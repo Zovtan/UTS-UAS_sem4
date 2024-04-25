@@ -2,13 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:twitter/twitter/comment_page.dart';
-import 'package:twitter/twitter/login.dart';
 import 'package:twitter/twitter/twt_app_bar.dart';
 import 'package:twitter/twitter/twt_bottom_bar.dart';
 
 class MainPage extends StatefulWidget {
-  final int idUser;
-  const MainPage({Key? key, required this.idUser}) : super(key: key);
+  final int userId;
+  const MainPage({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -76,7 +75,7 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
-  //This modification adds a commentCount property to the Tweet class and initializes it to 0. Then, in the _countComments method, it counts the comments for each tweet and updates the commentCount property accordingly. Finally, in the build method, it displays the comment count along with other tweet information.
+  //Hitung komen dalam json komen lalu kirim kesini
   Future<void> _countComments() async {
     String jsonString = await DefaultAssetBundle.of(context)
         .loadString('assets/json/comments.json');
@@ -107,7 +106,7 @@ class _MainPageState extends State<MainPage> {
           itemCount: tweets.length,
           itemBuilder: (BuildContext context, int index) {
             Tweet tweet = tweets[index];
-            print(userId);
+            print(widget.userId);
             // Format timestamp using DateFormat
             String formattedTimestamp =
                 DateFormat('yyyy-MM-dd HH:mm:ss').format(tweet.timestamp);

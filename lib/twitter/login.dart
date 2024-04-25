@@ -39,16 +39,20 @@ class Profile {
 
 //state awal visible
 bool _passwordVisible = false;
-/*   void initState() {
-  _passwordVisible = false;
-} */
 //di luar karna kalo di dalam build bakal ke reset sama visibility password
-final TextEditingController _emailController = TextEditingController();
-final TextEditingController _usernameController = TextEditingController();
-final TextEditingController _phoneController = TextEditingController();
+final TextEditingController _identifierController = TextEditingController();
 final TextEditingController _passwordController = TextEditingController();
 //reset id user
-int userId = 0;
+int _userId = 0;
+
+//harus initState supaya kerestart saat keluar dari aplikasi. Kalau g variable di ingat app. ntah kenapa harus diluar class _loginState
+@override
+void initState() {
+  _passwordVisible;
+  _identifierController;
+  _passwordController;
+  _userId;
+}
 
 class _LoginState extends State<Login> {
   List<Profile> profiles = [];
@@ -73,71 +77,93 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Column(
-      children: [
-        TextField(
-            keyboardType: TextInputType.text,
-            controller: _emailController,
-            decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: "Phone Number, Username, or Email")),
-        TextFormField(
-          keyboardType: TextInputType.text,
-          controller: _passwordController,
-          obscureText: !_passwordVisible, //This will obscure text dynamically
-          decoration: InputDecoration(
-            labelText: 'Password',
-            hintText: 'Enter your password',
-            // Here is key idea
-            suffixIcon: IconButton(
-              icon: Icon(
-                // Based on passwordVisible state choose the icon
-                _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                color: Theme.of(context).primaryColorDark,
-              ),
-              onPressed: () {
-                // Update the state i.e. toogle the state of passwordVisible variable
-                setState(() {
-                  _passwordVisible = !_passwordVisible;
-                });
-              },
-            ),
-          ),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            //validitas login
-bool isValid = false;
-            for (var profile in profiles) {
-              if (profile.email == _emailController.text &&
-                  profile.password == _passwordController.text) {
-                isValid = true;
-                userId = profile.id;
-                break;
-              }
-            }
-
-            if (isValid) {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MainPage(
-                          idUser: userId,
-                        )),
-                (route) => false,
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Email atau password salah'),
+    return FutureBuilder<void>(
+      future: _checkProfile(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return Scaffold(
+            body: Column(
+              children: [
+                TextField(
+                  maxLines: 1,
+                  keyboardType: TextInputType.text,
+                  controller: _identifierController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Phone Number, Username, or Email",
+                  ),
                 ),
-              );
-            }
-          },
-          child: const Text('Login'),
-        )
-      ],
-    ));
+                TextFormField(
+                  maxLines: 1,
+                  keyboardType: TextInputType.text,
+                  controller: _passwordController,
+                  obscureText: !_passwordVisible,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    hintText: 'Enter your password',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Theme.of(context).primaryColorDark,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _passwordVisible = !_passwordVisible;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Validation logic
+                    bool isValid = false;
+                    for (var profile in profiles) {
+                      if ((profile.email ==
+                                  _identifierController.text
+                                      .replaceAll(RegExp(r"\s+"), "") ||
+                              profile.username ==
+                                  _identifierController.text
+                                      .replaceAll(RegExp(r"\s+"), "") ||
+                              profile.phone ==
+                                  _identifierController.text
+                                      .replaceAll(RegExp(r"\s+"), "")) &&
+                          profile.password ==
+                              _passwordController.text
+                                  .replaceAll(RegExp(r"\s+"), "")) {
+                        isValid = true;
+                        _userId = profile.id;
+                        break;
+                      }
+                    }
+
+                    if (isValid) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MainPage(userId: _userId),
+                        ),
+                        (route) => false,
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Email atau password salah'),
+                        ),
+                      );
+                    }
+                  },
+                  child: const Text('Login'),
+                ),
+              ],
+            ),
+          );
+        }
+      },
+    );
   }
 }

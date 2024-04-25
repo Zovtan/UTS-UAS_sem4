@@ -2,15 +2,24 @@
     {
         "id": 1,
         "author": "Jo",
-        "username": "Jo",
+        "username": "Jolo",
         "password": "Nana",
         "email": "Jo@gmail.com",
         "phone":"123456789123"
     },
-    {        "id": 2,
+    {        
+    "id": 2,
     "author": "a",
     "username": "a",
     "password": "a",
     "email": "a@gmail.com",
-    "phone":"08458328483"}
+    "phone":"08458328483"
+    },
+    {       
+    "id": 3,
+    "author": "1",
+    "username": "2",
+    "password": "1",
+    "email": "1",
+    "phone":"123"}
 ]
