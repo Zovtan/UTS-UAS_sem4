@@ -21,7 +21,7 @@ class Tweet {
   final DateTime timestamp;
   final int likes;
   final int retweets;
-  int commentCount; // Add this line
+  int commentCount;
 
   Tweet({
     required this.id,
@@ -32,7 +32,7 @@ class Tweet {
     required this.timestamp,
     required this.likes,
     required this.retweets,
-    this.commentCount = 0, // Add this line
+    this.commentCount = 0,
   });
 
   factory Tweet.fromJson(Map<String, dynamic> json) {
