@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:twitter/twitter/main_page.dart'; // Import the Tweet class from the main page
 
-
 class Comment {
   final int commentId;
   final String author;
