@@ -1,0 +1,70 @@
+[
+    {
+      "tweet_id": 1,
+      "comments": [
+        {
+          "comment_id": 1,
+          "author": "TravelEnthusiast",
+          "username": "@traveler",
+          "comment": "Looks like you had an amazing time! I love exploring new cities."
+        },
+        {
+          "comment_id": 2,
+          "author": "CityExplorer",
+          "username": "@citylover",
+          "comment": "Which places did you visit? I'm planning a trip there soon!"
+        }
+      ]
+    },
+    {
+      "tweet_id": 2,
+      "comments": [
+        {
+          "comment_id": 1,
+          "author": "BlogReader",
+          "username": "@blogfan",
+          "comment": "Can't wait to read it! Your blog posts are always insightful."
+        },
+        {
+          "comment_id": 2,
+          "author": "TechGeek",
+          "username": "@techlover",
+          "comment": "Looking forward to checking out the latest tech trends in your post!"
+        }
+      ]
+    },
+    {
+      "tweet_id": 3,
+      "comments": [
+        {
+          "comment_id": 1,
+          "author": "GadgetFanatic",
+          "username": "@gadgetlover",
+          "comment": "That's awesome! What gadget did you get?"
+        },
+        {
+          "comment_id": 2,
+          "author": "Techie",
+          "username": "@techie",
+          "comment": "Let us know your thoughts after trying it out! I'm curious."
+        }
+      ]
+    },
+    {
+      "tweet_id": 5,
+      "comments": [
+        {
+          "comment_id": 1,
+          "author": "SportsEnthusiast",
+          "username": "@sportslover",
+          "comment": "What a game indeed! The comeback was unbelievable."
+        },
+        {
+          "comment_id": 2,
+          "author": "TeamSupporter",
+          "username": "@teamsupport",
+          "comment": "I was on the edge of my seat the entire time! Go team!"
+        }
+      ]
+    }
+  ]
