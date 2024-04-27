@@ -40,20 +40,20 @@ class Profile {
 }
 
 //state awal visible
-bool _passwordVisible = false;
+bool passwordVisible = false;
 //di luar karna kalo di dalam build bakal ke reset sama visibility password
-final TextEditingController _identifierController = TextEditingController();
-final TextEditingController _passwordController = TextEditingController();
+final TextEditingController identifierController = TextEditingController();
+final TextEditingController passwordController = TextEditingController();
 //reset id user
-int _userId = 0;
+int userId = 0;
 
 //harus initState supaya kerestart saat keluar dari aplikasi. Kalau g variable di ingat app. ntah kenapa harus diluar class _loginState
 @override
 void initState() {
-  _passwordVisible;
-  _identifierController;
-  _passwordController;
-  _userId;
+  passwordVisible;
+  identifierController;
+  passwordController;
+  userId;
 }
 
 class _LoginState extends State<Login> {
@@ -91,7 +91,7 @@ class _LoginState extends State<Login> {
                 TextField(
                   maxLines: 1,
                   keyboardType: TextInputType.text,
-                  controller: _identifierController,
+                  controller: identifierController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: "Phone Number, Username, or Email",
@@ -100,21 +100,21 @@ class _LoginState extends State<Login> {
                 TextFormField(
                   maxLines: 1,
                   keyboardType: TextInputType.text,
-                  controller: _passwordController,
-                  obscureText: !_passwordVisible,
+                  controller: passwordController,
+                  obscureText: !passwordVisible,
                   decoration: InputDecoration(
                     labelText: 'Password',
                     hintText: 'Enter your password',
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _passwordVisible
+                        passwordVisible
                             ? Icons.visibility
                             : Icons.visibility_off,
                         color: Theme.of(context).primaryColorDark,
                       ),
                       onPressed: () {
                         setState(() {
-                          _passwordVisible = !_passwordVisible;
+                          passwordVisible = !passwordVisible;
                         });
                       },
                     ),
@@ -127,19 +127,19 @@ class _LoginState extends State<Login> {
                     bool isValid = false;
                     for (var profile in profiles) {
                       if ((profile.email ==
-                                  _identifierController.text
+                                  identifierController.text
                                       .replaceAll(RegExp(r"\s+"), "") ||
                               profile.displayName ==
-                                  _identifierController.text
+                                  identifierController.text
                                       .replaceAll(RegExp(r"\s+"), "") ||
                               profile.phone ==
-                                  _identifierController.text
+                                  identifierController.text
                                       .replaceAll(RegExp(r"\s+"), "")) &&
                           profile.password ==
-                              _passwordController.text
+                              passwordController.text
                                   .replaceAll(RegExp(r"\s+"), "")) {
                         isValid = true;
-                        _userId = profile.id;
+                        userId = profile.id;
                         break;
                       }
                     }
@@ -148,7 +148,7 @@ class _LoginState extends State<Login> {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MainPage(userId: _userId),
+                          builder: (context) => MainPage(userId: userId),
                         ),
                         (route) => false,
                       );

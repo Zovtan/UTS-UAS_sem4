@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:twitter/twitter/login.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -36,13 +39,49 @@ class Profile {
       phone: json['phone'],
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'username': username,
+      'displayName': "",
+      'password': "",
+      'email': email,
+      'phone': phone,
+    };
+  }
+}
+
+final TextEditingController usernameController = TextEditingController();
+final TextEditingController emailController = TextEditingController();
+final TextEditingController phoneController = TextEditingController();
+
+@override
+void initState() {
+  usernameController;
+  emailController;
+  phoneController;
+}
+
+void _writeToJson(Profile profile) async {
+  // Convert profile object to JSON
+  Map<String, dynamic> jsonData = profile.toJson();
+  String jsonString = jsonEncode(jsonData);
+
+try {
+    // Get the path to the documents directory
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    // Specify the file name
+    String path = '$dir/profiles.json';
+    // Write JSON data to the file
+    File file = File(path);
+    await file.writeAsString(jsonString);
+    print('Data written to JSON file successfully.');
+  } catch (e) {
+    print('Error writing to JSON file: $e');
+  }
 }
 
 class _SignInState extends State<SignIn> {
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-
   // List to hold profiles from JSON
   late List<Profile> profiles;
 
@@ -66,46 +105,42 @@ class _SignInState extends State<SignIn> {
     });
   }
 
-  // Check if the provided email already exists
-  bool isEmailExist(String email) {
+  // Check if the provided email, username, phone num already exists
+  bool _isEmailExist(String email) {
     return profiles.any((Profile) => Profile.email == email);
   }
 
-  // Check if the provided username already exists
-  bool isUsernameExist(String username) {
+  bool _isUsernameExist(String username) {
     return profiles.any((Profile) => Profile.username == username);
   }
 
-  // Check if the provided phone number already exists
-  bool isPhoneExist(String phone) {
+  bool _isPhoneExist(String phone) {
     return profiles.any((Profile) => Profile.phone == phone);
   }
 
   // Handle sign-in button press
-  void signIn() {
+  _signInHandling() {
     String username = usernameController.text.trim();
     String email = emailController.text.trim();
     String phone = phoneController.text.trim();
 
     // Check for duplicates
-    if (isUsernameExist(username)) {
-      // Username already exists
-      // Show error message or handle accordingly
-      return;
-    }
-    if (isEmailExist(email)) {
-      // Email already exists
-      // Show error message or handle accordingly
-      return;
-    }
-    if (isPhoneExist(phone)) {
-      // Phone number already exists
-      // Show error message or handle accordingly
-      return;
-    }
+    if (!_isUsernameExist(username) ||
+        !_isEmailExist(email) ||
+        !_isPhoneExist(phone)) {
+      Profile profile = Profile(
+        id: 5, // You may assign an ID as needed
+        username: username,
+        displayName: '', // Set to empty string for now
+        password: '', // Set to empty string for now
+        email: email,
+        phone: phone,
+      );
 
-    // All fields are unique, proceed with sign-in
-    // You can add your sign-in logic here
+      // Write the profile data to JSON file
+      _writeToJson(profile);
+      ;
+    }
   }
 
   @override
@@ -140,8 +175,9 @@ class _SignInState extends State<SignIn> {
               ),
             ),
             SizedBox(height: 20),
+            //sign in button
             ElevatedButton(
-              onPressed: signIn,
+              onPressed: _signInHandling,
               child: Text('Sign In'),
             ),
           ],
