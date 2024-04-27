@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 
 import 'package:twitter/twitter/main_page.dart';
+import 'package:twitter/twitter/sign_in.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -12,28 +13,29 @@ class Login extends StatefulWidget {
 
 class Profile {
   final int id;
-  final String author;
   final String username;
+  final String displayName;
   final String password;
   final String email;
   final String phone;
 
   Profile(
       {required this.id,
-      required this.author,
       required this.username,
+      required this.displayName,
       required this.password,
       required this.email,
       required this.phone});
 
   factory Profile.fromJson(Map<String, dynamic> json) {
     return Profile(
-        id: json['id'],
-        author: json['author'],
-        username: json['username'],
-        password: json['password'],
-        email: json['email'],
-        phone: json['phone']);
+      id: json['id'],
+      username: json['username'],
+      displayName: json['displayName'],
+      password: json['password'],
+      email: json['email'],
+      phone: json['phone'],
+    );
   }
 }
 
@@ -90,7 +92,7 @@ class _LoginState extends State<Login> {
                   maxLines: 1,
                   keyboardType: TextInputType.text,
                   controller: _identifierController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: "Phone Number, Username, or Email",
                   ),
@@ -118,6 +120,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
+                //tombol login
                 ElevatedButton(
                   onPressed: () {
                     // Validation logic
@@ -126,7 +129,7 @@ class _LoginState extends State<Login> {
                       if ((profile.email ==
                                   _identifierController.text
                                       .replaceAll(RegExp(r"\s+"), "") ||
-                              profile.username ==
+                              profile.displayName ==
                                   _identifierController.text
                                       .replaceAll(RegExp(r"\s+"), "") ||
                               profile.phone ==
@@ -159,6 +162,17 @@ class _LoginState extends State<Login> {
                   },
                   child: const Text('Login'),
                 ),
+                //tombol sign in
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignIn(),
+                        ),
+                      );
+                    },
+                    child: const Text('Sign In'))
               ],
             ),
           );

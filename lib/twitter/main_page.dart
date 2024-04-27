@@ -15,8 +15,8 @@ class MainPage extends StatefulWidget {
 
 class Tweet {
   final int id;
-  final String author;
   final String username;
+  final String displayName;
   final String tweet;
   final String image;
   final DateTime timestamp;
@@ -26,8 +26,8 @@ class Tweet {
 
   Tweet({
     required this.id,
-    required this.author,
     required this.username,
+    required this.displayName,
     required this.tweet,
     required this.image,
     required this.timestamp,
@@ -41,8 +41,8 @@ class Tweet {
     DateTime parsedTimestamp = DateTime.parse(json['timestamp']);
     return Tweet(
       id: json['id'],
-      author: json['author'],
       username: json['username'],
+      displayName: json['displayName'],
       tweet: json['tweet'],
       image: json['image'],
       timestamp: parsedTimestamp,
@@ -124,7 +124,7 @@ class _MainPageState extends State<MainPage> {
               },
               title: Text(tweet.tweet),
               subtitle: Text(
-                  '${tweet.author} - $formattedTimestamp (${tweet.commentCount} comments)'),
+                  '${tweet.username} - $formattedTimestamp (${tweet.commentCount} comments)'),
               leading: tweet.image != "none"
                   ? Image.asset(
                       tweet.image,

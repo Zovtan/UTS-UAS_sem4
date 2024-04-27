@@ -4,22 +4,22 @@ import 'package:twitter/twitter/main_page.dart'; // Import the Tweet class from 
 
 class Comment {
   final int commentId;
-  final String author;
   final String username;
+  final String displayName;
   final String comment;
 
   Comment({
     required this.commentId,
-    required this.author,
     required this.username,
+    required this.displayName,
     required this.comment,
   });
 
   factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
       commentId: json['comment_id'],
-      author: json['author'],
       username: json['username'],
+      displayName: json['displayName'],
       comment: json['comment'],
     );
   }
@@ -78,8 +78,8 @@ class _CommentPageState extends State<CommentPage> {
         title: Text('Post'),
       ),
       body: Column(
-        children: [Text(tweet.author),
-        Text(tweet.username),
+        children: [Text(tweet.username),
+        Text(tweet.displayName),
           Expanded(
             child: ListView.builder(
               itemCount: comments.length,
@@ -87,7 +87,7 @@ class _CommentPageState extends State<CommentPage> {
                 Comment comment = comments[index];
                 return ListTile(
                   title: Text(comment.comment),
-                  subtitle: Text('${comment.author} - ${comment.username}'),
+                  subtitle: Text('${comment.username} - ${comment.displayName}'),
                 );
               },
             ),
