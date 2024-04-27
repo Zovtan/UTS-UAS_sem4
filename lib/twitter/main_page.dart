@@ -6,8 +6,14 @@ import 'package:twitter/twitter/twt_app_bar.dart';
 import 'package:twitter/twitter/twt_bottom_bar.dart';
 
 class MainPage extends StatefulWidget {
-  final int userId;
-  const MainPage({Key? key, required this.userId}) : super(key: key);
+  /* final int userId; */
+  final String currUsername;
+  final String currDisplayName;
+  const MainPage({
+    Key? key,
+    required this.currUsername,
+    required this.currDisplayName,
+  }) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -96,6 +102,8 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.currUsername);
+    print(widget.currDisplayName);
     return Scaffold(
       appBar: TwitterAppBar(),
       bottomNavigationBar: TwitterBottomBar(),
@@ -106,7 +114,6 @@ class _MainPageState extends State<MainPage> {
           itemCount: tweets.length,
           itemBuilder: (BuildContext context, int index) {
             Tweet tweet = tweets[index];
-            print(widget.userId);
             // Format timestamp using DateFormat
             String formattedTimestamp =
                 DateFormat('yyyy-MM-dd HH:mm:ss').format(tweet.timestamp);
