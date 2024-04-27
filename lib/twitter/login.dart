@@ -67,24 +67,20 @@ class _LoginState extends State<Login> {
           //tombol login
           ElevatedButton(
             onPressed: () {
+              String identifier =
+                  identifierController.text.trim().toLowerCase();
+              String password = passwordController.text.trim();
+
               // Validation logic
               bool isValid = false;
               for (var profile in profileData.profiles) {
-                if ((profile.email ==
-                            identifierController.text
-                                .replaceAll(RegExp(r"\s+"), "") ||
-                        profile.username ==
-                            identifierController.text
-                                .replaceAll(RegExp(r"\s+"), "") ||
-                        profile.phone ==
-                            identifierController.text
-                                .replaceAll(RegExp(r"\s+"), "")) &&
-                    profile.password ==
-                        passwordController.text
-                            .replaceAll(RegExp(r"\s+"), "")) {
+                if ((profile.email == identifier ||
+                        profile.username == identifier ||
+                        profile.phone == identifier) &&
+                    profile.password == password) {
                   isValid = true;
-                      currUsername = profile.username;
-                      currDisplayname = profile.displayName;
+                  currUsername = profile.username;
+                  currDisplayname = profile.displayName;
 
                   break;
                 }
@@ -100,7 +96,10 @@ class _LoginState extends State<Login> {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MainPage(currUsername: currUsername, currDisplayName: currDisplayname,),
+                    builder: (context) => MainPage(
+                      currUsername: currUsername,
+                      currDisplayName: currDisplayname,
+                    ),
                   ),
                   (route) => false,
                 );

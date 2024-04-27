@@ -82,24 +82,26 @@ class _SignInState extends State<SignIn> {
             ElevatedButton(
               onPressed: () {
                 // Validation logic
-                bool isValid = false;
+                bool isValid = true; // Set isValid to true initially
+
+                String email = emailController.text.trim().toLowerCase();
+                String username = usernameController.text.trim();
+                String phone = phoneController.text.trim();
+
                 for (var profile in profileData.profiles) {
-                  if ((profile.email !=
-                          emailController.text.replaceAll(RegExp(r"\s+"), "") ||
-                      profile.username !=
-                          usernameController.text
-                              .replaceAll(RegExp(r"\s+"), "") ||
-                      profile.phone !=
-                          phoneController.text
-                              .replaceAll(RegExp(r"\s+"), ""))) {
-                    isValid = true;
-                    currUsername = usernameController.text;
-                    currDisplayname = displayNameController.text;
+                  if (profile.email == email ||
+                      profile.username == username ||
+                      profile.phone == phone) {
+                    isValid =
+                        false; // Toggle isValid to false if a match is found
                     break;
                   }
                 }
 
                 if (isValid) {
+                  // If isValid is still true, it means no match was found, so proceed with the action
+                  currUsername = username;
+                  currDisplayname = displayNameController.text.trim();
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
@@ -111,6 +113,7 @@ class _SignInState extends State<SignIn> {
                     (route) => false,
                   );
                 } else {
+                  // If isValid is false, show an error message
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content:
