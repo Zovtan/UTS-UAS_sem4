@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:twitter/twitter/login.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:async';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -43,8 +45,8 @@ class Profile {
     return {
       'id': id,
       'username': username,
-      'displayName': "",
-      'password': "",
+      'displayName': displayName,
+      'password': password,
       'email': email,
       'phone': phone,
     };
@@ -62,24 +64,6 @@ void initState() {
   phoneController;
 }
 
-void _writeToJson(Profile profile) async {
-  // Convert profile object to JSON
-  Map<String, dynamic> jsonData = profile.toJson();
-  String jsonString = jsonEncode(jsonData);
-
-try {
-    // Get the path to the documents directory
-    String dir = (await getApplicationDocumentsDirectory()).path;
-    // Specify the file name
-    String path = '$dir/profiles.json';
-    // Write JSON data to the file
-    File file = File(path);
-    await file.writeAsString(jsonString);
-    print('Data written to JSON file successfully.');
-  } catch (e) {
-    print('Error writing to JSON file: $e');
-  }
-}
 
 class _SignInState extends State<SignIn> {
   // List to hold profiles from JSON
@@ -128,7 +112,7 @@ class _SignInState extends State<SignIn> {
     if (!_isUsernameExist(username) ||
         !_isEmailExist(email) ||
         !_isPhoneExist(phone)) {
-      Profile profile = Profile(
+      Profile newProfile = Profile(
         id: 5, // You may assign an ID as needed
         username: username,
         displayName: '', // Set to empty string for now
@@ -138,10 +122,32 @@ class _SignInState extends State<SignIn> {
       );
 
       // Write the profile data to JSON file
-      _writeToJson(profile);
-      ;
+      _writeToJson(newProfile);
     }
   }
+  
+Future<void> _writeToJson(Profile profile) async {
+  try {
+    // Load existing JSON data from file
+    String jsonString = await rootBundle.loadString('data/profiles.json');
+    List<dynamic> jsonList = jsonDecode(jsonString);
+
+    // Add the new profile data to the list
+    jsonList.add(profile.toJson());
+
+    // Convert the updated list back to JSON
+    String updatedJsonString = jsonEncode(jsonList);
+
+    // Write the updated JSON data back to the file
+    Directory directory = await getApplicationDocumentsDirectory();
+    File file = File('${directory.path}/profiles.json');
+    await file.writeAsString(updatedJsonString);
+
+    print('Data written to JSON file successfully.');
+  } catch (e) {
+    print('Error writing to JSON file: $e');
+  }
+}
 
   @override
   Widget build(BuildContext context) {
