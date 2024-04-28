@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:twitter/class/tweets.dart';
 import 'package:twitter/twitter/comment_page.dart';
 import 'package:twitter/twitter/twt_app_bar.dart';
 import 'package:twitter/twitter/twt_bottom_bar.dart';
@@ -19,67 +20,16 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-class Tweet {
-  final int id;
-  final String username;
-  final String displayName;
-  final String tweet;
-  final String image;
-  final DateTime timestamp;
-  final int likes;
-  final int retweets;
-  int commentCount;
-
-  Tweet({
-    required this.id,
-    required this.username,
-    required this.displayName,
-    required this.tweet,
-    required this.image,
-    required this.timestamp,
-    required this.likes,
-    required this.retweets,
-    this.commentCount = 0,
-  });
-
-  factory Tweet.fromJson(Map<String, dynamic> json) {
-    // Parse timestamp string into DateTime object
-    DateTime parsedTimestamp = DateTime.parse(json['timestamp']);
-    return Tweet(
-      id: json['id'],
-      username: json['username'],
-      displayName: json['displayName'],
-      tweet: json['tweet'],
-      image: json['image'],
-      timestamp: parsedTimestamp,
-      likes: json['likes'],
-      retweets: json['retweets'],
-    );
-  }
-}
-
 class _MainPageState extends State<MainPage> {
-  List<Tweet> tweets = [];
+  final TweetData tweetData = TweetData();
   int commentCount = 0;
 
   @override
   void initState() {
     super.initState();
-    _loadTweets();
     _countComments(); // Call the method to count comments
   }
 
-  Future<void> _loadTweets() async {
-    // Read the JSON file
-    String jsonString = await DefaultAssetBundle.of(context)
-        .loadString('assets/json/tweets.json');
-    // Parse JSON
-    List<dynamic> jsonList = jsonDecode(jsonString);
-    // Populate the list of tweets
-    setState(() {
-      tweets = jsonList.map((json) => Tweet.fromJson(json)).toList();
-    });
-  }
 
   //Hitung komen dalam json komen lalu kirim kesini
   Future<void> _countComments() async {
@@ -87,7 +37,7 @@ class _MainPageState extends State<MainPage> {
         .loadString('assets/json/comments.json');
     List<dynamic> jsonList = jsonDecode(jsonString);
     setState(() {
-      for (var tweet in tweets) {
+      for (var tweet in tweetData.tweets) {
         // Find the comments for the tweet
         var commentsInTweet = jsonList.firstWhere(
           (comment) => comment['tweet_id'] == tweet.id,
@@ -104,6 +54,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     print(widget.currUsername);
     print(widget.currDisplayName);
+    
     return Scaffold(
       appBar: TwitterAppBar(),
       bottomNavigationBar: TwitterBottomBar(),
@@ -111,12 +62,13 @@ class _MainPageState extends State<MainPage> {
         width: double.infinity,
         child: ListView.builder(
           //listview harus di warp oleh sizebox atau expanded
-          itemCount: tweets.length,
+          itemCount: tweetData.tweets.length,
           itemBuilder: (BuildContext context, int index) {
-            Tweet tweet = tweets[index];
+            Tweet tweet = tweetData.tweets[index];
             // Format timestamp using DateFormat
+            DateTime parsedTimestamp = DateTime.parse(tweet.timestamp);
             String formattedTimestamp =
-                DateFormat('yyyy-MM-dd HH:mm:ss').format(tweet.timestamp);
+                DateFormat('yyyy-MM-dd HH:mm:ss').format(parsedTimestamp);
             return ListTile(
               //navigasi
               onTap: () {
@@ -124,7 +76,6 @@ class _MainPageState extends State<MainPage> {
                   MaterialPageRoute(
                     builder: (context) => CommentPage(
                         tweetId: tweet.id,
-                        tweets: tweets //kirim id tweet dan data tweet
                         ),
                   ),
                 );

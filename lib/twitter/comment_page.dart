@@ -1,6 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:twitter/twitter/main_page.dart'; // Import the Tweet class from the main page
+import 'package:twitter/class/tweets.dart';
+
+class CommentPage extends StatefulWidget {
+  final int tweetId;
+  const CommentPage({Key? key, required this.tweetId}) : super(key: key);
+
+  @override
+  State<CommentPage> createState() => _CommentPageState();
+}
 
 class Comment {
   final int commentId;
@@ -25,30 +33,16 @@ class Comment {
   }
 }
 
-class CommentPage extends StatefulWidget {
-  final int tweetId;
-  final List<Tweet> tweets; // Receive the list of tweets
-
-  const CommentPage({Key? key, required this.tweetId, required this.tweets}) : super(key: key);
-
-  @override
-  State<CommentPage> createState() => _CommentPageState();
-}
-
 class _CommentPageState extends State<CommentPage> {
   List<Comment> comments = [];
-  late Tweet tweet; // variabel berisi class tweet yg di import
+  late Tweet tweet; // late di paka pada saat variabel di aktifkan nanti, pada kasus ini, variabel tweet dipakai dlm initsate sebelum build
 
   @override
   void initState() {
     super.initState();
-    _loadTweet();
     _loadComments();
-  }
-
-  Future<void> _loadTweet() async {
-    // Find the corresponding tweet using the tweetId from the received tweets list
-    tweet = widget.tweets.firstWhere((tweet) => tweet.id == widget.tweetId);
+    // Find and set the corresponding tweet
+    tweet = TweetData().tweets.firstWhere((tweet) => tweet.id == widget.tweetId);
   }
 
   Future<void> _loadComments() async {
@@ -78,8 +72,9 @@ class _CommentPageState extends State<CommentPage> {
         title: Text('Post'),
       ),
       body: Column(
-        children: [Text(tweet.username),
-        Text(tweet.displayName),
+        children: [
+          Text(tweet.username),
+          Text(tweet.displayName),
           Expanded(
             child: ListView.builder(
               itemCount: comments.length,
@@ -97,4 +92,3 @@ class _CommentPageState extends State<CommentPage> {
     );
   }
 }
-
