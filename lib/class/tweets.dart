@@ -77,7 +77,7 @@ class TweetData {
   ];
 
   void addTweet(Tweet tweet) {
-    tweets.add(tweet);
+    tweets.insert(0, tweet); // supaya saat tweet baru ditambah, akan diletakkan di paling atas
   }
 
   void deleteTweet(int index) {
