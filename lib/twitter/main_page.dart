@@ -5,6 +5,7 @@ import 'package:twitter/class/tweets.dart';
 import 'package:twitter/twitter/comment_page.dart';
 import 'package:twitter/twitter/twt_app_bar.dart';
 import 'package:twitter/twitter/twt_bottom_bar.dart';
+import 'package:twitter/widget/popup.dart';
 
 class MainPage extends StatefulWidget {
   /* final int userId; */
@@ -30,7 +31,6 @@ class _MainPageState extends State<MainPage> {
     _countComments(); // Call the method to count comments
   }
 
-
   //Hitung komen dalam json komen lalu kirim kesini
   Future<void> _countComments() async {
     String jsonString = await DefaultAssetBundle.of(context)
@@ -54,7 +54,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     print(widget.currUsername);
     print(widget.currDisplayName);
-    
+
     return Scaffold(
       appBar: TwitterAppBar(),
       bottomNavigationBar: TwitterBottomBar(),
@@ -76,7 +76,14 @@ class _MainPageState extends State<MainPage> {
                   MaterialPageRoute(
                     builder: (context) => CommentPage(
                         tweetId: tweet.id,
-                        ),
+                        username: tweet.username,
+                        displayName: tweet.displayName,
+                        tweet: tweet.tweet,
+                        image: tweet.image,
+                        timestamp: formattedTimestamp,
+                        likes: tweet.likes,
+                        retweets: tweet.retweets,
+                        commentCount: commentCount),
                   ),
                 );
               },
@@ -96,8 +103,34 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          // Show the add tweet popup when FAB is pressed
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AddTweetPopup(
+                onTweetAdded: (newTweet) {
+                  // Add the new tweet to the list
+                  setState(() {
+                    tweetData.addTweet(Tweet(
+                      id: tweetData.tweets.length + 1, // Increment the ID
+                      username: widget.currUsername,
+                      displayName: widget.currDisplayName,
+                      tweet: newTweet,
+                      image: "none",
+                      timestamp: DateTime.now().toIso8601String(),
+                      likes: 0,
+                      retweets: 0,
+                      commentCount: 0,
+                    ));
+                  });
+                },
+              );
+            },
+          );
+        },
         backgroundColor: Colors.blue,
+        child: Icon(Icons.add),
       ),
     );
   }

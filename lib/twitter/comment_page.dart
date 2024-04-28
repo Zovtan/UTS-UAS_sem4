@@ -1,10 +1,29 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:twitter/class/tweets.dart';
 
 class CommentPage extends StatefulWidget {
   final int tweetId;
-  const CommentPage({Key? key, required this.tweetId}) : super(key: key);
+  final String username;
+  final String displayName;
+  final String tweet;
+  final String image;
+  final String timestamp;
+  final int likes;
+  final int retweets;
+  final int commentCount;
+
+  const CommentPage({
+    Key? key,
+    required this.tweetId,
+    required this.username,
+    required this.displayName,
+    required this.tweet,
+    required this.image,
+    required this.timestamp,
+    required this.likes,
+    required this.retweets,
+    required this.commentCount,
+  }) : super(key: key);
 
   @override
   State<CommentPage> createState() => _CommentPageState();
@@ -35,14 +54,11 @@ class Comment {
 
 class _CommentPageState extends State<CommentPage> {
   List<Comment> comments = [];
-  late Tweet tweet; // late di paka pada saat variabel di aktifkan nanti, pada kasus ini, variabel tweet dipakai dlm initsate sebelum build
 
   @override
   void initState() {
     super.initState();
     _loadComments();
-    // Find and set the corresponding tweet
-    tweet = TweetData().tweets.firstWhere((tweet) => tweet.id == widget.tweetId);
   }
 
   Future<void> _loadComments() async {
@@ -51,7 +67,7 @@ class _CommentPageState extends State<CommentPage> {
         .loadString('assets/json/comments.json');
     // Parse JSON
     List<dynamic> jsonList = jsonDecode(jsonString);
-    // Find comments for the selected tweet ID
+    // Find comments for the selected CommentPage ID
     Map<String, dynamic>? tweetComments = jsonList.firstWhere(
       (element) => element['tweet_id'] == widget.tweetId,
       orElse: () => null,
@@ -61,6 +77,13 @@ class _CommentPageState extends State<CommentPage> {
       List<dynamic> commentsList = tweetComments['comments'];
       setState(() {
         comments = commentsList.map((json) => Comment.fromJson(json)).toList();
+      });
+    } else {
+      // No comments found for the selected CommentPage
+      // You can display a message or handle this case accordingly
+      setState(() {
+        // Set comments to an empty list
+        comments = [];
       });
     }
   }
@@ -73,8 +96,8 @@ class _CommentPageState extends State<CommentPage> {
       ),
       body: Column(
         children: [
-          Text(tweet.username),
-          Text(tweet.displayName),
+          Text(widget.username),
+          Text(widget.displayName),
           Expanded(
             child: ListView.builder(
               itemCount: comments.length,
@@ -82,7 +105,8 @@ class _CommentPageState extends State<CommentPage> {
                 Comment comment = comments[index];
                 return ListTile(
                   title: Text(comment.comment),
-                  subtitle: Text('${comment.username} - ${comment.displayName}'),
+                  subtitle:
+                      Text('${comment.username} - ${comment.displayName}'),
                 );
               },
             ),
