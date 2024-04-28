@@ -4,8 +4,7 @@ class TwitterBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed, //harus pakai ini kalo mau ganti warna
-      backgroundColor: Colors.black,
+
       selectedItemColor: Colors.blue,
       unselectedItemColor: Colors.grey,
       showSelectedLabels: false,

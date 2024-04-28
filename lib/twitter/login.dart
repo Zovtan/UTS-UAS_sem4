@@ -39,7 +39,6 @@ class _LoginState extends State<Login> {
             keyboardType: TextInputType.text,
             controller: identifierController,
             decoration: const InputDecoration(
-              border: OutlineInputBorder(),
               labelText: "Phone Number, Username, or Email",
             ),
           ),
@@ -53,8 +52,7 @@ class _LoginState extends State<Login> {
               hintText: 'Enter your password',
               suffixIcon: IconButton(
                 icon: Icon(
-                  passwordVisible ? Icons.visibility : Icons.visibility_off,
-                  color: Theme.of(context).primaryColorDark,
+                  passwordVisible ? Icons.visibility : Icons.visibility_off
                 ),
                 onPressed: () {
                   setState(() {

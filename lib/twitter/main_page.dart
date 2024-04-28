@@ -5,7 +5,7 @@ import 'package:twitter/class/tweets.dart';
 import 'package:twitter/twitter/comment_page.dart';
 import 'package:twitter/widget/twt_app_bar.dart';
 import 'package:twitter/widget/twt_bottom_bar.dart';
-import 'package:twitter/widget/popup.dart';
+import 'package:twitter/widget/post_tweet.dart';
 
 class MainPage extends StatefulWidget {
   /* final int userId; */
@@ -56,96 +56,110 @@ class _MainPageState extends State<MainPage> {
     print(widget.currDisplayName);
 
     return Scaffold(
-      appBar: TwitterAppBar(),
-      bottomNavigationBar: TwitterBottomBar(),
-      body: ListView.builder(
-        itemCount: tweetData.tweets.length,
-        itemBuilder: (BuildContext context, int index) {
-          Tweet tweet = tweetData.tweets[index];
-          DateTime parsedTimestamp = DateTime.parse(tweet.timestamp);
-          String formattedTimestamp =
-              DateFormat('yyyy-MM-dd HH:mm:ss').format(parsedTimestamp);
-          return Card(
-            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-            elevation: 0,
-            child: ListTile(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => CommentPage(
-                      tweetId: tweet.id,
-                      username: tweet.username,
-                      displayName: tweet.displayName,
-                      tweet: tweet.tweet,
-                      image: tweet.image,
-                      timestamp: formattedTimestamp,
-                      likes: tweet.likes,
-                      retweets: tweet.retweets,
-                      commentCount: commentCount,
+    bottomNavigationBar:TwitterBottomBar(),
+      body: CustomScrollView(
+        slivers: [
+          //appbar
+          TwitterAppBar(), // Here's where you integrate the TwitterAppBar
+          //Main content, ganti listbuilder dengan sliverlist supaya bisa pakai appbar yg responsive
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                Tweet tweet = tweetData.tweets[index];
+                DateTime parsedTimestamp = DateTime.parse(tweet.timestamp);
+                String formattedTimestamp =
+                    DateFormat('yyyy-MM-dd HH:mm:ss').format(parsedTimestamp);
+                return Card(
+                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  elevation: 0,
+                  child: ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => CommentPage(
+                            tweetId: tweet.id,
+                            username: tweet.username,
+                            displayName: tweet.displayName,
+                            tweet: tweet.tweet,
+                            image: tweet.image,
+                            timestamp: formattedTimestamp,
+                            likes: tweet.likes,
+                            retweets: tweet.retweets,
+                            commentCount: commentCount,
+                          ),
+                        ),
+                      );
+                    },
+                    title: Text(tweet.tweet),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 5),
+                        Text(
+                          '${tweet.username} - $formattedTimestamp',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Row(
+                          children: [
+                            Icon(Icons.comment, size: 16, color: Colors.grey),
+                            SizedBox(width: 5),
+                            Text(
+                              '${tweet.commentCount}',
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 12),
+                            ),
+                            SizedBox(width: 15),
+                            Icon(Icons.favorite_border,
+                                size: 16, color: Colors.grey),
+                            SizedBox(width: 5),
+                            Text(
+                              '${tweet.likes}',
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 12),
+                            ),
+                            SizedBox(width: 15),
+                            Icon(Icons.repeat, size: 16, color: Colors.grey),
+                            SizedBox(width: 5),
+                            Text(
+                              '${tweet.retweets}',
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
+                    leading: tweet.image != "none"
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.asset(
+                              tweet.image,
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : null,
                   ),
                 );
               },
-              title: Text(tweet.tweet),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 5),
-                  Text(
-                    '${tweet.username} - $formattedTimestamp',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 12,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Row(
-                    children: [
-                      Icon(Icons.comment, size: 16, color: Colors.grey),
-                      SizedBox(width: 5),
-                      Text(
-                        '${tweet.commentCount}',
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
-                      ),
-                      SizedBox(width: 15),
-                      Icon(Icons.favorite_border, size: 16, color: Colors.grey),
-                      SizedBox(width: 5),
-                      Text(
-                        '${tweet.likes}',
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
-                      ),
-                      SizedBox(width: 15),
-                      Icon(Icons.repeat, size: 16, color: Colors.grey),
-                      SizedBox(width: 5),
-                      Text(
-                        '${tweet.retweets}',
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              leading: tweet.image != "none"
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image.asset(
-                        tweet.image,
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : null,
+              childCount: tweetData.tweets.length,
             ),
-          );
-        },
+          ),
+        ],
       ),
+      //FAB
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return AddTweetPopup(
+              //panggil widget post lalu masukkan tweet di post lalu kirim tweet balik ke mainpage terus update class tweet
+              return AddTweetPage(
                 onTweetAdded: (newTweet) {
                   setState(() {
                     tweetData.addTweet(Tweet(
@@ -161,6 +175,7 @@ class _MainPageState extends State<MainPage> {
                     ));
                   });
                 },
+                currDisplayName: widget.currDisplayName,
               );
             },
           );
