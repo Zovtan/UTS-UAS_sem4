@@ -4,14 +4,13 @@ import 'package:twitter/twitter/login.dart';
 import 'package:twitter/class/profiles.dart';
 
 class TwitterAppBar extends StatelessWidget {
-    final String currDisplayName;
-      final ProfileData profileData;
+  final String currDisplayName;
+  final ProfileData profileData;
 
   TwitterAppBar({required this.currDisplayName, required this.profileData});
 
   @override
   Widget build(BuildContext context) {
-    
     return SliverAppBar(
       elevation: 0,
       title: Text(
@@ -23,22 +22,49 @@ class TwitterAppBar extends StatelessWidget {
       ),
       leading: GestureDetector(
         onTap: () {
-          Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Login(profileData: profileData,
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Log Out'),
+                content: Text('Are you sure you want to log out?'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Login(profileData: profileData),
                         ),
-                      ),
-                      (route) => false,
-                    );
+                        (route) => false,
+                      );
+                    },
+                    child: Text(
+                      'Log Out',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
         },
         child: ProfilePicture(
-                name: currDisplayName,
-                radius: 31,
-                fontsize: 21,
-                random: true,
-                count: 2,
-              ),
+          name: currDisplayName,
+          radius: 31,
+          fontsize: 21,
+          random: true,
+          count: 2,
+        ),
       ),
       actions: [
         IconButton(

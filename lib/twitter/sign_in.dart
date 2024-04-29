@@ -33,6 +33,7 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: CloseButton(),
         backgroundColor: Colors.black,
         centerTitle: true,
         title: Image.asset(
