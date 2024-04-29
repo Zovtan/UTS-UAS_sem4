@@ -27,7 +27,7 @@ class ProfileData {
         password: "a"),
     Profile(
         id: 2,
-        username: "1",
+        username: "@1",
         displayName: "1e",
         email: "1@g",
         phone: "2",

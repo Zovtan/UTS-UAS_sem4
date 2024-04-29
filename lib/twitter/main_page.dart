@@ -6,15 +6,17 @@ import 'package:twitter/twitter/comment_page.dart';
 import 'package:twitter/widget/twt_app_bar.dart';
 import 'package:twitter/widget/twt_bottom_bar.dart';
 import 'package:twitter/widget/post_tweet.dart';
+import 'package:twitter/class/profiles.dart';
 
 class MainPage extends StatefulWidget {
-  /* final int userId; */
   final String currUsername;
   final String currDisplayName;
+  final ProfileData profileData;
   const MainPage({
     Key? key,
     required this.currUsername,
     required this.currDisplayName,
+    required this.profileData
   }) : super(key: key);
 
   @override
@@ -24,11 +26,13 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final TweetData tweetData = TweetData();
   int commentCount = 0;
+  late ProfileData profileData;
 
   @override
   void initState() {
     super.initState();
     _countComments(); // Call the method to count comments
+    profileData = widget.profileData;
   }
 
   //Hitung komen dalam json komen lalu kirim kesini
@@ -56,12 +60,11 @@ class _MainPageState extends State<MainPage> {
     print(widget.currDisplayName);
 
     return Scaffold(
-       extendBodyBehindAppBar: true, // Set to true to prevent color change in AppBar
     bottomNavigationBar:TwitterBottomBar(),
       body: CustomScrollView(
         slivers: [
           //appbar
-          TwitterAppBar(), // Here's where you integrate the TwitterAppBar
+          TwitterAppBar(currDisplayName: widget.currDisplayName, profileData: profileData,), // Here's where you integrate the TwitterAppBar
           //Main content, ganti listbuilder dengan sliverlist supaya bisa pakai appbar yg responsive
           SliverList(
             delegate: SliverChildBuilderDelegate(

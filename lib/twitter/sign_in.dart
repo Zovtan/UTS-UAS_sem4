@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:twitter/class/profiles.dart';
 import 'package:twitter/twitter/login.dart';
-import 'package:twitter/twitter/main_page.dart';
 
 class SignIn extends StatefulWidget {
   final ProfileData profileData;
@@ -34,169 +33,185 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sign In"),
+        backgroundColor: Colors.black,
+        centerTitle: true,
+        title: Image.asset(
+          'assets/images/twitterXlogo.avif',
+          height: 50,
+          width: 50,
+        
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: usernameController,
-              decoration: InputDecoration(
-                labelText: 'Username',
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+                            Text("Create your account", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35, ), ),
+              SizedBox(height: 20.0),
+              TextField(
+                controller: usernameController,
+                decoration: InputDecoration(
+                  labelText: 'Username',
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: displayNameController,
-              decoration: InputDecoration(
-                labelText: 'Display Name',
+              SizedBox(height: 20),
+              TextField(
+                controller: displayNameController,
+                decoration: InputDecoration(
+                  labelText: 'Display Name',
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: emailController,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        border: OutlineInputBorder(),
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(width: 20),
-                Expanded(
-                  child: TextField(
-                    controller: phoneController,
-                    decoration: InputDecoration(
-                      labelText: 'Phone',
+                  SizedBox(width: 20),
+                  Expanded(
+                    child: TextField(
+                      controller: phoneController,
+                      decoration: InputDecoration(
+                        labelText: 'Phone',
+                        border: OutlineInputBorder(),
+                      ),
                     ),
                   ),
+                ],
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(),
                 ),
-              ],
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Password',
               ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: repeatPasswordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Repeat Password',
+              SizedBox(height: 20),
+              TextField(
+                controller: repeatPasswordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Repeat Password',
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                bool isValid = true;
-                String email = emailController.text.trim().toLowerCase();
-                String username = usernameController.text.trim().toLowerCase();
-                String phone = phoneController.text.trim();
-                String password = passwordController.text.trim();
-                String repeatPassword = repeatPasswordController.text.trim();
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  bool isValid = true;
+                  String email = emailController.text.trim().toLowerCase();
+                  String username = usernameController.text.trim().toLowerCase();
+                  String phone = phoneController.text.trim();
+                  String password = passwordController.text.trim();
+                  String repeatPassword = repeatPasswordController.text.trim();
+                  bool isEmailValid =
+                      RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
 
-                bool isEmailValid =
-                    RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
-
-                // Check if either email or phone is provided
-                if (email.isEmpty && phone.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Please provide either email or phone.'),
-                    ),
-                  );
-                  return;
-                }
-
-                /* // Check if both email and phone are provided
-                if (email.isNotEmpty && phone.isNotEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                          'Please provide only one contact method: either email or phone.'),
-                    ),
-                  );
-                  return;
-                } */
-
-                // Check if email is provided and valid
-                if (email.isNotEmpty && !isEmailValid) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Please provide a valid email.'),
-                    ),
-                  );
-                  return;
-                }
-
-                //cek apakah ada password
-                if (password.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Please provide a password.'),
-                    ),
-                  );
-                  return;
-                }
-
-                // Check if password and repeat password match
-                if (password != repeatPassword) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Passwords do not match.'),
-                    ),
-                  );
-                  return;
-                }
-
-                //cek apakah profile tersedia
-                for (var profile in profileData.profiles) {
-                  if ((profile.email == email && email.isNotEmpty) ||
-                      (profile.phone == phone && phone.isNotEmpty) ||
-                      profile.username == username) {
-                    isValid = false;
-                    break;
+                                        // Cek apakah ada username
+                  if (username.isEmpty || displayNameController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please provide an username and a display name.'),
+                      ),
+                    );
+                    return;
                   }
-                }
+        
+                  // Check if either email or phone is provided
+                  if (email.isEmpty && phone.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please provide either email or phone.'),
+                      ),
+                    );
+                    return;
+                  }
 
-                if (isValid) {
-                  /* currUsername = username;
-                  currDisplayname = displayNameController.text.trim(); */
-
-                  profileData.addProfile(Profile(
-                    id: profileData.profiles.length + 1,
-                    username: username,
-                    displayName: displayNameController.text.trim(),
-                    email: email,
-                    phone: phone,
-                    password: password,
-                  ));
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Login(profileData: profileData,),
-                    ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content:
-                          Text('Email, username, or Phone number is taken'),
-                    ),
-                  );
-                }
-                /* setState(() {}); */
-              },
-              child: Text('Sign In'),
-            ),
-          ],
+                  // Check if email is provided and valid
+                  if (email.isNotEmpty && !isEmailValid) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please provide a valid email.'),
+                      ),
+                    );
+                    return;
+                  }
+        
+                  //cek apakah ada password
+                  if (password.isEmpty || repeatPassword.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please provide a password and repeat it.'),
+                      ),
+                    );
+                    return;
+                  }
+        
+                  // Check if password and repeat password match
+                  if (password != repeatPassword) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Passwords do not match.'),
+                      ),
+                    );
+                    return;
+                  }
+        
+                  //cek apakah profile tersedia
+                  for (var profile in profileData.profiles) {
+                    if ((profile.email == email && email.isNotEmpty) ||
+                        (profile.phone == phone && phone.isNotEmpty) ||
+                        profile.username == username) {
+                      isValid = false;
+                      break;
+                    }
+                  }
+        
+                  if (isValid) {
+                    /* currUsername = username;
+                    currDisplayname = displayNameController.text.trim(); */
+        
+                    profileData.addProfile(Profile(
+                      id: profileData.profiles.length + 1,
+                      username: "@$username", //tambahkan @
+                      displayName: displayNameController.text.trim(),
+                      email: email,
+                      phone: phone,
+                      password: password,
+                    ));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Login(profileData: profileData,),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content:
+                            Text('Email, username, or Phone number is taken'),
+                      ),
+                    );
+                  }
+                  /* setState(() {}); */
+                },
+                child: Text('Sign In'),
+                style: ElevatedButton.styleFrom(),
+              ),
+            ],
+          ),
         ),
       ),
     );

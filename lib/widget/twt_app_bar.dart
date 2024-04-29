@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
+import 'package:twitter/twitter/login.dart';
+import 'package:twitter/class/profiles.dart';
 
 class TwitterAppBar extends StatelessWidget {
+    final String currDisplayName;
+      final ProfileData profileData;
+
+  TwitterAppBar({required this.currDisplayName, required this.profileData});
+
   @override
   Widget build(BuildContext context) {
+    
     return SliverAppBar(
-      primary: true, // Set to true to prevent color change
       elevation: 0,
       title: Text(
         'Home',
@@ -13,9 +21,24 @@ class TwitterAppBar extends StatelessWidget {
           fontSize: 20,
         ),
       ),
-      leading: Icon(
-        Icons.menu,
-        color: Colors.blue,
+      leading: GestureDetector(
+        onTap: () {
+          Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Login(profileData: profileData,
+                        ),
+                      ),
+                      (route) => false,
+                    );
+        },
+        child: ProfilePicture(
+                name: currDisplayName,
+                radius: 31,
+                fontsize: 21,
+                random: true,
+                count: 2,
+              ),
       ),
       actions: [
         IconButton(
