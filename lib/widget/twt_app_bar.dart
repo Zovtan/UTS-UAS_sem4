@@ -4,6 +4,7 @@ class TwitterAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
+      primary: true, // Set to true to prevent color change
       elevation: 0,
       title: Text(
         'Home',

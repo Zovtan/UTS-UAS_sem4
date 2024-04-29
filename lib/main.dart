@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:twitter/class/profiles.dart';
 import 'package:twitter/twitter/login.dart';
 
 void main() {
@@ -11,6 +12,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    //panggil diawal supaya login bisa membaca data profil baru
+    final profileData = ProfileData();
     return MaterialApp(
       title: 'Twitter',
       theme: ThemeData(
@@ -29,12 +32,14 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue, brightness: Brightness.dark,),
-        
-        
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+          brightness: Brightness.dark,
+        ),
+
         useMaterial3: true,
       ),
-      home: const Login(),
+      home: Login(profileData: profileData,),
     );
   }
 }

@@ -4,14 +4,16 @@ import 'package:twitter/twitter/main_page.dart';
 import 'package:twitter/twitter/sign_in.dart';
 
 class Login extends StatefulWidget {
-  const Login({super.key});
+  final ProfileData profileData;
+
+  const Login({Key? key, required this.profileData}) : super(key: key);
 
   @override
   State<Login> createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  final ProfileData profileData = ProfileData();
+  late ProfileData profileData; //late di pakai jika ingin mendeklarasi variable yg akan diinisialisasi nanti (value ditambah nanti)
   TextEditingController identifierController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool passwordVisible = false;
@@ -22,6 +24,7 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
+     profileData = widget.profileData;
     identifierController;
     passwordController;
     passwordVisible = false;
@@ -117,7 +120,7 @@ class _LoginState extends State<Login> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SignIn(),
+                    builder: (context) => SignIn(profileData: profileData,),
                   ),
                 );
               },

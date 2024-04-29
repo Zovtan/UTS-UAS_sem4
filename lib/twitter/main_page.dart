@@ -56,6 +56,7 @@ class _MainPageState extends State<MainPage> {
     print(widget.currDisplayName);
 
     return Scaffold(
+       extendBodyBehindAppBar: true, // Set to true to prevent color change in AppBar
     bottomNavigationBar:TwitterBottomBar(),
       body: CustomScrollView(
         slivers: [
