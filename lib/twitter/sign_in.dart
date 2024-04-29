@@ -23,7 +23,7 @@ class _SignInState extends State<SignIn> {
   /* String currUsername = "";
   String currDisplayname = ""; */
 
-    @override
+  @override
   void initState() {
     super.initState();
     profileData = widget.profileData;
@@ -39,7 +39,6 @@ class _SignInState extends State<SignIn> {
           'assets/images/twitterXlogo.avif',
           height: 50,
           width: 50,
-        
         ),
       ),
       body: SingleChildScrollView(
@@ -48,9 +47,17 @@ class _SignInState extends State<SignIn> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-                            Text("Create your account", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35, ), ),
+              Text(
+                "Create your account",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 35,
+                ),
+              ),
               SizedBox(height: 20.0),
               TextField(
+                maxLines: 1,
+                keyboardType: TextInputType.text,
                 controller: usernameController,
                 decoration: InputDecoration(
                   labelText: 'Username',
@@ -59,6 +66,8 @@ class _SignInState extends State<SignIn> {
               ),
               SizedBox(height: 20),
               TextField(
+                maxLines: 1,
+                keyboardType: TextInputType.text,
                 controller: displayNameController,
                 decoration: InputDecoration(
                   labelText: 'Display Name',
@@ -70,6 +79,8 @@ class _SignInState extends State<SignIn> {
                 children: [
                   Expanded(
                     child: TextField(
+                      maxLines: 1,
+                keyboardType: TextInputType.emailAddress,
                       controller: emailController,
                       decoration: InputDecoration(
                         labelText: 'Email',
@@ -80,6 +91,8 @@ class _SignInState extends State<SignIn> {
                   SizedBox(width: 20),
                   Expanded(
                     child: TextField(
+                      maxLines: 1,
+                keyboardType: TextInputType.phone,
                       controller: phoneController,
                       decoration: InputDecoration(
                         labelText: 'Phone',
@@ -112,23 +125,26 @@ class _SignInState extends State<SignIn> {
                 onPressed: () {
                   bool isValid = true;
                   String email = emailController.text.trim().toLowerCase();
-                  String username = usernameController.text.trim().toLowerCase();
+                  String username =
+                      usernameController.text.trim().toLowerCase();
                   String phone = phoneController.text.trim();
                   String password = passwordController.text.trim();
                   String repeatPassword = repeatPasswordController.text.trim();
                   bool isEmailValid =
-                      RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
+                      RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                          .hasMatch(email);
 
-                                        // Cek apakah ada username
+                  // Cek apakah ada username
                   if (username.isEmpty || displayNameController.text.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Please provide an username and a display name.'),
+                        content: Text(
+                            'Please provide an username and a display name.'),
                       ),
                     );
                     return;
                   }
-        
+
                   // Check if either email or phone is provided
                   if (email.isEmpty && phone.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -148,17 +164,18 @@ class _SignInState extends State<SignIn> {
                     );
                     return;
                   }
-        
+
                   //cek apakah ada password
                   if (password.isEmpty || repeatPassword.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Please provide a password and repeat it.'),
+                        content:
+                            Text('Please provide a password and repeat it.'),
                       ),
                     );
                     return;
                   }
-        
+
                   // Check if password and repeat password match
                   if (password != repeatPassword) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -168,7 +185,7 @@ class _SignInState extends State<SignIn> {
                     );
                     return;
                   }
-        
+
                   //cek apakah profile tersedia
                   for (var profile in profileData.profiles) {
                     if ((profile.email == email && email.isNotEmpty) ||
@@ -178,11 +195,11 @@ class _SignInState extends State<SignIn> {
                       break;
                     }
                   }
-        
+
                   if (isValid) {
                     /* currUsername = username;
                     currDisplayname = displayNameController.text.trim(); */
-        
+
                     profileData.addProfile(Profile(
                       id: profileData.profiles.length + 1,
                       username: "@$username", //tambahkan @
@@ -194,7 +211,9 @@ class _SignInState extends State<SignIn> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Login(profileData: profileData,),
+                        builder: (context) => Login(
+                          profileData: profileData,
+                        ),
                       ),
                     );
                   } else {
