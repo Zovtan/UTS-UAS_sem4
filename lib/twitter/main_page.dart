@@ -73,7 +73,7 @@ class _MainPageState extends State<MainPage> {
                 //ganti tweet ganti jadi divider
                 if (index.isOdd) {
                   return Divider(
-                    color: Colors.red,
+                    color: Color.fromARGB(120, 101, 119, 134),
                   );
                 } else {
                   // menggandakan tweet supaya untuk memadai penghapusan ganjil (setaip tweet jadi ada 2)
@@ -104,6 +104,7 @@ class _MainPageState extends State<MainPage> {
 
       //FAB
       floatingActionButton: FloatingActionButton(
+        shape: const CircleBorder(),
         onPressed: () {
           showDialog(
             context: context,

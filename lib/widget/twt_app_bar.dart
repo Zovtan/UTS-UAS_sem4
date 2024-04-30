@@ -14,12 +14,12 @@ class TwitterAppBar extends StatelessWidget {
     return SliverAppBar(
       backgroundColor: Colors.black,
       elevation: 0,
-              centerTitle: true,
-        title: Image.asset(
-          'assets/images/twitterXlogo.avif',
-          height: 30,
-          width: 30,
-        ),
+      centerTitle: true,
+      title: Image.asset(
+        'assets/images/twitterXlogo.avif',
+        height: 30,
+        width: 30,
+      ),
       leading: GestureDetector(
         onTap: () {
           showDialog(
@@ -81,20 +81,32 @@ class TwitterAppBar extends StatelessWidget {
         preferredSize: Size.fromHeight(10.0),
         child: Container(
           alignment: Alignment.centerLeft,
-          margin: EdgeInsets.only(left: 16.0),
+          margin: EdgeInsets.zero, // Remove any extra space
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Color.fromARGB(120, 101, 119, 134), // Border color
+                width: 1.0, // Border width
+              ),
+            ),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(
-                'for you ',
-                style: TextStyle(
-                  decoration: TextDecoration.underline,
-                  decorationColor: Colors.blue,
-                  decorationThickness: 2.0,
+              Container(decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.blue, // Border color
+                width: 5
+              ),
+            ),
+          ),
+                child: Text(
+                  'For you',
                 ),
               ),
               Text(
-                'following',
+                'Following',
               ),
             ],
           ),
