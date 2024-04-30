@@ -12,14 +12,14 @@ class TwitterAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
+      backgroundColor: Colors.black,
       elevation: 0,
-      title: Text(
-        'Home',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
+              centerTitle: true,
+        title: Image.asset(
+          'assets/images/twitterXlogo.avif',
+          height: 30,
+          width: 30,
         ),
-      ),
       leading: GestureDetector(
         onTap: () {
           showDialog(
@@ -60,8 +60,8 @@ class TwitterAppBar extends StatelessWidget {
         },
         child: ProfilePicture(
           name: currDisplayName,
-          radius: 31,
-          fontsize: 21,
+          radius: 12,
+          fontsize: 10,
           random: true,
           count: 2,
         ),
@@ -70,15 +70,8 @@ class TwitterAppBar extends StatelessWidget {
         IconButton(
           onPressed: () {},
           icon: Icon(
-            Icons.search,
-            color: Colors.blue,
-          ),
-        ),
-        IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.notifications_none,
-            color: Colors.blue,
+            Icons.settings_outlined,
+            color: Colors.white,
           ),
         ),
       ],

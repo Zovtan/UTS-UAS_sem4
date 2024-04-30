@@ -38,8 +38,8 @@ class _SignInState extends State<SignIn> {
         centerTitle: true,
         title: Image.asset(
           'assets/images/twitterXlogo.avif',
-          height: 50,
-          width: 50,
+          height: 30,
+          width: 30,
         ),
       ),
       body: SingleChildScrollView(

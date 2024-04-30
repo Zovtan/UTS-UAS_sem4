@@ -74,51 +74,45 @@ class TweetData {
       likes: 250,
       retweets: 80,
     ),
-        Tweet(
+    Tweet(
       id: 6,
       username: "@test",
       displayName: "sbambino",
-      tweet: "#sly #weiner shit my self your not harder point i say or i say whats hard as swing controll",
+      tweet:
+          "#sly #weiner shit my self your not harder point i say or i say whats hard as swing controll",
       image: "none",
       timestamp: "2024-04-21T20:00:00Z",
       likes: 250,
       retweets: 80,
     ),
-            Tweet(
-      id: 6,
+    Tweet(
+      id: 7,
       username: "@test",
       displayName: "sbambino",
-      tweet: "#sly #weiner shit my self your not harder point i say or i say whats hard as swing controll",
+      tweet:
+          "#sly #weiner shit my self your not harder point i say or i say whats hard as swing controll",
       image: "none",
       timestamp: "2024-04-21T20:00:00Z",
       likes: 250,
       retweets: 80,
     ),
-            Tweet(
-      id: 6,
+    Tweet(
+      id: 8,
       username: "@test",
       displayName: "sbambino",
-      tweet: "#sly #weiner shit my self your not harder point i say or i say whats hard as swing controll",
+      tweet:
+          "#sly #weiner shit my self your not harder point i say or i say whats hard as swing controll",
       image: "none",
       timestamp: "2024-04-21T20:00:00Z",
       likes: 250,
       retweets: 80,
     ),
-            Tweet(
-      id: 6,
+    Tweet(
+      id: 9,
       username: "@test",
       displayName: "sbambino",
-      tweet: "#sly #weiner shit my self your not harder point i say or i say whats hard as swing controll",
-      image: "none",
-      timestamp: "2024-04-21T20:00:00Z",
-      likes: 250,
-      retweets: 80,
-    ),
-            Tweet(
-      id: 6,
-      username: "@test",
-      displayName: "sbambino",
-      tweet: "#sly #weiner shit my self your not harder point i say or i say whats hard as swing controll",
+      tweet:
+          "#sly #weiner shit my self your not harder point i say or i say whats hard as swing controll",
       image: "none",
       timestamp: "2024-04-21T20:00:00Z",
       likes: 250,
@@ -127,7 +121,8 @@ class TweetData {
   ];
 
   void addTweet(Tweet tweet) {
-    tweets.insert(0, tweet); // supaya saat tweet baru ditambah, akan diletakkan di paling atas
+    tweets.insert(0,
+        tweet); // supaya saat tweet baru ditambah, akan diletakkan di paling atas
   }
 
   void deleteTweet(int index) {
