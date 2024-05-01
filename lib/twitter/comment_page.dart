@@ -1,31 +1,21 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:twitter/class/tweets.dart';
 
 class CommentPage extends StatefulWidget {
-  final int tweetId;
-  final String username;
-  final String displayName;
-  final String tweet;
-  final String image;
-  final String timestamp;
-  final int likes;
-  final int retweets;
-  final int views;
+  final Tweet tweet;
   final int commentCount;
+  final String formattedDur;
+  final int currId;
 
-  const CommentPage({
-    Key? key,
-    required this.tweetId,
-    required this.username,
-    required this.displayName,
-    required this.tweet,
-    required this.image,
-    required this.timestamp,
-    required this.likes,
-    required this.retweets,
-    required this.views,
-    required this.commentCount,
-  }) : super(key: key);
+  const CommentPage(
+      {Key? key,
+      required this.tweet,
+      required this.commentCount,
+      required this.formattedDur,
+      required this.currId,
+})
+      : super(key: key);
 
   @override
   State<CommentPage> createState() => _CommentPageState();
@@ -71,7 +61,7 @@ class _CommentPageState extends State<CommentPage> {
     List<dynamic> jsonList = jsonDecode(jsonString);
     // Find comments for the selected CommentPage ID
     Map<String, dynamic>? tweetComments = jsonList.firstWhere(
-      (element) => element['tweet_id'] == widget.tweetId,
+      (element) => element['twtId'] == widget.tweet.twtId,
       orElse: () => null,
     );
     // Populate the list of comments
@@ -98,8 +88,9 @@ class _CommentPageState extends State<CommentPage> {
       ),
       body: Column(
         children: [
-          Text(widget.username),
-          Text(widget.displayName),
+          Text(widget.tweet.username),
+          Text(widget.tweet.displayName),
+          Text(widget.tweet.tweet),
           Expanded(
             child: ListView.builder(
               itemCount: comments.length,

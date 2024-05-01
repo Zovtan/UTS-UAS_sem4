@@ -139,7 +139,7 @@ class _MainPageState extends State<MainPage> {
       for (var tweet in tweetData.tweets) {
         // Find the comments for the tweet
         var commentsInTweet = jsonList.firstWhere(
-          (comment) => comment['tweet_id'] == tweet.twtId,
+          (comment) => comment['twtId'] == tweet.twtId,
           orElse: () =>
               {'comments': []}, // If no comments found, use an empty list
         )['comments'];

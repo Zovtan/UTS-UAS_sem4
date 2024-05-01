@@ -12,7 +12,7 @@ class TweetCell extends StatefulWidget {
   final String formattedDur;
   final Function(Tweet) onTweetEdited;
   final int currId;
-    final Function(int) onDeleteTweet;
+  final Function(int) onDeleteTweet;
 
   const TweetCell(
       {Key? key,
@@ -194,16 +194,10 @@ class _TweetCellState extends State<TweetCell> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => CommentPage(
-                              tweetId: widget.tweet.twtId,
-                              username: widget.tweet.username,
-                              displayName: widget.tweet.displayName,
-                              tweet: widget.tweet.tweet,
-                              image: widget.tweet.image,
-                              timestamp: formattedTimestamp,
-                              likes: widget.tweet.likes,
-                              retweets: widget.tweet.retweets,
-                              views: widget.tweet.views,
+                              tweet: widget.tweet,
                               commentCount: widget.commentCount,
+                              formattedDur: widget.formattedDur,
+                              currId: widget.currId,
                             ),
                           ),
                         );
