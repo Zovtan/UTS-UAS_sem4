@@ -10,14 +10,16 @@ class TweetCell extends StatefulWidget {
   final Tweet tweet;
   final int commentCount;
   final String formattedDur;
-  final Function(Tweet) onTweetEdited; // Modify the callback parameter type
+  final Function(Tweet) onTweetEdited;
+  final int currId;
 
   const TweetCell(
       {Key? key,
       required this.tweet,
       required this.commentCount,
       required this.formattedDur,
-      required this.onTweetEdited})
+      required this.onTweetEdited,
+      required this.currId})
       : super(key: key);
 
   @override
@@ -91,30 +93,33 @@ class _TweetCellState extends State<TweetCell> {
                         ],
                       ),
                     ),
-                    PopupMenuButton<String>(
-                      itemBuilder: (BuildContext context) => [
-                        PopupMenuItem<String>(
-                          value: 'Edit',
-                          child: Text('Edit tweet'),
+                    //hanya muncul jika ada tweet sendiri
+                    if (widget.tweet.userId ==
+                        widget.currId) // Conditionally render PopupMenuButton
+                      PopupMenuButton<String>(
+                        itemBuilder: (BuildContext context) => [
+                          PopupMenuItem<String>(
+                            value: 'Edit',
+                            child: Text('Edit tweet'),
+                          ),
+                          PopupMenuItem<String>(
+                            value: 'Delete',
+                            child: Text('Delete tweet'),
+                          ),
+                        ],
+                        onSelected: (value) {
+                          if (value == 'Edit') {
+                            _editTweet(); // Call the function to handle tweet editing
+                          } else if (value == 'Delete') {
+                            // Handle delete tweet action
+                          }
+                        },
+                        child: Icon(
+                          Icons.more_vert_rounded,
+                          color: Color.fromARGB(255, 101, 119, 134),
+                          size: 15,
                         ),
-                        PopupMenuItem<String>(
-                          value: 'Delete',
-                          child: Text('Delete tweet'),
-                        ),
-                      ],
-                      onSelected: (value) {
-                        if (value == 'Edit') {
-                          _editTweet(); // Call the function to handle tweet editing
-                        } else if (value == 'Delete') {
-                          // Handle delete tweet action
-                        }
-                      },
-                      child: Icon(
-                        Icons.more_vert_rounded,
-                        color: Color.fromARGB(255, 101, 119, 134),
-                        size: 15,
                       ),
-                    ),
                   ],
                 ),
                 SizedBox(height: 5),

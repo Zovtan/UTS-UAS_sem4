@@ -84,6 +84,7 @@ class _MainPageState extends State<MainPage> {
                       commentCount: tweet.commentCount, // Pass the actual comment count
                       formattedDur: formattedDur,
                       onTweetEdited: _editTweet,
+                      currId: widget.currId,
                     );
                   } else {
                     return SizedBox();
