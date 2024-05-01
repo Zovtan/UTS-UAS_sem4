@@ -9,11 +9,15 @@ import 'package:twitter/widget/post_tweet.dart';
 import 'package:twitter/class/profiles.dart';
 
 class MainPage extends StatefulWidget {
+    final int currId;
   final String currUsername;
   final String currDisplayName;
   final ProfileData profileData;
+
+
   const MainPage(
       {Key? key,
+      required this.currId,
       required this.currUsername,
       required this.currDisplayName,
       required this.profileData})
@@ -81,13 +85,30 @@ class _MainPageState extends State<MainPage> {
                   // cek apakah index lbh kecil daripada length, ini supaya tdk ada tweet ganda di akhir
                   if (tweetIndex < tweetData.tweets.length) {
                     Tweet tweet = tweetData.tweets[tweetIndex];
+                    //format waktu
                     DateTime parsedTimestamp = DateTime.parse(tweet.timestamp);
                     String formattedTimestamp =
                         DateFormat('yyyy-MM-dd HH:mm:ss')
                             .format(parsedTimestamp);
+                    //hitung selisih waktu
+                    var durTime = DateTime.now().difference(parsedTimestamp);
+                    String formattedDur;
+                    if (durTime.inDays > 0) {
+                      formattedDur = "${durTime.inDays}d";
+                    } else if (durTime.inHours > 0) {
+                      formattedDur = "${durTime.inHours}h";
+                    } else if (durTime.inMinutes > 0) {
+                      formattedDur = "${durTime.inMinutes}m";
+                    } else {
+                      formattedDur = "Less than a minute";
+                    }
+
+                    print(formattedDur);
+
                     return TweetCell(
                       tweet: tweet,
                       commentCount: commentCount,
+                      formattedDur: formattedDur,
                     );
                   } else {
                     // kalo index lbh besar dari lenght
@@ -115,6 +136,7 @@ class _MainPageState extends State<MainPage> {
                   setState(() {
                     tweetData.addTweet(Tweet(
                       id: tweetData.tweets.length + 1,
+                      userId: widget.currId,
                       username: widget.currUsername,
                       displayName: widget.currDisplayName,
                       tweet: newTweet,
@@ -122,6 +144,8 @@ class _MainPageState extends State<MainPage> {
                       timestamp: DateTime.now().toIso8601String(),
                       likes: 0,
                       retweets: 0,
+                      views: 0,
+                      bookmarks: 0,
                       commentCount: 0,
                     ));
                   });

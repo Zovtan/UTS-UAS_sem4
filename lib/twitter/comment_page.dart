@@ -10,6 +10,7 @@ class CommentPage extends StatefulWidget {
   final String timestamp;
   final int likes;
   final int retweets;
+  final int views;
   final int commentCount;
 
   const CommentPage({
@@ -22,6 +23,7 @@ class CommentPage extends StatefulWidget {
     required this.timestamp,
     required this.likes,
     required this.retweets,
+    required this.views,
     required this.commentCount,
   }) : super(key: key);
 

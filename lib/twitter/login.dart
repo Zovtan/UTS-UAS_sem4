@@ -19,6 +19,7 @@ class _LoginState extends State<Login> {
   bool passwordVisible = false;
   String currUsername = "";
   String currDisplayname = "";
+  int currId = 0;
 
   @override
   void initState() {
@@ -45,7 +46,10 @@ class _LoginState extends State<Login> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               SizedBox(height: 100.0),
-              Text("What's happening?", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),),
+              Text(
+                "What's happening?",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+              ),
               SizedBox(height: 20.0),
               TextField(
                 maxLines: 1,
@@ -94,6 +98,7 @@ class _LoginState extends State<Login> {
                       isValid = true;
                       currUsername = profile.username;
                       currDisplayname = profile.displayName;
+                      currId = profile.id;
                       break;
                     }
                   }
@@ -103,6 +108,7 @@ class _LoginState extends State<Login> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => MainPage(
+                          currId: currId,
                           currUsername: currUsername,
                           currDisplayName: currDisplayname,
                           profileData: profileData,

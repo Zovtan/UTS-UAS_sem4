@@ -12,6 +12,7 @@ class TwitterAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
+      scrolledUnderElevation: 0, //menghilangkan efek ganti warna saat ada item dibawah appbar
       backgroundColor: Colors.black,
       elevation: 0,
       centerTitle: true,
@@ -62,7 +63,6 @@ class TwitterAppBar extends StatelessWidget {
           name: currDisplayName,
           radius: 12,
           fontsize: 10,
-          random: true,
           count: 2,
         ),
       ),

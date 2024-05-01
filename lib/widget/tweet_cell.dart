@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:intl/intl.dart';
 import 'package:twitter/class/tweets.dart';
@@ -7,12 +9,14 @@ import 'package:twitter/twitter/comment_page.dart';
 class TweetCell extends StatefulWidget {
   final Tweet tweet;
   final int commentCount;
+  final String formattedDur;
 
-  const TweetCell({
-    Key? key,
-    required this.tweet,
-    required this.commentCount,
-  }) : super(key: key);
+  const TweetCell(
+      {Key? key,
+      required this.tweet,
+      required this.commentCount,
+      required this.formattedDur})
+      : super(key: key);
 
   @override
   _TweetCellState createState() => _TweetCellState();
@@ -21,6 +25,16 @@ class TweetCell extends StatefulWidget {
 class _TweetCellState extends State<TweetCell> {
   bool isLiked = false;
   bool isRetweeted = false;
+  bool isBookmarked = false;
+  //format angka yg lbh dari 999 jadi 1.0k
+  String formatNumber(int number) {
+    if (number >= 1000) {
+      double numberInK = number / 1000;
+      return numberInK.toStringAsFixed(1) + 'k';
+    } else {
+      return number.toString();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +55,7 @@ class _TweetCellState extends State<TweetCell> {
               timestamp: formattedTimestamp,
               likes: widget.tweet.likes,
               retweets: widget.tweet.retweets,
+              views: widget.tweet.views,
               commentCount: widget.commentCount,
             ),
           ),
@@ -60,7 +75,6 @@ class _TweetCellState extends State<TweetCell> {
                   name: widget.tweet.displayName,
                   radius: 18,
                   fontsize: 10,
-                  random: true,
                   count: 2,
                 ),
               ],
@@ -76,7 +90,6 @@ class _TweetCellState extends State<TweetCell> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    
                     children: [
                       RichText(
                         text: TextSpan(
@@ -87,13 +100,43 @@ class _TweetCellState extends State<TweetCell> {
                             ),
                             TextSpan(
                               text: " " + widget.tweet.username,
-                              style: TextStyle(fontWeight: FontWeight.normal, color: Color.fromARGB(255, 101, 119, 134)),
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 101, 119, 134)),
                             ),
+                            TextSpan(
+                              text: " • " + widget.formattedDur,
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 101, 119, 134)),
+                            )
                           ],
                         ),
                       ),
-                      Icon(Icons.more_vert_rounded),
-                      /* IconButton(onPressed: () {}, icon: Icon(Icons.more_vert_rounded), color: Color.fromARGB(255, 101, 119, 134), iconSize: 15,) */
+
+                      //kalo pake icon button ada margin tersembunyi
+                      PopupMenuButton<String>(
+                        itemBuilder: (BuildContext context) => [
+                          PopupMenuItem<String>(
+                            value: 'Edit',
+                            child: Text('Edit tweet'),
+                          ),
+                          PopupMenuItem<String>(
+                            value: 'Delete',
+                            child: Text('Delete tweet'),
+                          ),
+                        ],
+                        onSelected: (value) {
+                          if (value == 'Edit') {
+                            // Handle edit tweet action
+                          } else if (value == 'Delete') {
+                            // Handle delete tweet action
+                          }
+                        },
+                        child: Icon(
+                          Icons.more_vert_rounded,
+                          color: Color.fromARGB(255, 101, 119, 134),
+                          size: 15,
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(height: 5),
@@ -125,12 +168,16 @@ class _TweetCellState extends State<TweetCell> {
                             Icon(
                               isLiked ? Icons.favorite : Icons.favorite_border,
                               size: 16,
-                              color: isLiked ? Colors.red : Color.fromARGB(255, 101, 119, 134),
+                              color: isLiked
+                                  ? Colors.red
+                                  : Color.fromARGB(255, 101, 119, 134),
                             ),
                             SizedBox(width: 5),
                             Text(
-                              '${widget.tweet.likes}',
-                              style: TextStyle(color: Color.fromARGB(255, 101, 119, 134), fontSize: 12),
+                              '${formatNumber(widget.tweet.likes)}',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 101, 119, 134),
+                                  fontSize: 12),
                             ),
                           ],
                         ),
@@ -151,12 +198,16 @@ class _TweetCellState extends State<TweetCell> {
                             Icon(
                               isRetweeted ? Icons.repeat : Icons.repeat_rounded,
                               size: 16,
-                              color: isRetweeted ? Colors.green : Color.fromARGB(255, 101, 119, 134),
+                              color: isRetweeted
+                                  ? Colors.green
+                                  : Color.fromARGB(255, 101, 119, 134),
                             ),
                             SizedBox(width: 5),
                             Text(
-                              '${widget.tweet.retweets}',
-                              style: TextStyle(color: Color.fromARGB(255, 101, 119, 134), fontSize: 12),
+                              '${formatNumber(widget.tweet.retweets)}',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 101, 119, 134),
+                                  fontSize: 12),
                             ),
                           ],
                         ),
@@ -164,31 +215,60 @@ class _TweetCellState extends State<TweetCell> {
                       Row(
                         children: [
                           Icon(Icons.mode_comment_outlined,
-                              size: 16, color: Color.fromARGB(255, 101, 119, 134)),
+                              size: 16,
+                              color: Color.fromARGB(255, 101, 119, 134)),
                           SizedBox(width: 5),
                           Text(
-                            '${widget.tweet.commentCount}',
-                            style: TextStyle(color: Color.fromARGB(255, 101, 119, 134), fontSize: 12),
+                            '${formatNumber(widget.tweet.commentCount)}',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 101, 119, 134),
+                                fontSize: 12),
                           ),
                         ],
                       ),
                       Row(
                         children: [
                           Icon(Icons.insert_chart_outlined_rounded,
-                              size: 16, color: Color.fromARGB(255, 101, 119, 134)),
+                              size: 16,
+                              color: Color.fromARGB(255, 101, 119, 134)),
                           SizedBox(width: 5),
                           Text(
-                            '${widget.tweet.likes + 230}',
-                            style: TextStyle(color: Color.fromARGB(255, 101, 119, 134), fontSize: 12),
+                            '${formatNumber(widget.tweet.views)}',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 101, 119, 134),
+                                fontSize: 12),
                           ),
                         ],
                       ),
                       Row(
                         children: [
-                          Icon(Icons.bookmark_outline,
-                              size: 16, color: Color.fromARGB(255, 101, 119, 134)),
-                              SizedBox(width: 5,),
-                          Icon(Icons.share_outlined, size: 16, color: Color.fromARGB(255, 101, 119, 134)),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isBookmarked = !isBookmarked;
+                                if (isBookmarked) {
+                                  widget.tweet.bookmarks++;
+                                } else {
+                                  widget.tweet.bookmarks--;
+                                }
+                              });
+                            },
+                            child: Icon(
+                              isBookmarked
+                                  ? Icons.bookmark
+                                  : Icons.bookmark_border,
+                              size: 16,
+                              color: isBookmarked
+                                  ? Colors.blue
+                                  : Color.fromARGB(255, 101, 119, 134),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Icon(Icons.share_outlined,
+                              size: 16,
+                              color: Color.fromARGB(255, 101, 119, 134)),
                         ],
                       ),
                     ],
