@@ -12,6 +12,7 @@ class TweetCell extends StatefulWidget {
   final String formattedDur;
   final Function(Tweet) onTweetEdited;
   final int currId;
+    final Function(int) onDeleteTweet;
 
   const TweetCell(
       {Key? key,
@@ -19,7 +20,8 @@ class TweetCell extends StatefulWidget {
       required this.commentCount,
       required this.formattedDur,
       required this.onTweetEdited,
-      required this.currId})
+      required this.currId,
+      required this.onDeleteTweet})
       : super(key: key);
 
   @override
@@ -30,15 +32,6 @@ class _TweetCellState extends State<TweetCell> {
   bool isLiked = false;
   bool isRetweeted = false;
   bool isBookmarked = false;
-
-  String formatNumber(int number) {
-    if (number >= 1000) {
-      double numberInK = number / 1000;
-      return numberInK.toStringAsFixed(1) + 'k';
-    } else {
-      return number.toString();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +104,7 @@ class _TweetCellState extends State<TweetCell> {
                           if (value == 'Edit') {
                             _editTweet(); // Call the function to handle tweet editing
                           } else if (value == 'Delete') {
-                            // Handle delete tweet action
+                            widget.onDeleteTweet(widget.tweet.id);// Handle delete tweet action
                           }
                         },
                         child: Icon(
@@ -158,7 +151,7 @@ class _TweetCellState extends State<TweetCell> {
                           ),
                           SizedBox(width: 5),
                           Text(
-                            '${formatNumber(widget.tweet.likes)}',
+                            '${_formatNumber(widget.tweet.likes)}',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 101, 119, 134),
                                 fontSize: 12),
@@ -188,7 +181,7 @@ class _TweetCellState extends State<TweetCell> {
                           ),
                           SizedBox(width: 5),
                           Text(
-                            '${formatNumber(widget.tweet.retweets)}',
+                            '${_formatNumber(widget.tweet.retweets)}',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 101, 119, 134),
                                 fontSize: 12),
@@ -222,7 +215,7 @@ class _TweetCellState extends State<TweetCell> {
                               color: Color.fromARGB(255, 101, 119, 134)),
                           SizedBox(width: 5),
                           Text(
-                            '${formatNumber(widget.tweet.commentCount)}',
+                            '${_formatNumber(widget.tweet.commentCount)}',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 101, 119, 134),
                                 fontSize: 12),
@@ -237,7 +230,7 @@ class _TweetCellState extends State<TweetCell> {
                             color: Color.fromARGB(255, 101, 119, 134)),
                         SizedBox(width: 5),
                         Text(
-                          '${formatNumber(widget.tweet.views)}',
+                          '${_formatNumber(widget.tweet.views)}',
                           style: TextStyle(
                               color: Color.fromARGB(255, 101, 119, 134),
                               fontSize: 12),
@@ -283,6 +276,14 @@ class _TweetCellState extends State<TweetCell> {
         )
       ],
     );
+  }
+    String _formatNumber(int number) {
+    if (number >= 1000) {
+      double numberInK = number / 1000;
+      return numberInK.toStringAsFixed(1) + 'k';
+    } else {
+      return number.toString();
+    }
   }
 
   void _editTweet() {

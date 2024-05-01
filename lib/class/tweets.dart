@@ -26,36 +26,6 @@ class Tweet {
     required this.bookmarks,
     this.commentCount = 0,
   });
-
-    Tweet copyWith({
-    int? id,
-    int? userId,
-    String? username,
-    String? displayName,
-    String? tweet,
-    String? image,
-    String? timestamp,
-    int? likes,
-    int? retweets,
-    int? views,
-    int? bookmarks,
-    int? commentCount,
-  }) {
-    return Tweet(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      username: username ?? this.username,
-      displayName: displayName ?? this.displayName,
-      tweet: tweet ?? this.tweet,
-      image: image ?? this.image,
-      timestamp: timestamp ?? this.timestamp,
-      likes: likes ?? this.likes,
-      retweets: retweets ?? this.retweets,
-      views: views ?? this.views,
-      bookmarks: bookmarks ?? this.bookmarks,
-      commentCount: commentCount ?? this.commentCount,
-    );
-  }
 }
 
 class TweetData {
@@ -174,13 +144,12 @@ class TweetData {
         retweets: 80,
         views: 7000,
         bookmarks: 5),
-            Tweet(
+    Tweet(
         id: 10,
         userId: 70,
         username: "@test",
         displayName: "sbambino",
-        tweet:
-            "#",
+        tweet: "#",
         image: "none",
         timestamp: "2024-04-21T20:00:00Z",
         likes: 250,
@@ -194,16 +163,21 @@ class TweetData {
         tweet); // supaya saat tweet baru ditambah, akan diletakkan di paling atas
   }
 
-  void deleteTweet(int index) {
-    if (index >= 0 && index < tweets.length) {
-      tweets.removeAt(index);
-    }
-  }
-
-  void updateTweet(int index, Tweet tweet) {
+/*   void updateTweet(int index, Tweet tweet) {
     if (index >= 0 && index < tweets.length) {
       tweets[index] = tweet;
     }
+  } */
+
+  void updateTweet(Tweet editedTweet) {
+    int index = tweets.indexWhere((tweet) => tweet.id == editedTweet.id);
+    if (index != -1) {
+      tweets[index] = editedTweet;
+    }
+  }
+
+  void deleteTweet(int targetTweetId) {
+    tweets.removeWhere((tweet) => tweet.id == targetTweetId);
   }
 }
 

@@ -5,7 +5,7 @@ import 'package:twitter/class/tweets.dart';
 import 'package:twitter/widget/tweet_cell.dart';
 import 'package:twitter/widget/twt_app_bar.dart';
 import 'package:twitter/widget/twt_bottom_bar.dart';
-import 'package:twitter/widget/post_tweet.dart';
+import 'package:twitter/widget/add_tweet.dart';
 import 'package:twitter/class/profiles.dart';
 
 class MainPage extends StatefulWidget {
@@ -34,15 +34,6 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     profileData = widget.profileData;
-  }
-
-  void _editTweet(Tweet editedTweet) {
-    setState(() {
-      int index = tweetData.tweets.indexWhere((tweet) => tweet.id == editedTweet.id);
-      if (index != -1) {
-        tweetData.tweets[index] = editedTweet;
-      }
-    });
   }
 
   @override
@@ -83,7 +74,9 @@ class _MainPageState extends State<MainPage> {
                       tweet: tweet,
                       commentCount: tweet.commentCount, // Pass the actual comment count
                       formattedDur: formattedDur,
+                      //kirim fungsi
                       onTweetEdited: _editTweet,
+                      onDeleteTweet: _deleteTweet,
                       currId: widget.currId,
                     );
                   } else {
@@ -130,5 +123,29 @@ class _MainPageState extends State<MainPage> {
         child: Icon(Icons.add),
       ),
     );
+  }
+
+  //panggil fungsi update dan delete
+  //cara modular
+    void _editTweet(Tweet editedTweet) {
+    setState(() {
+      tweetData.updateTweet(editedTweet);
+    });
+  }
+
+    //cara langsung
+    /* void _editTweet(Tweet editedTweet) {
+    setState(() {
+      int index = tweetData.tweets.indexWhere((tweet) => tweet.id == editedTweet.id);
+      if (index != -1) {
+        tweetData.tweets[index] = editedTweet;
+      }
+    });
+  } */
+
+    void _deleteTweet(int tweetId) {
+    setState(() {
+      tweetData.deleteTweet(tweetId);
+    });
   }
 }

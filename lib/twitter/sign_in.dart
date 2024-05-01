@@ -19,9 +19,7 @@ class _SignInState extends State<SignIn> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController repeatPasswordController =
-      TextEditingController();
-  /* String currUsername = "";
-  String currDisplayname = ""; */
+  TextEditingController();
 
   @override
   void initState() {
@@ -81,7 +79,7 @@ class _SignInState extends State<SignIn> {
                   Expanded(
                     child: TextField(
                       maxLines: 1,
-                keyboardType: TextInputType.emailAddress,
+                      keyboardType: TextInputType.emailAddress,
                       controller: emailController,
                       decoration: InputDecoration(
                         labelText: 'Email',
@@ -93,7 +91,7 @@ class _SignInState extends State<SignIn> {
                   Expanded(
                     child: TextField(
                       maxLines: 1,
-                keyboardType: TextInputType.phone,
+                      keyboardType: TextInputType.phone,
                       controller: phoneController,
                       decoration: InputDecoration(
                         labelText: 'Phone',

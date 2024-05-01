@@ -6,16 +6,26 @@ class AddTweetPage extends StatefulWidget {
   final Function(String) onTweetAdded;
   final String currDisplayName;
 
-  const AddTweetPage(
-      {Key? key, required this.onTweetAdded, required this.currDisplayName})
-      : super(key: key);
+  const AddTweetPage({
+    Key? key,
+    required this.onTweetAdded,
+    required this.currDisplayName,
+  }) : super(key: key);
 
   @override
   State<AddTweetPage> createState() => _AddTweetPageState();
 }
 
 class _AddTweetPageState extends State<AddTweetPage> {
+  late TextEditingController _tweetController;
   String newTweet = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _tweetController = TextEditingController();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,24 +37,23 @@ class _AddTweetPageState extends State<AddTweetPage> {
             onPressed: () {
               // Add the new tweet and close the page
               if (newTweet.isNotEmpty) {
-                widget.onTweetAdded(
-                    newTweet); // panggil fungsi onTweetAdded dari mainpage lalu kirim balik newTweet
+                widget.onTweetAdded(newTweet);
                 Navigator.of(context).pop(); // Close the page
               }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
               shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(20), // Set rounded corners here
+                borderRadius: BorderRadius.circular(20),
               ),
             ),
             child: Text(
               "Post",
               style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16),
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
             ),
           ),
         ],
@@ -72,14 +81,17 @@ class _AddTweetPageState extends State<AddTweetPage> {
               child: Column(
                 children: [
                   TextField(
-                    autofocus: true, //otomatis menunjukkan keyboard
+                    controller: _tweetController,
+                    autofocus: true,
                     keyboardType: TextInputType.text,
-                    maxLines: null, // supaya bisa auto enter saat text overflow
+                    maxLines: null,
                     decoration: InputDecoration(
-                        hintText: "What's happening?",
-                        border: InputBorder.none,
-                        hintStyle: TextStyle(
-                            color: Color.fromARGB(255, 101, 119, 134))),
+                      hintText: "What's happening?",
+                      border: InputBorder.none,
+                      hintStyle: TextStyle(
+                        color: Color.fromARGB(255, 101, 119, 134),
+                      ),
+                    ),
                     onChanged: (value) {
                       setState(() {
                         newTweet = value;
@@ -94,4 +106,11 @@ class _AddTweetPageState extends State<AddTweetPage> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _tweetController.dispose();
+    super.dispose();
+  }
 }
+
