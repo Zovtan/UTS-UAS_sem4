@@ -97,7 +97,7 @@ class _EditTweetPageState extends State<EditTweetPage> {
   void _editTweet() {
     // Create the edited tweet based on the text in the TextField
     Tweet editedTweet = Tweet(
-      id: widget.tweet.id,
+      twtId: widget.tweet.twtId,
       userId: widget.tweet.userId,
       username: widget.tweet.username,
       displayName: widget.tweet.displayName,

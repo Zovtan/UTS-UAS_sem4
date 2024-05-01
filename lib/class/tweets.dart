@@ -1,5 +1,5 @@
 class Tweet {
-  int id;
+  int twtId;
   int userId;
   String username;
   String displayName;
@@ -13,7 +13,7 @@ class Tweet {
   int commentCount;
 
   Tweet({
-    required this.id,
+    required this.twtId,
     required this.userId,
     required this.username,
     required this.displayName,
@@ -31,7 +31,7 @@ class Tweet {
 class TweetData {
   List<Tweet> tweets = [
     Tweet(
-        id: 1,
+        twtId: 1,
         userId: 65,
         username: "@JohnDoe",
         displayName: "johndoe",
@@ -43,7 +43,7 @@ class TweetData {
         views: 230,
         bookmarks: 5),
     Tweet(
-        id: 2,
+        twtId: 2,
         userId: 66,
         username: "@JaneSmith",
         displayName: "janesmith",
@@ -55,7 +55,7 @@ class TweetData {
         views: 579,
         bookmarks: 7),
     Tweet(
-        id: 3,
+        twtId: 3,
         userId: 67,
         username: "@TechGeek",
         displayName: "techgeek",
@@ -68,7 +68,7 @@ class TweetData {
         views: 611,
         bookmarks: 10),
     Tweet(
-        id: 4,
+        twtId: 4,
         userId: 68,
         username: "@Foodie",
         displayName: "@foodie",
@@ -81,7 +81,7 @@ class TweetData {
         views: 1002,
         bookmarks: 7),
     Tweet(
-        id: 5,
+        twtId: 5,
         userId: 69,
         username: "@SportsFan",
         displayName: "sportsfan",
@@ -93,7 +93,7 @@ class TweetData {
         views: 444,
         bookmarks: 1),
     Tweet(
-        id: 6,
+        twtId: 6,
         userId: 70,
         username: "@test",
         displayName: "sbambino",
@@ -106,7 +106,7 @@ class TweetData {
         views: 571,
         bookmarks: 0),
     Tweet(
-        id: 7,
+        twtId: 7,
         userId: 70,
         username: "@test",
         displayName: "sbambino",
@@ -119,7 +119,7 @@ class TweetData {
         views: 300,
         bookmarks: 90),
     Tweet(
-        id: 8,
+        twtId: 8,
         userId: 70,
         username: "@test",
         displayName: "sbambino",
@@ -132,7 +132,7 @@ class TweetData {
         views: 1560,
         bookmarks: 5),
     Tweet(
-        id: 9,
+        twtId: 9,
         userId: 70,
         username: "@test",
         displayName: "sbambino",
@@ -145,7 +145,7 @@ class TweetData {
         views: 7000,
         bookmarks: 5),
     Tweet(
-        id: 10,
+        twtId: 10,
         userId: 70,
         username: "@test",
         displayName: "sbambino",
@@ -170,14 +170,14 @@ class TweetData {
   } */
 
   void updateTweet(Tweet editedTweet) {
-    int index = tweets.indexWhere((tweet) => tweet.id == editedTweet.id);
+    int index = tweets.indexWhere((tweet) => tweet.twtId == editedTweet.twtId);
     if (index != -1) {
       tweets[index] = editedTweet;
     }
   }
 
   void deleteTweet(int targetTweetId) {
-    tweets.removeWhere((tweet) => tweet.id == targetTweetId);
+    tweets.removeWhere((tweet) => tweet.twtId == targetTweetId);
   }
 }
 
@@ -185,7 +185,7 @@ class TweetData {
   // Example usage:
   var jsonData = [
     {
-      "id": 1,
+      "twtId": 1,
       "username": "JohnDoe",
       "displayName": "@johndoe",
       "tweet": "Just had a fantastic day exploring the city! #travel",

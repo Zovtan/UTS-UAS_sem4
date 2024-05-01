@@ -104,7 +104,7 @@ class _TweetCellState extends State<TweetCell> {
                           if (value == 'Edit') {
                             _editTweet(); // Call the function to handle tweet editing
                           } else if (value == 'Delete') {
-                            widget.onDeleteTweet(widget.tweet.id);// Handle delete tweet action
+                            widget.onDeleteTweet(widget.tweet.twtId);// Handle delete tweet action
                           }
                         },
                         child: Icon(
@@ -194,7 +194,7 @@ class _TweetCellState extends State<TweetCell> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => CommentPage(
-                              tweetId: widget.tweet.id,
+                              tweetId: widget.tweet.twtId,
                               username: widget.tweet.username,
                               displayName: widget.tweet.displayName,
                               tweet: widget.tweet.tweet,

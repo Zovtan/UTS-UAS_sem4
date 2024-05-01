@@ -29,10 +29,12 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final TweetData tweetData = TweetData();
   late ProfileData profileData;
+  int commentCount = 0;
 
   @override
   void initState() {
     super.initState();
+    _countComments(); // Call the method to count comments
     profileData = widget.profileData;
   }
 
@@ -58,7 +60,9 @@ class _MainPageState extends State<MainPage> {
                   if (tweetIndex < tweetData.tweets.length) {
                     Tweet tweet = tweetData.tweets[tweetIndex];
                     DateTime parsedTimestamp = DateTime.parse(tweet.timestamp);
-                    String formattedTimestamp = DateFormat('yyyy-MM-dd HH:mm:ss').format(parsedTimestamp);
+                    String formattedTimestamp =
+                        DateFormat('yyyy-MM-dd HH:mm:ss')
+                            .format(parsedTimestamp);
                     var durTime = DateTime.now().difference(parsedTimestamp);
                     String formattedDur;
                     if (durTime.inDays > 0) {
@@ -72,7 +76,8 @@ class _MainPageState extends State<MainPage> {
                     }
                     return TweetCell(
                       tweet: tweet,
-                      commentCount: tweet.commentCount, // Pass the actual comment count
+                      commentCount:
+                          tweet.commentCount, // Pass the actual comment count
                       formattedDur: formattedDur,
                       //kirim fungsi
                       onTweetEdited: _editTweet,
@@ -99,7 +104,7 @@ class _MainPageState extends State<MainPage> {
                 onTweetAdded: (newTweet) {
                   setState(() {
                     tweetData.addTweet(Tweet(
-                      id: tweetData.tweets.length + 1,
+                      twtId: tweetData.tweets.length + 1,
                       userId: widget.currId,
                       username: widget.currUsername,
                       displayName: widget.currDisplayName,
@@ -125,16 +130,35 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
+  //Hitung komen dalam json komen lalu kirim kesini
+  Future<void> _countComments() async {
+    String jsonString = await DefaultAssetBundle.of(context)
+        .loadString('assets/json/comments.json');
+    List<dynamic> jsonList = jsonDecode(jsonString);
+    setState(() {
+      for (var tweet in tweetData.tweets) {
+        // Find the comments for the tweet
+        var commentsInTweet = jsonList.firstWhere(
+          (comment) => comment['tweet_id'] == tweet.twtId,
+          orElse: () =>
+              {'comments': []}, // If no comments found, use an empty list
+        )['comments'];
+        // Update the comment count
+        tweet.commentCount = commentsInTweet.length;
+      }
+    });
+  }
+
   //panggil fungsi update dan delete
   //cara modular
-    void _editTweet(Tweet editedTweet) {
+  void _editTweet(Tweet editedTweet) {
     setState(() {
       tweetData.updateTweet(editedTweet);
     });
   }
 
-    //cara langsung
-    /* void _editTweet(Tweet editedTweet) {
+  //cara langsung
+  /* void _editTweet(Tweet editedTweet) {
     setState(() {
       int index = tweetData.tweets.indexWhere((tweet) => tweet.id == editedTweet.id);
       if (index != -1) {
@@ -143,9 +167,9 @@ class _MainPageState extends State<MainPage> {
     });
   } */
 
-    void _deleteTweet(int tweetId) {
+  void _deleteTweet(int twtId) {
     setState(() {
-      tweetData.deleteTweet(tweetId);
+      tweetData.deleteTweet(twtId);
     });
   }
 }
