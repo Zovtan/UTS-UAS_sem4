@@ -26,6 +26,36 @@ class Tweet {
     required this.bookmarks,
     this.commentCount = 0,
   });
+
+    Tweet copyWith({
+    int? id,
+    int? userId,
+    String? username,
+    String? displayName,
+    String? tweet,
+    String? image,
+    String? timestamp,
+    int? likes,
+    int? retweets,
+    int? views,
+    int? bookmarks,
+    int? commentCount,
+  }) {
+    return Tweet(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      username: username ?? this.username,
+      displayName: displayName ?? this.displayName,
+      tweet: tweet ?? this.tweet,
+      image: image ?? this.image,
+      timestamp: timestamp ?? this.timestamp,
+      likes: likes ?? this.likes,
+      retweets: retweets ?? this.retweets,
+      views: views ?? this.views,
+      bookmarks: bookmarks ?? this.bookmarks,
+      commentCount: commentCount ?? this.commentCount,
+    );
+  }
 }
 
 class TweetData {
@@ -138,6 +168,19 @@ class TweetData {
         displayName: "sbambino",
         tweet:
             "#sly #weiner shit my self your not harder point i say or i say whats hard as swing controll",
+        image: "none",
+        timestamp: "2024-04-21T20:00:00Z",
+        likes: 250,
+        retweets: 80,
+        views: 7000,
+        bookmarks: 5),
+            Tweet(
+        id: 10,
+        userId: 70,
+        username: "@test",
+        displayName: "sbambino",
+        tweet:
+            "#",
         image: "none",
         timestamp: "2024-04-21T20:00:00Z",
         likes: 250,

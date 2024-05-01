@@ -9,11 +9,10 @@ import 'package:twitter/widget/post_tweet.dart';
 import 'package:twitter/class/profiles.dart';
 
 class MainPage extends StatefulWidget {
-    final int currId;
+  final int currId;
   final String currUsername;
   final String currDisplayName;
   final ProfileData profileData;
-
 
   const MainPage(
       {Key? key,
@@ -29,40 +28,25 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final TweetData tweetData = TweetData();
-  int commentCount = 0;
   late ProfileData profileData;
 
   @override
   void initState() {
     super.initState();
-    _countComments(); // Call the method to count comments
     profileData = widget.profileData;
   }
 
-  //Hitung komen dalam json komen lalu kirim kesini
-  Future<void> _countComments() async {
-    String jsonString = await DefaultAssetBundle.of(context)
-        .loadString('assets/json/comments.json');
-    List<dynamic> jsonList = jsonDecode(jsonString);
+  void _editTweet(Tweet editedTweet) {
     setState(() {
-      for (var tweet in tweetData.tweets) {
-        // Find the comments for the tweet
-        var commentsInTweet = jsonList.firstWhere(
-          (comment) => comment['tweet_id'] == tweet.id,
-          orElse: () =>
-              {'comments': []}, // If no comments found, use an empty list
-        )['comments'];
-        // Update the comment count
-        tweet.commentCount = commentsInTweet.length;
+      int index = tweetData.tweets.indexWhere((tweet) => tweet.id == editedTweet.id);
+      if (index != -1) {
+        tweetData.tweets[index] = editedTweet;
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    print(widget.currUsername);
-    print(widget.currDisplayName);
-
     return Scaffold(
       bottomNavigationBar: TwitterBottomBar(),
       body: CustomScrollView(
@@ -74,23 +58,16 @@ class _MainPageState extends State<MainPage> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                //ganti tweet ganti jadi divider
                 if (index.isOdd) {
                   return Divider(
                     color: Color.fromARGB(120, 101, 119, 134),
                   );
                 } else {
-                  // menggandakan tweet supaya untuk memadai penghapusan ganjil (setaip tweet jadi ada 2)
                   int tweetIndex = index ~/ 2;
-                  // cek apakah index lbh kecil daripada length, ini supaya tdk ada tweet ganda di akhir
                   if (tweetIndex < tweetData.tweets.length) {
                     Tweet tweet = tweetData.tweets[tweetIndex];
-                    //format waktu
                     DateTime parsedTimestamp = DateTime.parse(tweet.timestamp);
-                    String formattedTimestamp =
-                        DateFormat('yyyy-MM-dd HH:mm:ss')
-                            .format(parsedTimestamp);
-                    //hitung selisih waktu
+                    String formattedTimestamp = DateFormat('yyyy-MM-dd HH:mm:ss').format(parsedTimestamp);
                     var durTime = DateTime.now().difference(parsedTimestamp);
                     String formattedDur;
                     if (durTime.inDays > 0) {
@@ -102,35 +79,28 @@ class _MainPageState extends State<MainPage> {
                     } else {
                       formattedDur = "Less than a minute";
                     }
-
-                    print(formattedDur);
-
                     return TweetCell(
                       tweet: tweet,
-                      commentCount: commentCount,
+                      commentCount: tweet.commentCount, // Pass the actual comment count
                       formattedDur: formattedDur,
+                      onTweetEdited: _editTweet,
                     );
                   } else {
-                    // kalo index lbh besar dari lenght
                     return SizedBox();
                   }
                 }
               },
-              childCount: tweetData.tweets.length * 2 -
-                  1, // Adjusted count for dividers
+              childCount: tweetData.tweets.length * 2 - 1,
             ),
           ),
         ],
       ),
-
-      //FAB
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
         onPressed: () {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              //panggil widget post lalu masukkan tweet di post lalu kirim tweet balik ke mainpage terus update class tweet
               return AddTweetPage(
                 onTweetAdded: (newTweet) {
                   setState(() {
