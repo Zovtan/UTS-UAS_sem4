@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:twitter/class/tweets.dart';
 import 'package:twitter/widget/tweet_cell.dart';
 import 'package:twitter/widget/twt_app_bar.dart';
@@ -61,9 +60,6 @@ class _MainPageState extends State<MainPage> {
                     Tweet tweet = tweetData.tweets[tweetIndex];
                     //buat string bisa dibaca jadi datetime
                     DateTime parsedTimestamp = DateTime.parse(tweet.timestamp);
-                    String formattedTimestamp =
-                        DateFormat('yyyy-MM-dd HH:mm:ss')
-                            .format(parsedTimestamp);
                     //hitung selisih waktu
                     var durTime = DateTime.now().difference(parsedTimestamp);
                     String formattedDur;
@@ -115,6 +111,7 @@ class _MainPageState extends State<MainPage> {
                       timestamp: DateTime.now().toIso8601String(),
                       likes: 0,
                       retweets: 0,
+                      qtweets: 0,
                       views: 0,
                       bookmarks: 0,
                       commentCount: 0,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
-import 'package:intl/intl.dart';
 import 'package:twitter/class/tweets.dart';
 import 'package:twitter/twitter/comment_page.dart';
 import 'package:twitter/widget/edit_tweet.dart'; // Import the EditTweetPage
@@ -32,10 +31,8 @@ class _TweetCellState extends State<TweetCell> {
   
   @override
   Widget build(BuildContext context) {
-    DateTime parsedTimestamp = DateTime.parse(widget.tweet.timestamp);
-    String formattedTimestamp =
-        DateFormat('yyyy-MM-dd HH:mm:ss').format(parsedTimestamp);
-
+    //hitung total tweet
+    int ttlRetweets = widget.tweet.retweets + widget.tweet.qtweets;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -179,7 +176,7 @@ class _TweetCellState extends State<TweetCell> {
                           ),
                           SizedBox(width: 5),
                           Text(
-                            '${_formatNumber(widget.tweet.retweets)}',
+                            '${_formatNumber(ttlRetweets)}',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 101, 119, 134),
                                 fontSize: 12),
@@ -195,7 +192,6 @@ class _TweetCellState extends State<TweetCell> {
                             builder: (context) => CommentPage(
                               tweet: widget.tweet,
                               commentCount: widget.commentCount,
-                              formattedDur: widget.formattedDur,
                               currId: widget.currId,
                               formatNumber: _formatNumber,
                               onTweetEdited: widget.onTweetEdited,

@@ -1,13 +1,15 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
+import 'package:intl/intl.dart';
 import 'package:twitter/class/tweets.dart';
 import 'package:twitter/widget/edit_tweet.dart';
 
 class CommentPage extends StatefulWidget {
   final Tweet tweet;
   final int commentCount;
-  final String formattedDur;
   final int currId;
   final Function(int) formatNumber;
   final Function(Tweet) onTweetEdited;
@@ -20,7 +22,6 @@ class CommentPage extends StatefulWidget {
     Key? key,
     required this.tweet,
     required this.commentCount,
-    required this.formattedDur,
     required this.currId,
     required this.formatNumber,
     required this.onTweetEdited,
@@ -66,8 +67,8 @@ class _CommentPageState extends State<CommentPage> {
   @override
   void initState() {
     super.initState();
-     _loadComments();
-    // Initialize state variables based on props
+    _loadComments();
+    // sinkron dengan data yg baru diedit
     isLiked = widget.tweet.isLiked;
     isRetweeted = widget.tweet.isRetweeted;
     isBookmarked = widget.tweet.isBookmarked;
@@ -102,61 +103,73 @@ class _CommentPageState extends State<CommentPage> {
 
   @override
   Widget build(BuildContext context) {
+    //format waktu
+    DateTime parsedTimestamp = DateTime.parse(widget.tweet.timestamp);
+    String formattedTimestamp =
+        DateFormat('h:mm a • dd MMM yy').format(parsedTimestamp);
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         title: Text('Post'),
+        backgroundColor: Colors.black,
       ),
-      body: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 35,
-                margin: EdgeInsets.symmetric(horizontal: 5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ProfilePicture(
-                      name: widget.tweet.displayName,
-                      radius: 18,
-                      fontsize: 10,
-                      count: 2,
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 5),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            //tweet utama
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      //pfp, name, follow
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: widget.tweet.displayName,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                TextSpan(
-                                  text: " " + widget.tweet.username,
-                                  style: TextStyle(
-                                      color:
-                                          Color.fromARGB(255, 101, 119, 134)),
-                                ),
-                                TextSpan(
-                                  text: " • " + widget.formattedDur,
-                                  style: TextStyle(
-                                      color:
-                                          Color.fromARGB(255, 101, 119, 134)),
-                                )
-                              ],
-                            ),
+                          Row(
+                            children: [
+                              ProfilePicture(
+                                name: widget.tweet.displayName,
+                                radius: 18,
+                                fontsize: 10,
+                                count: 2,
+                              ),
+                              Column(
+                                children: [
+                                  Text(
+                                    widget.tweet.displayName,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    widget.tweet.username,
+                                    style: TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 101, 119, 134)),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
+                          if (widget.tweet.userId != widget.currId)
+                            SizedBox(
+                              height: 25,
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                child: Text(
+                                  "Follow",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.white),
+                                ),
+                              ),
+                            ),
                           //hanya muncul jika ada tweet sendiri
                           if (widget.tweet.userId ==
                               widget
@@ -198,17 +211,122 @@ class _CommentPageState extends State<CommentPage> {
                         ),
                         SizedBox(height: 5),
                       ],
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Column(
                         children: [
-                          // Like, Retweet, Comment, and other icons
-                          GestureDetector(
-                            onTap: () {
-                              onLikePressed();
-                            },
+                          //waktu dan view
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5),
                             child: Row(
                               children: [
-                                Icon(
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: formattedTimestamp + " • ",
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 101, 119, 134)),
+                                      ),
+                                      TextSpan(
+                                        text: widget
+                                            .formatNumber(widget.tweet.views),
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      TextSpan(
+                                        text: " Views",
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 101, 119, 134)),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Divider(
+                            color: Color.fromARGB(255, 101, 119, 134),
+                            height: 1,
+                          ),
+                          //retweet, qtweet, likes, bookmark
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text:
+                                            '${widget.formatNumber(widget.tweet.retweets)} ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      TextSpan(
+                                        text: 'Reposts',
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 101, 119, 134)),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            ' ${widget.formatNumber(widget.tweet.qtweets)} ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      TextSpan(
+                                        text: 'Quotes',
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 101, 119, 134)),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            ' ${widget.formatNumber(widget.tweet.likes)} ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      TextSpan(
+                                        text: 'Likes',
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 101, 119, 134)),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            ' ${widget.formatNumber(widget.tweet.bookmarks)} ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      TextSpan(
+                                        text: 'Bookmarks',
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 101, 119, 134)),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Divider(
+                            color: Color.fromARGB(255, 101, 119, 134),
+                            height: 1,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          )
+                        ],
+                      ),
+                      // Like, Retweet, Comment, and other icons
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  onLikePressed();
+                                },
+                                child: Icon(
                                   isLiked
                                       ? Icons.favorite
                                       : Icons.favorite_border,
@@ -217,24 +335,13 @@ class _CommentPageState extends State<CommentPage> {
                                       ? Colors.red
                                       : Color.fromARGB(255, 101, 119, 134),
                                 ),
-                                SizedBox(width: 5),
-                                Text(
-                                  '${widget.formatNumber(widget.tweet.likes)}',
-                                  style: TextStyle(
-                                      color: Color.fromARGB(255, 101, 119, 134),
-                                      fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              onRetweetPressed();
-                            },
-                            child: Row(
-                              children: [
-                                Icon(
-                                 isRetweeted
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  onRetweetPressed();
+                                },
+                                child: Icon(
+                                  isRetweeted
                                       ? Icons.repeat
                                       : Icons.repeat_rounded,
                                   size: 16,
@@ -242,47 +349,15 @@ class _CommentPageState extends State<CommentPage> {
                                       ? Colors.green
                                       : Color.fromARGB(255, 101, 119, 134),
                                 ),
-                                SizedBox(width: 5),
-                                Text(
-                                  '${widget.formatNumber(widget.tweet.retweets)}',
-                                  style: TextStyle(
-                                      color: Color.fromARGB(255, 101, 119, 134),
-                                      fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ),
-                          //navigasi ke komen
-                          Row(
-                            children: [
-                              Icon(Icons.mode_comment_outlined,
-                                  size: 16,
-                                  color: Color.fromARGB(255, 101, 119, 134)),
-                              SizedBox(width: 5),
-                              Text(
-                                '${widget.formatNumber(widget.tweet.commentCount)}',
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 101, 119, 134),
-                                    fontSize: 12),
                               ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.insert_chart_outlined_rounded,
-                                  size: 16,
-                                  color: Color.fromARGB(255, 101, 119, 134)),
-                              SizedBox(width: 5),
-                              Text(
-                                '${widget.formatNumber(widget.tweet.views)}',
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 101, 119, 134),
-                                    fontSize: 12),
+                              Row(
+                                children: [
+                                  Icon(Icons.mode_comment_outlined,
+                                      size: 16,
+                                      color:
+                                          Color.fromARGB(255, 101, 119, 134)),
+                                ],
                               ),
-                            ],
-                          ),
-                          Row(
-                            children: [
                               GestureDetector(
                                 onTap: () {
                                   onBookmarkPressed();
@@ -297,36 +372,44 @@ class _CommentPageState extends State<CommentPage> {
                                       : Color.fromARGB(255, 101, 119, 134),
                                 ),
                               ),
-                              SizedBox(
-                                width: 5,
-                              ),
                               Icon(Icons.share_outlined,
                                   size: 16,
                                   color: Color.fromARGB(255, 101, 119, 134)),
                             ],
                           ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Divider(
+                            color: Color.fromARGB(255, 101, 119, 134),
+                            height: 1,
+                          ),
                         ],
                       ),
                     ],
                   ),
-                ),
-              )
-            ],
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: comments.length,
-              itemBuilder: (BuildContext context, int index) {
-                Comment comment = comments[index];
-                return ListTile(
-                  title: Text(comment.comment),
-                  subtitle:
-                      Text('${comment.username} - ${comment.displayName}'),
-                );
-              },
+                )
+              ],
             ),
-          ),
-        ],
+            //komentar
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.5, // Adjust height as needed
+              child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(), //mencegah double scroll
+                shrinkWrap: true,
+                itemCount: comments.length,
+                itemBuilder: (BuildContext context, int index) {
+                  Comment comment = comments[index];
+                  return ListTile(
+                    title: Text(comment.comment),
+                    subtitle:
+                        Text('${comment.username} - ${comment.displayName}'),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -345,7 +428,7 @@ class _CommentPageState extends State<CommentPage> {
     );
   }
 
-    // implementasi fungsi yg diterima dan kirim balik data ke tweetcell
+  // implementasi fungsi yg diterima dan kirim balik data ke tweetcell
   void onLikePressed() {
     setState(() {
       isLiked = !isLiked;

@@ -13,6 +13,30 @@
           "username": "CityExplorer",
           "displayName": "@citylover",
           "comment": "Which places did you visit? I'm planning a trip there soon!"
+        },
+        {
+          "comment_id": 3,
+          "username": "TravelEnthusiast",
+          "displayName": "@traveler",
+          "comment": "Looks like you had an amazing time! I love exploring new cities."
+        },
+        {
+          "comment_id": 4,
+          "username": "CityExplorer",
+          "displayName": "@citylover",
+          "comment": "Which places did you visit? I'm planning a trip there soon!"
+        },
+        {
+          "comment_id": 5,
+          "username": "TravelEnthusiast",
+          "displayName": "@traveler",
+          "comment": "Looks like you had an amazing time! I love exploring new cities."
+        },
+        {
+          "comment_id": 6,
+          "username": "CityExplorer",
+          "displayName": "@citylover",
+          "comment": "Which places did you visit? I'm planning a trip there soon!"
         }
       ]
     },

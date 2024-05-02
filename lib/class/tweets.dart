@@ -8,6 +8,7 @@ class Tweet {
   String timestamp;
   int likes;
   int retweets;
+  int qtweets;
   int views;
   int bookmarks;
   int commentCount;
@@ -21,6 +22,7 @@ class Tweet {
     required this.username,
     required this.displayName,
     required this.tweet,
+    required this.qtweets,
     required this.image,
     required this.timestamp,
     required this.likes,
@@ -46,6 +48,7 @@ class TweetData {
         timestamp: "2024-05-01T08:00:00Z",
         likes: 100,
         retweets: 50,
+        qtweets: 10,
         views: 230,
         bookmarks: 5),
     Tweet(
@@ -58,6 +61,7 @@ class TweetData {
         timestamp: "2024-04-24T10:30:00Z",
         likes: 200,
         retweets: 75,
+        qtweets: 10,
         views: 579,
         bookmarks: 7),
     Tweet(
@@ -71,6 +75,7 @@ class TweetData {
         timestamp: "2024-04-23T15:45:00Z",
         likes: 150,
         retweets: 30,
+        qtweets: 10,
         views: 611,
         bookmarks: 10),
     Tweet(
@@ -84,6 +89,7 @@ class TweetData {
         timestamp: "2024-04-22T12:15:00Z",
         likes: 300,
         retweets: 100,
+        qtweets: 10,
         views: 1002,
         bookmarks: 7),
     Tweet(
@@ -96,6 +102,7 @@ class TweetData {
         timestamp: "2024-04-21T20:00:00Z",
         likes: 250,
         retweets: 80,
+        qtweets: 10,
         views: 444,
         bookmarks: 1),
     Tweet(
@@ -109,6 +116,7 @@ class TweetData {
         timestamp: "2024-04-21T20:00:00Z",
         likes: 250,
         retweets: 80,
+        qtweets: 10,
         views: 571,
         bookmarks: 0),
     Tweet(
@@ -122,6 +130,7 @@ class TweetData {
         timestamp: "2024-04-21T20:00:00Z",
         likes: 250,
         retweets: 80,
+        qtweets: 10,
         views: 300,
         bookmarks: 90),
     Tweet(
@@ -135,6 +144,7 @@ class TweetData {
         timestamp: "2024-04-21T20:00:00Z",
         likes: 250,
         retweets: 80,
+        qtweets: 10,
         views: 1560,
         bookmarks: 5),
     Tweet(
@@ -148,6 +158,7 @@ class TweetData {
         timestamp: "2024-04-21T20:00:00Z",
         likes: 250,
         retweets: 80,
+        qtweets: 10,
         views: 7000,
         bookmarks: 5),
     Tweet(
@@ -160,6 +171,7 @@ class TweetData {
         timestamp: "2024-04-21T20:00:00Z",
         likes: 250,
         retweets: 80,
+        qtweets: 10,
         views: 7000,
         bookmarks: 5),
   ];
@@ -185,7 +197,7 @@ class TweetData {
       tweets[index] = tweet;
     }
   } */
-  
+
 /* void main() {
   // Example usage:
   var jsonData = [

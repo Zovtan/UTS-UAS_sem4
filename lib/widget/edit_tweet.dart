@@ -106,6 +106,7 @@ class _EditTweetPageState extends State<EditTweetPage> {
       timestamp: widget.tweet.timestamp,
       likes: widget.tweet.likes,
       retweets: widget.tweet.retweets,
+      qtweets: widget.tweet.qtweets,
       views: widget.tweet.views,
       bookmarks: widget.tweet.bookmarks,
       commentCount: widget.tweet.commentCount,
