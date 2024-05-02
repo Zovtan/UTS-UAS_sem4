@@ -59,10 +59,12 @@ class _MainPageState extends State<MainPage> {
                   int tweetIndex = index ~/ 2;
                   if (tweetIndex < tweetData.tweets.length) {
                     Tweet tweet = tweetData.tweets[tweetIndex];
+                    //buat string bisa dibaca jadi datetime
                     DateTime parsedTimestamp = DateTime.parse(tweet.timestamp);
                     String formattedTimestamp =
                         DateFormat('yyyy-MM-dd HH:mm:ss')
                             .format(parsedTimestamp);
+                    //hitung selisih waktu
                     var durTime = DateTime.now().difference(parsedTimestamp);
                     String formattedDur;
                     if (durTime.inDays > 0) {
@@ -77,7 +79,7 @@ class _MainPageState extends State<MainPage> {
                     return TweetCell(
                       tweet: tweet,
                       commentCount:
-                          tweet.commentCount, // Pass the actual comment count
+                      tweet.commentCount, // Pass the actual comment count
                       formattedDur: formattedDur,
                       //kirim fungsi
                       onTweetEdited: _editTweet,

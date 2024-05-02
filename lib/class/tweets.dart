@@ -11,6 +11,9 @@ class Tweet {
   int views;
   int bookmarks;
   int commentCount;
+  bool isLiked;
+  bool isRetweeted;
+  bool isBookmarked;
 
   Tweet({
     required this.twtId,
@@ -24,6 +27,9 @@ class Tweet {
     required this.retweets,
     required this.views,
     required this.bookmarks,
+    this.isLiked = false,
+    this.isRetweeted = false,
+    this.isBookmarked = false,
     this.commentCount = 0,
   });
 }
@@ -163,12 +169,6 @@ class TweetData {
         tweet); // supaya saat tweet baru ditambah, akan diletakkan di paling atas
   }
 
-/*   void updateTweet(int index, Tweet tweet) {
-    if (index >= 0 && index < tweets.length) {
-      tweets[index] = tweet;
-    }
-  } */
-
   void updateTweet(Tweet editedTweet) {
     int index = tweets.indexWhere((tweet) => tweet.twtId == editedTweet.twtId);
     if (index != -1) {
@@ -180,7 +180,12 @@ class TweetData {
     tweets.removeWhere((tweet) => tweet.twtId == targetTweetId);
   }
 }
-
+/*   void updateTweet(int index, Tweet tweet) {
+    if (index >= 0 && index < tweets.length) {
+      tweets[index] = tweet;
+    }
+  } */
+  
 /* void main() {
   // Example usage:
   var jsonData = [

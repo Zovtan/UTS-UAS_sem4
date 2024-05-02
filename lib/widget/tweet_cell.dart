@@ -29,10 +29,7 @@ class TweetCell extends StatefulWidget {
 }
 
 class _TweetCellState extends State<TweetCell> {
-  bool isLiked = false;
-  bool isRetweeted = false;
-  bool isBookmarked = false;
-
+  
   @override
   Widget build(BuildContext context) {
     DateTime parsedTimestamp = DateTime.parse(widget.tweet.timestamp);
@@ -104,7 +101,8 @@ class _TweetCellState extends State<TweetCell> {
                           if (value == 'Edit') {
                             _editTweet(); // Call the function to handle tweet editing
                           } else if (value == 'Delete') {
-                            widget.onDeleteTweet(widget.tweet.twtId);// Handle delete tweet action
+                            widget.onDeleteTweet(widget
+                                .tweet.twtId); // Handle delete tweet action
                           }
                         },
                         child: Icon(
@@ -132,8 +130,8 @@ class _TweetCellState extends State<TweetCell> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          isLiked = !isLiked;
-                          if (isLiked) {
+                          widget.tweet.isLiked = !widget.tweet.isLiked;
+                          if (widget.tweet.isLiked) {
                             widget.tweet.likes++;
                           } else {
                             widget.tweet.likes--;
@@ -143,9 +141,9 @@ class _TweetCellState extends State<TweetCell> {
                       child: Row(
                         children: [
                           Icon(
-                            isLiked ? Icons.favorite : Icons.favorite_border,
+                            widget.tweet.isLiked ? Icons.favorite : Icons.favorite_border,
                             size: 16,
-                            color: isLiked
+                            color: widget.tweet.isLiked
                                 ? Colors.red
                                 : Color.fromARGB(255, 101, 119, 134),
                           ),
@@ -162,8 +160,8 @@ class _TweetCellState extends State<TweetCell> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          isRetweeted = !isRetweeted;
-                          if (isRetweeted) {
+                          widget.tweet.isRetweeted = !widget.tweet.isRetweeted;
+                          if (widget.tweet.isRetweeted) {
                             widget.tweet.retweets++;
                           } else {
                             widget.tweet.retweets--;
@@ -173,9 +171,9 @@ class _TweetCellState extends State<TweetCell> {
                       child: Row(
                         children: [
                           Icon(
-                            isRetweeted ? Icons.repeat : Icons.repeat_rounded,
+                            widget.tweet.isRetweeted ? Icons.repeat : Icons.repeat_rounded,
                             size: 16,
-                            color: isRetweeted
+                            color: widget.tweet.isRetweeted
                                 ? Colors.green
                                 : Color.fromARGB(255, 101, 119, 134),
                           ),
@@ -189,6 +187,7 @@ class _TweetCellState extends State<TweetCell> {
                         ],
                       ),
                     ),
+                    //navigasi ke komen
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(
@@ -198,6 +197,40 @@ class _TweetCellState extends State<TweetCell> {
                               commentCount: widget.commentCount,
                               formattedDur: widget.formattedDur,
                               currId: widget.currId,
+                              formatNumber: _formatNumber,
+                              onTweetEdited: widget.onTweetEdited,
+                              onDeleteTweet: widget.onDeleteTweet,
+                              // Pass update functions
+                              onLikePressed: () {
+                                setState(() {
+                                  widget.tweet.isLiked = !widget.tweet.isLiked;
+                                  if (widget.tweet.isLiked) {
+                                    widget.tweet.likes++;
+                                  } else {
+                                    widget.tweet.likes--;
+                                  }
+                                });
+                              },
+                              onRetweetPressed: () {
+                                setState(() {
+                                  widget.tweet.isRetweeted = !widget.tweet.isRetweeted;
+                                  if (widget.tweet.isRetweeted) {
+                                    widget.tweet.retweets++;
+                                  } else {
+                                    widget.tweet.retweets--;
+                                  }
+                                });
+                              },
+                              onBookmarkPressed: () {
+                                setState(() {
+                                  widget.tweet.isBookmarked = !widget.tweet.isBookmarked;
+                                  if (widget.tweet.isBookmarked) {
+                                    widget.tweet.bookmarks++;
+                                  } else {
+                                    widget.tweet.bookmarks--;
+                                  }
+                                });
+                              },
                             ),
                           ),
                         );
@@ -236,8 +269,8 @@ class _TweetCellState extends State<TweetCell> {
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              isBookmarked = !isBookmarked;
-                              if (isBookmarked) {
+                              widget.tweet.isBookmarked = !widget.tweet.isBookmarked;
+                              if (widget.tweet.isBookmarked) {
                                 widget.tweet.bookmarks++;
                               } else {
                                 widget.tweet.bookmarks--;
@@ -245,11 +278,11 @@ class _TweetCellState extends State<TweetCell> {
                             });
                           },
                           child: Icon(
-                            isBookmarked
+                            widget.tweet.isBookmarked
                                 ? Icons.bookmark
                                 : Icons.bookmark_border,
                             size: 16,
-                            color: isBookmarked
+                            color: widget.tweet.isBookmarked
                                 ? Colors.blue
                                 : Color.fromARGB(255, 101, 119, 134),
                           ),
@@ -271,7 +304,8 @@ class _TweetCellState extends State<TweetCell> {
       ],
     );
   }
-    String _formatNumber(int number) {
+
+  String _formatNumber(int number) {
     if (number >= 1000) {
       double numberInK = number / 1000;
       return numberInK.toStringAsFixed(1) + 'k';
