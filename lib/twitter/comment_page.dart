@@ -137,18 +137,20 @@ class _CommentPageState extends State<CommentPage> {
                                 fontsize: 10,
                                 count: 2,
                               ),
+                              SizedBox(width: 10,),
                               Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     widget.tweet.displayName,
                                     style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                                   ),
                                   Text(
                                     widget.tweet.username,
                                     style: TextStyle(
                                         color:
-                                            Color.fromARGB(255, 101, 119, 134)),
+                                            Color.fromARGB(255, 101, 119, 134), fontSize: 16),
                                   ),
                                 ],
                               ),
@@ -161,7 +163,7 @@ class _CommentPageState extends State<CommentPage> {
                                 onPressed: () {},
                                 child: Text(
                                   "Follow",
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(color: Colors.black, fontSize: 16 ),
                                 ),
                                 style: ButtonStyle(
                                   backgroundColor:
@@ -202,7 +204,7 @@ class _CommentPageState extends State<CommentPage> {
                         ],
                       ),
                       SizedBox(height: 5),
-                      Text(widget.tweet.tweet),
+                      Text(widget.tweet.tweet, style: TextStyle(fontSize: 16),),
                       SizedBox(height: 5),
                       if (widget.tweet.image != "none") ...[
                         ClipRRect(
@@ -225,18 +227,18 @@ class _CommentPageState extends State<CommentPage> {
                                         text: formattedTimestamp + " • ",
                                         style: TextStyle(
                                             color: Color.fromARGB(
-                                                255, 101, 119, 134)),
+                                                255, 101, 119, 134), fontSize: 16),
                                       ),
                                       TextSpan(
                                         text: widget
                                             .formatNumber(widget.tweet.views),
-                                        style: TextStyle(color: Colors.white),
+                                        style: TextStyle(color: Colors.white, fontSize: 16),
                                       ),
                                       TextSpan(
                                         text: " Views",
                                         style: TextStyle(
                                             color: Color.fromARGB(
-                                                255, 101, 119, 134)),
+                                                255, 101, 119, 134), fontSize: 16),
                                       ),
                                     ],
                                   ),
@@ -244,9 +246,15 @@ class _CommentPageState extends State<CommentPage> {
                               ],
                             ),
                           ),
+                          SizedBox(
+                            height: 7,
+                          ),
                           Divider(
                             color: Color.fromARGB(120, 101, 119, 134),
                             height: 1,
+                          ),
+                          SizedBox(
+                            height: 7,
                           ),
                           //retweet, qtweet, likes, bookmark
                           Padding(
@@ -260,46 +268,46 @@ class _CommentPageState extends State<CommentPage> {
                                       TextSpan(
                                         text:
                                             '${widget.formatNumber(widget.tweet.retweets)} ',
-                                        style: TextStyle(color: Colors.white),
+                                        style: TextStyle(color: Colors.white, fontSize: 16),
                                       ),
                                       TextSpan(
                                         text: 'Reposts',
                                         style: TextStyle(
                                             color: Color.fromARGB(
-                                                255, 101, 119, 134)),
+                                                255, 101, 119, 134), fontSize: 16),
                                       ),
                                       TextSpan(
                                         text:
-                                            ' ${widget.formatNumber(widget.tweet.qtweets)} ',
-                                        style: TextStyle(color: Colors.white),
+                                            '  ${widget.formatNumber(widget.tweet.qtweets)} ',
+                                        style: TextStyle(color: Colors.white, fontSize: 16),
                                       ),
                                       TextSpan(
                                         text: 'Quotes',
                                         style: TextStyle(
                                             color: Color.fromARGB(
-                                                255, 101, 119, 134)),
+                                                255, 101, 119, 134), fontSize: 16),
                                       ),
                                       TextSpan(
                                         text:
-                                            ' ${widget.formatNumber(widget.tweet.likes)} ',
-                                        style: TextStyle(color: Colors.white),
+                                            '  ${widget.formatNumber(widget.tweet.likes)} ',
+                                        style: TextStyle(color: Colors.white, fontSize: 16),
                                       ),
                                       TextSpan(
                                         text: 'Likes',
                                         style: TextStyle(
                                             color: Color.fromARGB(
-                                                255, 101, 119, 134)),
+                                                255, 101, 119, 134), fontSize: 16),
                                       ),
                                       TextSpan(
                                         text:
-                                            ' ${widget.formatNumber(widget.tweet.bookmarks)} ',
-                                        style: TextStyle(color: Colors.white),
+                                            '  ${widget.formatNumber(widget.tweet.bookmarks)} ',
+                                        style: TextStyle(color: Colors.white, fontSize: 16),
                                       ),
                                       TextSpan(
                                         text: 'Bookmarks',
                                         style: TextStyle(
                                             color: Color.fromARGB(
-                                                255, 101, 119, 134)),
+                                                255, 101, 119, 134), fontSize: 16),
                                       ),
                                     ],
                                   ),
@@ -307,13 +315,16 @@ class _CommentPageState extends State<CommentPage> {
                               ],
                             ),
                           ),
+                          SizedBox(
+                            height: 7,
+                          ),
                           Divider(
                             color: Color.fromARGB(120, 101, 119, 134),
                             height: 1,
                           ),
                           SizedBox(
-                            height: 5,
-                          )
+                            height: 7,
+                          ),
                         ],
                       ),
                       // Like, Retweet, Comment, and other icons
@@ -322,20 +333,9 @@ class _CommentPageState extends State<CommentPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  onLikePressed();
-                                },
-                                child: Icon(
-                                  isLiked
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  size: 16,
-                                  color: isLiked
-                                      ? Colors.red
-                                      : Color.fromARGB(255, 101, 119, 134),
-                                ),
-                              ),
+                              Icon(Icons.mode_comment_outlined,
+                                  size: 24,
+                                  color: Color.fromARGB(255, 101, 119, 134)),
                               GestureDetector(
                                 onTap: () {
                                   onRetweetPressed();
@@ -344,19 +344,25 @@ class _CommentPageState extends State<CommentPage> {
                                   isRetweeted
                                       ? Icons.repeat
                                       : Icons.repeat_rounded,
-                                  size: 16,
+                                  size: 24,
                                   color: isRetweeted
                                       ? Colors.green
                                       : Color.fromARGB(255, 101, 119, 134),
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  Icon(Icons.mode_comment_outlined,
-                                      size: 16,
-                                      color:
-                                          Color.fromARGB(255, 101, 119, 134)),
-                                ],
+                              GestureDetector(
+                                onTap: () {
+                                  onLikePressed();
+                                },
+                                child: Icon(
+                                  isLiked
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  size: 24,
+                                  color: isLiked
+                                      ? Colors.red
+                                      : Color.fromARGB(255, 101, 119, 134),
+                                ),
                               ),
                               GestureDetector(
                                 onTap: () {
@@ -366,23 +372,26 @@ class _CommentPageState extends State<CommentPage> {
                                   isBookmarked
                                       ? Icons.bookmark
                                       : Icons.bookmark_border,
-                                  size: 16,
+                                  size: 24,
                                   color: isBookmarked
                                       ? Colors.blue
                                       : Color.fromARGB(255, 101, 119, 134),
                                 ),
                               ),
                               Icon(Icons.share_outlined,
-                                  size: 16,
+                                  size: 24,
                                   color: Color.fromARGB(255, 101, 119, 134)),
                             ],
                           ),
                           SizedBox(
-                            height: 5,
+                            height: 7,
                           ),
                           Divider(
                             color: Color.fromARGB(120, 101, 119, 134),
                             height: 1,
+                          ),
+                          SizedBox(
+                            height: 7,
                           ),
                         ],
                       ),
@@ -423,7 +432,7 @@ class _CommentPageState extends State<CommentPage> {
                       ),
                       Expanded(
                         child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 5),
+                          margin: EdgeInsets.all(5),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -437,19 +446,19 @@ class _CommentPageState extends State<CommentPage> {
                                         TextSpan(
                                           text: comment.displayName,
                                           style: TextStyle(
-                                              fontWeight: FontWeight.bold),
+                                              fontWeight: FontWeight.bold, fontSize: 16),
                                         ),
                                         TextSpan(
                                           text: " " + comment.username,
                                           style: TextStyle(
                                               color: Color.fromARGB(
-                                                  255, 101, 119, 134)),
+                                                  255, 101, 119, 134), fontSize: 16),
                                         ),
                                         TextSpan(
                                           text: " • " + widget.formattedDur,
                                           style: TextStyle(
                                               color: Color.fromARGB(
-                                                  255, 101, 119, 134)),
+                                                  255, 101, 119, 134), fontSize: 16),
                                         )
                                       ],
                                     ),
@@ -457,7 +466,7 @@ class _CommentPageState extends State<CommentPage> {
                                 ],
                               ),
                               SizedBox(height: 5),
-                              Text(widget.tweet.tweet),
+                              Text(widget.tweet.tweet, style: TextStyle(fontSize: 16),),
                               SizedBox(height: 5),
                               Row(
                                 mainAxisAlignment:
@@ -466,11 +475,10 @@ class _CommentPageState extends State<CommentPage> {
                                   Row(
                                     children: [
                                       Icon(
-
-                                            Icons.favorite_border,
-                                        size: 16,
-                                        color:Color.fromARGB(
-                                                255, 101, 119, 134),
+                                        Icons.favorite_border,
+                                        size: 20,
+                                        color:
+                                            Color.fromARGB(255, 101, 119, 134),
                                       ),
                                       SizedBox(width: 5),
                                       Text(
@@ -478,7 +486,7 @@ class _CommentPageState extends State<CommentPage> {
                                         style: TextStyle(
                                             color: Color.fromARGB(
                                                 255, 101, 119, 134),
-                                            fontSize: 12),
+                                            fontSize: 16),
                                       ),
                                     ],
                                   ),
@@ -486,9 +494,9 @@ class _CommentPageState extends State<CommentPage> {
                                     children: [
                                       Icon(
                                         Icons.repeat_rounded,
-                                        size: 16,
-                                        color:Color.fromARGB(
-                                                255, 101, 119, 134),
+                                        size: 20,
+                                        color:
+                                            Color.fromARGB(255, 101, 119, 134),
                                       ),
                                       SizedBox(width: 5),
                                       Text(
@@ -496,14 +504,14 @@ class _CommentPageState extends State<CommentPage> {
                                         style: TextStyle(
                                             color: Color.fromARGB(
                                                 255, 101, 119, 134),
-                                            fontSize: 12),
+                                            fontSize: 16),
                                       ),
                                     ],
                                   ),
                                   Row(
                                     children: [
                                       Icon(Icons.mode_comment_outlined,
-                                          size: 16,
+                                          size: 20,
                                           color: Color.fromARGB(
                                               255, 101, 119, 134)),
                                       SizedBox(width: 5),
@@ -512,14 +520,14 @@ class _CommentPageState extends State<CommentPage> {
                                         style: TextStyle(
                                             color: Color.fromARGB(
                                                 255, 101, 119, 134),
-                                            fontSize: 12),
+                                            fontSize: 16),
                                       ),
                                     ],
                                   ),
                                   Row(
                                     children: [
                                       Icon(Icons.insert_chart_outlined_rounded,
-                                          size: 16,
+                                          size: 20,
                                           color: Color.fromARGB(
                                               255, 101, 119, 134)),
                                       SizedBox(width: 5),
@@ -528,7 +536,7 @@ class _CommentPageState extends State<CommentPage> {
                                         style: TextStyle(
                                             color: Color.fromARGB(
                                                 255, 101, 119, 134),
-                                            fontSize: 12),
+                                            fontSize: 16),
                                       ),
                                     ],
                                   ),
@@ -536,7 +544,7 @@ class _CommentPageState extends State<CommentPage> {
                                     children: [
                                       Icon(
                                         Icons.bookmark_border,
-                                        size: 16,
+                                        size: 20,
                                         color: widget.tweet.isBookmarked
                                             ? Colors.blue
                                             : Color.fromARGB(
@@ -546,7 +554,7 @@ class _CommentPageState extends State<CommentPage> {
                                         width: 5,
                                       ),
                                       Icon(Icons.share_outlined,
-                                          size: 16,
+                                          size: 20,
                                           color: Color.fromARGB(
                                               255, 101, 119, 134)),
                                     ],

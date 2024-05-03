@@ -53,7 +53,7 @@ class _TweetCellState extends State<TweetCell> {
         ),
         Expanded(
           child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 5),
+            margin: EdgeInsets.all(5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -65,17 +65,17 @@ class _TweetCellState extends State<TweetCell> {
                         children: [
                           TextSpan(
                             text: widget.tweet.displayName,
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           TextSpan(
                             text: " " + widget.tweet.username,
                             style: TextStyle(
-                                color: Color.fromARGB(255, 101, 119, 134)),
+                                color: Color.fromARGB(255, 101, 119, 134), fontSize: 16),
                           ),
                           TextSpan(
                             text: " • " + widget.formattedDur,
                             style: TextStyle(
-                                color: Color.fromARGB(255, 101, 119, 134)),
+                                color: Color.fromARGB(255, 101, 119, 134), fontSize: 16),
                           )
                         ],
                       ),
@@ -111,7 +111,7 @@ class _TweetCellState extends State<TweetCell> {
                   ],
                 ),
                 SizedBox(height: 5),
-                Text(widget.tweet.tweet),
+                Text(widget.tweet.tweet, style: TextStyle(fontSize: 16),),
                 SizedBox(height: 5),
                 if (widget.tweet.image != "none") ...[
                   ClipRRect(
@@ -139,7 +139,7 @@ class _TweetCellState extends State<TweetCell> {
                         children: [
                           Icon(
                             widget.tweet.isLiked ? Icons.favorite : Icons.favorite_border,
-                            size: 16,
+                            size: 20,
                             color: widget.tweet.isLiked
                                 ? Colors.red
                                 : Color.fromARGB(255, 101, 119, 134),
@@ -149,7 +149,7 @@ class _TweetCellState extends State<TweetCell> {
                             '${_formatNumber(widget.tweet.likes)}',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 101, 119, 134),
-                                fontSize: 12),
+                                fontSize: 16),
                           ),
                         ],
                       ),
@@ -169,7 +169,7 @@ class _TweetCellState extends State<TweetCell> {
                         children: [
                           Icon(
                             widget.tweet.isRetweeted ? Icons.repeat : Icons.repeat_rounded,
-                            size: 16,
+                            size: 20,
                             color: widget.tweet.isRetweeted
                                 ? Colors.green
                                 : Color.fromARGB(255, 101, 119, 134),
@@ -179,7 +179,7 @@ class _TweetCellState extends State<TweetCell> {
                             '${_formatNumber(ttlRetweets)}',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 101, 119, 134),
-                                fontSize: 12),
+                                fontSize: 16),
                           ),
                         ],
                       ),
@@ -235,14 +235,14 @@ class _TweetCellState extends State<TweetCell> {
                       child: Row(
                         children: [
                           Icon(Icons.mode_comment_outlined,
-                              size: 16,
+                              size: 20,
                               color: Color.fromARGB(255, 101, 119, 134)),
                           SizedBox(width: 5),
                           Text(
                             '${_formatNumber(widget.tweet.commentCount)}',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 101, 119, 134),
-                                fontSize: 12),
+                                fontSize: 16),
                           ),
                         ],
                       ),
@@ -250,14 +250,14 @@ class _TweetCellState extends State<TweetCell> {
                     Row(
                       children: [
                         Icon(Icons.insert_chart_outlined_rounded,
-                            size: 16,
+                            size: 20,
                             color: Color.fromARGB(255, 101, 119, 134)),
                         SizedBox(width: 5),
                         Text(
                           '${_formatNumber(widget.tweet.views)}',
                           style: TextStyle(
                               color: Color.fromARGB(255, 101, 119, 134),
-                              fontSize: 12),
+                              fontSize: 16),
                         ),
                       ],
                     ),
@@ -278,7 +278,7 @@ class _TweetCellState extends State<TweetCell> {
                             widget.tweet.isBookmarked
                                 ? Icons.bookmark
                                 : Icons.bookmark_border,
-                            size: 16,
+                            size: 20,
                             color: widget.tweet.isBookmarked
                                 ? Colors.blue
                                 : Color.fromARGB(255, 101, 119, 134),
@@ -288,7 +288,7 @@ class _TweetCellState extends State<TweetCell> {
                           width: 5,
                         ),
                         Icon(Icons.share_outlined,
-                            size: 16,
+                            size: 20,
                             color: Color.fromARGB(255, 101, 119, 134)),
                       ],
                     ),

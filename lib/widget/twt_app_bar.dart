@@ -27,7 +27,7 @@ class TwitterAppBar extends StatelessWidget {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Log Out'),
+                title: Text('Log Out', style: TextStyle(fontSize: 16),),
                 content: Text('Are you sure you want to log out?'),
                 actions: [
                   TextButton(
@@ -51,7 +51,7 @@ class TwitterAppBar extends StatelessWidget {
                     },
                     child: Text(
                       'Log Out',
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(color: Colors.red, fontSize: 16),
                     ),
                   ),
                 ],
@@ -102,11 +102,11 @@ class TwitterAppBar extends StatelessWidget {
             ),
           ),
                 child: Text(
-                  'For you',
+                  'For you', style: TextStyle(fontSize: 16),
                 ),
               ),
               Text(
-                'Following',
+                'Following', style: TextStyle(fontSize: 16),
               ),
             ],
           ),
