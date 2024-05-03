@@ -5,7 +5,7 @@ import 'package:twitter/twitter/login.dart';
 class SignIn extends StatefulWidget {
   final ProfileData profileData;
 
-  const SignIn({Key? key, required this.profileData}) : super(key: key);
+  const SignIn({super.key, required this.profileData});
 
   @override
   State<SignIn> createState() => _SignInState();
@@ -19,7 +19,7 @@ class _SignInState extends State<SignIn> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController repeatPasswordController =
-  TextEditingController();
+      TextEditingController();
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: CloseButton(),
+        leading: const CloseButton(),
         backgroundColor: Colors.black,
         centerTitle: true,
         title: Image.asset(
@@ -46,34 +46,34 @@ class _SignInState extends State<SignIn> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
+              const Text(
                 "Create your account",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 35,
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               TextField(
                 maxLines: 1,
                 keyboardType: TextInputType.text,
                 controller: usernameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Username',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextField(
                 maxLines: 1,
                 keyboardType: TextInputType.text,
                 controller: displayNameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Display Name',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 children: [
                   Expanded(
@@ -81,19 +81,19 @@ class _SignInState extends State<SignIn> {
                       maxLines: 1,
                       keyboardType: TextInputType.emailAddress,
                       controller: emailController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Email',
                         border: OutlineInputBorder(),
                       ),
                     ),
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   Expanded(
                     child: TextField(
                       maxLines: 1,
                       keyboardType: TextInputType.phone,
                       controller: phoneController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Phone',
                         border: OutlineInputBorder(),
                       ),
@@ -101,25 +101,25 @@ class _SignInState extends State<SignIn> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextField(
                 controller: passwordController,
                 obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextField(
                 controller: repeatPasswordController,
                 obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Repeat Password',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   bool isValid = true;
@@ -144,7 +144,7 @@ class _SignInState extends State<SignIn> {
                     return;
                   }
 
-                  // Check if either email or phone is provided
+                  // cek apakah email dan phone kosong
                   if (email.isEmpty && phone.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -154,7 +154,7 @@ class _SignInState extends State<SignIn> {
                     return;
                   }
 
-                  // Check if email is provided and valid
+                  // cek apakah email valid
                   if (email.isNotEmpty && !isEmailValid) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -175,7 +175,7 @@ class _SignInState extends State<SignIn> {
                     return;
                   }
 
-                  // Check if password and repeat password match
+                  // cek apakah password dan repeatpassword sama
                   if (password != repeatPassword) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -195,10 +195,8 @@ class _SignInState extends State<SignIn> {
                     }
                   }
 
+                  //jika semua valid
                   if (isValid) {
-                    /* currUsername = username;
-                    currDisplayname = displayNameController.text.trim(); */
-
                     profileData.addProfile(Profile(
                       id: profileData.profiles.length + 1,
                       username: "@$username", //tambahkan @
@@ -223,10 +221,9 @@ class _SignInState extends State<SignIn> {
                       ),
                     );
                   }
-                  /* setState(() {}); */
                 },
-                child: Text('Sign In'),
                 style: ElevatedButton.styleFrom(),
+                child: const Text('Sign In'),
               ),
             ],
           ),

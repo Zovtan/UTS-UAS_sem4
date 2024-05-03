@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:twitter/class/tweets.dart';
 import 'package:twitter/twitter/comment_page.dart';
-import 'package:twitter/widget/edit_tweet.dart'; // Import the EditTweetPage
+import 'package:twitter/widget/edit_tweet.dart';
 
 class TweetCell extends StatefulWidget {
   final Tweet tweet;
@@ -14,21 +13,19 @@ class TweetCell extends StatefulWidget {
   final Function(int) onDeleteTweet;
 
   const TweetCell(
-      {Key? key,
+      {super.key,
       required this.tweet,
       required this.commentCount,
       required this.formattedDur,
       required this.onTweetEdited,
       required this.currId,
-      required this.onDeleteTweet})
-      : super(key: key);
+      required this.onDeleteTweet});
 
   @override
-  _TweetCellState createState() => _TweetCellState();
+  TweetCellState createState() => TweetCellState();
 }
 
-class _TweetCellState extends State<TweetCell> {
-  
+class TweetCellState extends State<TweetCell> {
   @override
   Widget build(BuildContext context) {
     //hitung total tweet
@@ -38,7 +35,7 @@ class _TweetCellState extends State<TweetCell> {
       children: [
         Container(
           width: 35,
-          margin: EdgeInsets.symmetric(horizontal: 5),
+          margin: const EdgeInsets.symmetric(horizontal: 5),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -53,7 +50,7 @@ class _TweetCellState extends State<TweetCell> {
         ),
         Expanded(
           child: Container(
-            margin: EdgeInsets.all(5),
+            margin: const EdgeInsets.all(5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -65,44 +62,45 @@ class _TweetCellState extends State<TweetCell> {
                         children: [
                           TextSpan(
                             text: widget.tweet.displayName,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           TextSpan(
-                            text: " " + widget.tweet.username,
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 101, 119, 134), fontSize: 16),
+                            text: ' ${widget.tweet.username}',
+                            style: const TextStyle(
+                                color: Color.fromARGB(255, 101, 119, 134),
+                                fontSize: 16),
                           ),
                           TextSpan(
-                            text: " • " + widget.formattedDur,
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 101, 119, 134), fontSize: 16),
+                            text: ' • ${widget.formattedDur}',
+                            style: const TextStyle(
+                                color: Color.fromARGB(255, 101, 119, 134),
+                                fontSize: 16),
                           )
                         ],
                       ),
                     ),
                     //hanya muncul jika ada tweet sendiri
-                    if (widget.tweet.userId ==
-                        widget.currId) // Conditionally render PopupMenuButton
+                    if (widget.tweet.userId == widget.currId)
                       PopupMenuButton<String>(
                         itemBuilder: (BuildContext context) => [
-                          PopupMenuItem<String>(
+                          const PopupMenuItem<String>(
                             value: 'Edit',
                             child: Text('Edit tweet'),
                           ),
-                          PopupMenuItem<String>(
+                          const PopupMenuItem<String>(
                             value: 'Delete',
                             child: Text('Delete tweet'),
                           ),
                         ],
                         onSelected: (value) {
                           if (value == 'Edit') {
-                            _editTweet(); // Call the function to handle tweet editing
+                            _editTweet();
                           } else if (value == 'Delete') {
-                            widget.onDeleteTweet(widget
-                                .tweet.twtId); // Handle delete tweet action
+                            widget.onDeleteTweet(widget.tweet.twtId);
                           }
                         },
-                        child: Icon(
+                        child: const Icon(
                           Icons.more_vert_rounded,
                           color: Color.fromARGB(255, 101, 119, 134),
                           size: 15,
@@ -110,15 +108,18 @@ class _TweetCellState extends State<TweetCell> {
                       ),
                   ],
                 ),
-                SizedBox(height: 5),
-                Text(widget.tweet.tweet, style: TextStyle(fontSize: 16),),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
+                Text(
+                  widget.tweet.tweet,
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(height: 5),
                 if (widget.tweet.image != "none") ...[
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: Image.asset(widget.tweet.image),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                 ],
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -138,16 +139,18 @@ class _TweetCellState extends State<TweetCell> {
                       child: Row(
                         children: [
                           Icon(
-                            widget.tweet.isLiked ? Icons.favorite : Icons.favorite_border,
+                            widget.tweet.isLiked
+                                ? Icons.favorite
+                                : Icons.favorite_border,
                             size: 20,
                             color: widget.tweet.isLiked
                                 ? Colors.red
-                                : Color.fromARGB(255, 101, 119, 134),
+                                : const Color.fromARGB(255, 101, 119, 134),
                           ),
-                          SizedBox(width: 5),
+                          const SizedBox(width: 5),
                           Text(
-                            '${_formatNumber(widget.tweet.likes)}',
-                            style: TextStyle(
+                            _formatNumber(widget.tweet.likes),
+                            style: const TextStyle(
                                 color: Color.fromARGB(255, 101, 119, 134),
                                 fontSize: 16),
                           ),
@@ -168,16 +171,18 @@ class _TweetCellState extends State<TweetCell> {
                       child: Row(
                         children: [
                           Icon(
-                            widget.tweet.isRetweeted ? Icons.repeat : Icons.repeat_rounded,
+                            widget.tweet.isRetweeted
+                                ? Icons.repeat
+                                : Icons.repeat_rounded,
                             size: 20,
                             color: widget.tweet.isRetweeted
                                 ? Colors.green
-                                : Color.fromARGB(255, 101, 119, 134),
+                                : const Color.fromARGB(255, 101, 119, 134),
                           ),
-                          SizedBox(width: 5),
+                          const SizedBox(width: 5),
                           Text(
-                            '${_formatNumber(ttlRetweets)}',
-                            style: TextStyle(
+                            _formatNumber(ttlRetweets),
+                            style: const TextStyle(
                                 color: Color.fromARGB(255, 101, 119, 134),
                                 fontSize: 16),
                           ),
@@ -210,7 +215,8 @@ class _TweetCellState extends State<TweetCell> {
                               },
                               onRetweetPressed: () {
                                 setState(() {
-                                  widget.tweet.isRetweeted = !widget.tweet.isRetweeted;
+                                  widget.tweet.isRetweeted =
+                                      !widget.tweet.isRetweeted;
                                   if (widget.tweet.isRetweeted) {
                                     widget.tweet.retweets++;
                                   } else {
@@ -220,7 +226,8 @@ class _TweetCellState extends State<TweetCell> {
                               },
                               onBookmarkPressed: () {
                                 setState(() {
-                                  widget.tweet.isBookmarked = !widget.tweet.isBookmarked;
+                                  widget.tweet.isBookmarked =
+                                      !widget.tweet.isBookmarked;
                                   if (widget.tweet.isBookmarked) {
                                     widget.tweet.bookmarks++;
                                   } else {
@@ -234,13 +241,13 @@ class _TweetCellState extends State<TweetCell> {
                       },
                       child: Row(
                         children: [
-                          Icon(Icons.mode_comment_outlined,
+                          const Icon(Icons.mode_comment_outlined,
                               size: 20,
                               color: Color.fromARGB(255, 101, 119, 134)),
-                          SizedBox(width: 5),
+                          const SizedBox(width: 5),
                           Text(
-                            '${_formatNumber(widget.tweet.commentCount)}',
-                            style: TextStyle(
+                            _formatNumber(widget.tweet.commentCount),
+                            style: const TextStyle(
                                 color: Color.fromARGB(255, 101, 119, 134),
                                 fontSize: 16),
                           ),
@@ -249,13 +256,13 @@ class _TweetCellState extends State<TweetCell> {
                     ),
                     Row(
                       children: [
-                        Icon(Icons.insert_chart_outlined_rounded,
+                        const Icon(Icons.insert_chart_outlined_rounded,
                             size: 20,
                             color: Color.fromARGB(255, 101, 119, 134)),
-                        SizedBox(width: 5),
+                        const SizedBox(width: 5),
                         Text(
-                          '${_formatNumber(widget.tweet.views)}',
-                          style: TextStyle(
+                          _formatNumber(widget.tweet.views),
+                          style: const TextStyle(
                               color: Color.fromARGB(255, 101, 119, 134),
                               fontSize: 16),
                         ),
@@ -266,7 +273,8 @@ class _TweetCellState extends State<TweetCell> {
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              widget.tweet.isBookmarked = !widget.tweet.isBookmarked;
+                              widget.tweet.isBookmarked =
+                                  !widget.tweet.isBookmarked;
                               if (widget.tweet.isBookmarked) {
                                 widget.tweet.bookmarks++;
                               } else {
@@ -281,13 +289,13 @@ class _TweetCellState extends State<TweetCell> {
                             size: 20,
                             color: widget.tweet.isBookmarked
                                 ? Colors.blue
-                                : Color.fromARGB(255, 101, 119, 134),
+                                : const Color.fromARGB(255, 101, 119, 134),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
-                        Icon(Icons.share_outlined,
+                        const Icon(Icons.share_outlined,
                             size: 20,
                             color: Color.fromARGB(255, 101, 119, 134)),
                       ],
@@ -305,7 +313,7 @@ class _TweetCellState extends State<TweetCell> {
   String _formatNumber(int number) {
     if (number >= 1000) {
       double numberInK = number / 1000;
-      return numberInK.toStringAsFixed(1) + 'k';
+      return '${numberInK.toStringAsFixed(1)}k';
     } else {
       return number.toString();
     }

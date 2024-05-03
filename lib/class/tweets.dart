@@ -192,32 +192,3 @@ class TweetData {
     tweets.removeWhere((tweet) => tweet.twtId == targetTweetId);
   }
 }
-/*   void updateTweet(int index, Tweet tweet) {
-    if (index >= 0 && index < tweets.length) {
-      tweets[index] = tweet;
-    }
-  } */
-
-/* void main() {
-  // Example usage:
-  var jsonData = [
-    {
-      "twtId": 1,
-      "username": "JohnDoe",
-      "displayName": "@johndoe",
-      "tweet": "Just had a fantastic day exploring the city! #travel",
-      "image": "assets/images/image1.jpg",
-      "timestamp": "2024-04-25T08:00:00Z",
-      "likes": 100,
-      "retweets": 50
-    },
-    // Additional tweets here...
-  ];
-
-  TweetData tweetData = TweetData.fromJsonList(jsonData);
-  
-  // Accessing tweets
-  for (var tweet in tweetData.tweets) {
-    print("Tweet: ${tweet.tweet}");
-  }
-} */

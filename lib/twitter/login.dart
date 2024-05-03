@@ -6,7 +6,7 @@ import 'package:twitter/twitter/sign_in.dart';
 class Login extends StatefulWidget {
   final ProfileData profileData;
 
-  const Login({Key? key, required this.profileData}) : super(key: key);
+  const Login({super.key, required this.profileData});
 
   @override
   State<Login> createState() => _LoginState();
@@ -41,26 +41,26 @@ class _LoginState extends State<Login> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(height: 100.0),
-              Text(
+              const SizedBox(height: 100.0),
+              const Text(
                 "What's happening?",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               TextField(
                 maxLines: 1,
                 keyboardType: TextInputType.text,
                 controller: identifierController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Phone, email, or username",
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               TextFormField(
                 maxLines: 1,
                 keyboardType: TextInputType.text,
@@ -69,20 +69,20 @@ class _LoginState extends State<Login> {
                 decoration: InputDecoration(
                   labelText: 'Password',
                   hintText: 'Enter your password',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                   suffixIcon: IconButton(
                     icon: Icon(
                       passwordVisible ? Icons.visibility : Icons.visibility_off,
                     ),
                     onPressed: () {
                       setState(() {
-                        passwordVisible = !passwordVisible;
+                        passwordVisible = !passwordVisible; //update true -> false -> true -> ...
                       });
                     },
                   ),
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               ElevatedButton(
                 onPressed: () {
                   String identifier =
@@ -118,18 +118,18 @@ class _LoginState extends State<Login> {
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
+                      const SnackBar(
                         content: Text('Email or password is incorrect'),
                       ),
                     );
                   }
                 },
-                child: Text(
+                style: ElevatedButton.styleFrom(),
+                child: const Text(
                   'Login',
                 ),
-                style: ElevatedButton.styleFrom(),
               ),
-              SizedBox(height: 10.0),
+              const SizedBox(height: 10.0),
               TextButton(
                 onPressed: () {
                   Navigator.push(
@@ -141,7 +141,7 @@ class _LoginState extends State<Login> {
                     ),
                   );
                 },
-                child: Text(
+                child: const Text(
                   'Sign In',
                 ),
               ),

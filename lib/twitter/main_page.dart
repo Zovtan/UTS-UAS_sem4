@@ -14,12 +14,11 @@ class MainPage extends StatefulWidget {
   final ProfileData profileData;
 
   const MainPage(
-      {Key? key,
+      {super.key,
       required this.currId,
       required this.currUsername,
       required this.currDisplayName,
-      required this.profileData})
-      : super(key: key);
+      required this.profileData});
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -33,8 +32,8 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    _countComments(); // Call the method to count comments
-    profileData = widget.profileData;
+    _countComments();
+    profileData = widget.profileData; // refresh data profil supaya appbar mendapatkan data terbaru
   }
 
   @override
@@ -49,9 +48,11 @@ class _MainPageState extends State<MainPage> {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
+              childCount: tweetData.tweets.length * 2 - 1, //menggandakan jumlah tweet
               (BuildContext context, int index) {
+                //setiap tweet dgn index ganjil di ganti dgn divider, supaya semua tweet bisa muncul maka jumlah tweet digandakan. jika ada tweet ganda yg belum dihapus tersisa maka akan dihapus
                 if (index.isOdd) {
-                  return Divider(
+                  return const Divider(
                     color: Color.fromARGB(120, 101, 119, 134),
                   );
                 } else {
@@ -75,19 +76,17 @@ class _MainPageState extends State<MainPage> {
                     return TweetCell(
                       tweet: tweet,
                       commentCount:
-                      tweet.commentCount, // Pass the actual comment count
+                      tweet.commentCount,
                       formattedDur: formattedDur,
-                      //kirim fungsi
                       onTweetEdited: _editTweet,
                       onDeleteTweet: _deleteTweet,
                       currId: widget.currId,
                     );
                   } else {
-                    return SizedBox();
+                    return const SizedBox(); //kirim widget kosong jika tweet habis
                   }
                 }
               },
-              childCount: tweetData.tweets.length * 2 - 1,
             ),
           ),
         ],
@@ -124,7 +123,7 @@ class _MainPageState extends State<MainPage> {
           );
         },
         backgroundColor: Colors.blue,
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -136,35 +135,24 @@ class _MainPageState extends State<MainPage> {
     List<dynamic> jsonList = jsonDecode(jsonString);
     setState(() {
       for (var tweet in tweetData.tweets) {
-        // Find the comments for the tweet
+        // cari komen utk tweet
         var commentsInTweet = jsonList.firstWhere(
           (comment) => comment['twtId'] == tweet.twtId,
           orElse: () =>
-              {'comments': []}, // If no comments found, use an empty list
+              {'comments': []}, // jika tdk ada komen kosongkan
         )['comments'];
-        // Update the comment count
+        // udpate tweetcount
         tweet.commentCount = commentsInTweet.length;
       }
     });
   }
 
   //panggil fungsi update dan delete
-  //cara modular
   void _editTweet(Tweet editedTweet) {
     setState(() {
       tweetData.updateTweet(editedTweet);
     });
   }
-
-  //cara langsung
-  /* void _editTweet(Tweet editedTweet) {
-    setState(() {
-      int index = tweetData.tweets.indexWhere((tweet) => tweet.id == editedTweet.id);
-      if (index != -1) {
-        tweetData.tweets[index] = editedTweet;
-      }
-    });
-  } */
 
   void _deleteTweet(int twtId) {
     setState(() {

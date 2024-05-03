@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 
 class AddTweetPage extends StatefulWidget {
@@ -7,10 +6,10 @@ class AddTweetPage extends StatefulWidget {
   final String currDisplayName;
 
   const AddTweetPage({
-    Key? key,
+    super.key,
     required this.onTweetAdded,
     required this.currDisplayName,
-  }) : super(key: key);
+  });
 
   @override
   State<AddTweetPage> createState() => _AddTweetPageState();
@@ -30,15 +29,15 @@ class _AddTweetPageState extends State<AddTweetPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: CloseButton(),
+        leading: const CloseButton(),
         backgroundColor: Colors.black,
         actions: [
           ElevatedButton(
             onPressed: () {
-              // Add the new tweet and close the page
+              // larang kirim jika isi tweet kosong
               if (newTweet.isNotEmpty) {
                 widget.onTweetAdded(newTweet);
-                Navigator.of(context).pop(); // Close the page
+                Navigator.of(context).pop(); // tutup page
               }
             },
             style: ElevatedButton.styleFrom(
@@ -47,7 +46,7 @@ class _AddTweetPageState extends State<AddTweetPage> {
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
-            child: Text(
+            child: const Text(
               "Post",
               style: TextStyle(
                 color: Colors.white,
@@ -64,7 +63,7 @@ class _AddTweetPageState extends State<AddTweetPage> {
           children: [
             Container(
               width: 35,
-              margin: EdgeInsetsDirectional.only(end: 10),
+              margin: const EdgeInsetsDirectional.only(end: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -85,7 +84,7 @@ class _AddTweetPageState extends State<AddTweetPage> {
                     autofocus: true,
                     keyboardType: TextInputType.text,
                     maxLines: null,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: "What's happening?",
                       border: InputBorder.none,
                       hintStyle: TextStyle(
@@ -107,6 +106,7 @@ class _AddTweetPageState extends State<AddTweetPage> {
     );
   }
 
+  //hapus isi tweetController saat keluar
   @override
   void dispose() {
     _tweetController.dispose();

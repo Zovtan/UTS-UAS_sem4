@@ -17,8 +17,8 @@ class CommentPage extends StatefulWidget {
   final Function() onRetweetPressed;
   final Function() onBookmarkPressed;
 
-  CommentPage({
-    Key? key,
+  const CommentPage({
+    super.key,
     required this.tweet,
     required this.commentCount,
     required this.currId,
@@ -29,7 +29,7 @@ class CommentPage extends StatefulWidget {
     required this.onLikePressed,
     required this.onRetweetPressed,
     required this.onBookmarkPressed,
-  }) : super(key: key);
+  });
 
   @override
   State<CommentPage> createState() => _CommentPageState();
@@ -75,27 +75,25 @@ class _CommentPageState extends State<CommentPage> {
   }
 
   Future<void> _loadComments() async {
-    // Read the JSON file
+    // baca file json
     String jsonString = await DefaultAssetBundle.of(context)
         .loadString('assets/json/comments.json');
     // Parse JSON
     List<dynamic> jsonList = jsonDecode(jsonString);
-    // Find comments for the selected CommentPage ID
+    // komen yg sesuai dengan tweet yg dibalas
     Map<String, dynamic>? tweetComments = jsonList.firstWhere(
       (element) => element['twtId'] == widget.tweet.twtId,
       orElse: () => null,
     );
-    // Populate the list of comments
+    // isi list dgn json
     if (tweetComments != null) {
       List<dynamic> commentsList = tweetComments['comments'];
       setState(() {
         comments = commentsList.map((json) => Comment.fromJson(json)).toList();
       });
     } else {
-      // No comments found for the selected CommentPage
-      // You can display a message or handle this case accordingly
+      //kirim kossong jika tdk ada komen
       setState(() {
-        // Set comments to an empty list
         comments = [];
       });
     }
@@ -110,7 +108,7 @@ class _CommentPageState extends State<CommentPage> {
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
-        title: Text('Post'),
+        title: const Text('Post'),
         backgroundColor: Colors.black,
       ),
       body: SingleChildScrollView(
@@ -137,20 +135,24 @@ class _CommentPageState extends State<CommentPage> {
                                 fontsize: 10,
                                 count: 2,
                               ),
-                              SizedBox(width: 10,),
+                              const SizedBox(
+                                width: 10,
+                              ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     widget.tweet.displayName,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
                                   ),
                                   Text(
                                     widget.tweet.username,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color:
-                                            Color.fromARGB(255, 101, 119, 134), fontSize: 16),
+                                            Color.fromARGB(255, 101, 119, 134),
+                                        fontSize: 16),
                                   ),
                                 ],
                               ),
@@ -161,41 +163,39 @@ class _CommentPageState extends State<CommentPage> {
                               height: 25,
                               child: ElevatedButton(
                                 onPressed: () {},
-                                child: Text(
-                                  "Follow",
-                                  style: TextStyle(color: Colors.black, fontSize: 16 ),
-                                ),
                                 style: ButtonStyle(
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
                                           Colors.white),
                                 ),
+                                child: const Text(
+                                  "Follow",
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 16),
+                                ),
                               ),
                             ),
                           //hanya muncul jika ada tweet sendiri
-                          if (widget.tweet.userId ==
-                              widget
-                                  .currId) // Conditionally render PopupMenuButton
+                          if (widget.tweet.userId == widget.currId)
                             PopupMenuButton<String>(
                               itemBuilder: (BuildContext context) => [
-                                PopupMenuItem<String>(
+                                const PopupMenuItem<String>(
                                   value: 'Edit',
                                   child: Text('Edit tweet'),
                                 ),
-                                PopupMenuItem<String>(
+                                const PopupMenuItem<String>(
                                   value: 'Delete',
                                   child: Text('Delete tweet'),
                                 ),
                               ],
                               onSelected: (value) {
                                 if (value == 'Edit') {
-                                  _editTweet(); // Call the function to handle tweet editing
+                                  _editTweet();
                                 } else if (value == 'Delete') {
-                                  widget.onDeleteTweet(widget.tweet
-                                      .twtId); // Handle delete tweet action
+                                  widget.onDeleteTweet(widget.tweet.twtId);
                                 }
                               },
-                              child: Icon(
+                              child: const Icon(
                                 Icons.more_vert_rounded,
                                 color: Color.fromARGB(255, 101, 119, 134),
                                 size: 15,
@@ -203,42 +203,48 @@ class _CommentPageState extends State<CommentPage> {
                             ),
                         ],
                       ),
-                      SizedBox(height: 5),
-                      Text(widget.tweet.tweet, style: TextStyle(fontSize: 16),),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
+                      Text(
+                        widget.tweet.tweet,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      const SizedBox(height: 5),
                       if (widget.tweet.image != "none") ...[
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
                           child: Image.asset(widget.tweet.image),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                       ],
                       Column(
                         children: [
                           //waktu dan view
                           Padding(
-                            padding: EdgeInsets.symmetric(vertical: 5),
+                            padding: const EdgeInsets.symmetric(vertical: 5),
                             child: Row(
                               children: [
                                 RichText(
                                   text: TextSpan(
                                     children: [
                                       TextSpan(
-                                        text: formattedTimestamp + " • ",
-                                        style: TextStyle(
+                                        text: '$formattedTimestamp • ',
+                                        style: const TextStyle(
                                             color: Color.fromARGB(
-                                                255, 101, 119, 134), fontSize: 16),
+                                                255, 101, 119, 134),
+                                            fontSize: 16),
                                       ),
                                       TextSpan(
                                         text: widget
                                             .formatNumber(widget.tweet.views),
-                                        style: TextStyle(color: Colors.white, fontSize: 16),
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 16),
                                       ),
-                                      TextSpan(
+                                      const TextSpan(
                                         text: " Views",
                                         style: TextStyle(
                                             color: Color.fromARGB(
-                                                255, 101, 119, 134), fontSize: 16),
+                                                255, 101, 119, 134),
+                                            fontSize: 16),
                                       ),
                                     ],
                                   ),
@@ -246,19 +252,19 @@ class _CommentPageState extends State<CommentPage> {
                               ],
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 7,
                           ),
-                          Divider(
+                          const Divider(
                             color: Color.fromARGB(120, 101, 119, 134),
                             height: 1,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 7,
                           ),
                           //retweet, qtweet, likes, bookmark
                           Padding(
-                            padding: EdgeInsets.symmetric(vertical: 5),
+                            padding: const EdgeInsets.symmetric(vertical: 5),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -268,46 +274,54 @@ class _CommentPageState extends State<CommentPage> {
                                       TextSpan(
                                         text:
                                             '${widget.formatNumber(widget.tweet.retweets)} ',
-                                        style: TextStyle(color: Colors.white, fontSize: 16),
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 16),
                                       ),
-                                      TextSpan(
+                                      const TextSpan(
                                         text: 'Reposts',
                                         style: TextStyle(
                                             color: Color.fromARGB(
-                                                255, 101, 119, 134), fontSize: 16),
+                                                255, 101, 119, 134),
+                                            fontSize: 16),
                                       ),
                                       TextSpan(
                                         text:
                                             '  ${widget.formatNumber(widget.tweet.qtweets)} ',
-                                        style: TextStyle(color: Colors.white, fontSize: 16),
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 16),
                                       ),
-                                      TextSpan(
+                                      const TextSpan(
                                         text: 'Quotes',
                                         style: TextStyle(
                                             color: Color.fromARGB(
-                                                255, 101, 119, 134), fontSize: 16),
+                                                255, 101, 119, 134),
+                                            fontSize: 16),
                                       ),
                                       TextSpan(
                                         text:
                                             '  ${widget.formatNumber(widget.tweet.likes)} ',
-                                        style: TextStyle(color: Colors.white, fontSize: 16),
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 16),
                                       ),
-                                      TextSpan(
+                                      const TextSpan(
                                         text: 'Likes',
                                         style: TextStyle(
                                             color: Color.fromARGB(
-                                                255, 101, 119, 134), fontSize: 16),
+                                                255, 101, 119, 134),
+                                            fontSize: 16),
                                       ),
                                       TextSpan(
                                         text:
                                             '  ${widget.formatNumber(widget.tweet.bookmarks)} ',
-                                        style: TextStyle(color: Colors.white, fontSize: 16),
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 16),
                                       ),
-                                      TextSpan(
+                                      const TextSpan(
                                         text: 'Bookmarks',
                                         style: TextStyle(
                                             color: Color.fromARGB(
-                                                255, 101, 119, 134), fontSize: 16),
+                                                255, 101, 119, 134),
+                                            fontSize: 16),
                                       ),
                                     ],
                                   ),
@@ -315,14 +329,14 @@ class _CommentPageState extends State<CommentPage> {
                               ],
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 7,
                           ),
-                          Divider(
+                          const Divider(
                             color: Color.fromARGB(120, 101, 119, 134),
                             height: 1,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 7,
                           ),
                         ],
@@ -333,7 +347,7 @@ class _CommentPageState extends State<CommentPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Icon(Icons.mode_comment_outlined,
+                              const Icon(Icons.mode_comment_outlined,
                                   size: 24,
                                   color: Color.fromARGB(255, 101, 119, 134)),
                               GestureDetector(
@@ -347,7 +361,8 @@ class _CommentPageState extends State<CommentPage> {
                                   size: 24,
                                   color: isRetweeted
                                       ? Colors.green
-                                      : Color.fromARGB(255, 101, 119, 134),
+                                      : const Color.fromARGB(
+                                          255, 101, 119, 134),
                                 ),
                               ),
                               GestureDetector(
@@ -361,7 +376,8 @@ class _CommentPageState extends State<CommentPage> {
                                   size: 24,
                                   color: isLiked
                                       ? Colors.red
-                                      : Color.fromARGB(255, 101, 119, 134),
+                                      : const Color.fromARGB(
+                                          255, 101, 119, 134),
                                 ),
                               ),
                               GestureDetector(
@@ -375,22 +391,23 @@ class _CommentPageState extends State<CommentPage> {
                                   size: 24,
                                   color: isBookmarked
                                       ? Colors.blue
-                                      : Color.fromARGB(255, 101, 119, 134),
+                                      : const Color.fromARGB(
+                                          255, 101, 119, 134),
                                 ),
                               ),
-                              Icon(Icons.share_outlined,
+                              const Icon(Icons.share_outlined,
                                   size: 24,
                                   color: Color.fromARGB(255, 101, 119, 134)),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 7,
                           ),
-                          Divider(
+                          const Divider(
                             color: Color.fromARGB(120, 101, 119, 134),
                             height: 1,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 7,
                           ),
                         ],
@@ -404,10 +421,10 @@ class _CommentPageState extends State<CommentPage> {
             //komentar
             SizedBox(
               height: MediaQuery.of(context).size.height *
-                  0.5, // Adjust height as needed
+                  0.5, // diberi ukuran supaya bisa dirender oleh singlechildslider
               child: ListView.builder(
                 physics:
-                    NeverScrollableScrollPhysics(), //mencegah double scroll
+                    const NeverScrollableScrollPhysics(), //mencegah double scroll
                 shrinkWrap: true,
                 itemCount: comments.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -417,7 +434,7 @@ class _CommentPageState extends State<CommentPage> {
                     children: [
                       Container(
                         width: 35,
-                        margin: EdgeInsets.symmetric(horizontal: 5),
+                        margin: const EdgeInsets.symmetric(horizontal: 5),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -432,7 +449,7 @@ class _CommentPageState extends State<CommentPage> {
                       ),
                       Expanded(
                         child: Container(
-                          margin: EdgeInsets.all(5),
+                          margin: const EdgeInsets.all(5),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -445,34 +462,40 @@ class _CommentPageState extends State<CommentPage> {
                                       children: [
                                         TextSpan(
                                           text: comment.displayName,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold, fontSize: 16),
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
                                         ),
                                         TextSpan(
-                                          text: " " + comment.username,
-                                          style: TextStyle(
+                                          text: ' ${comment.username}',
+                                          style: const TextStyle(
                                               color: Color.fromARGB(
-                                                  255, 101, 119, 134), fontSize: 16),
+                                                  255, 101, 119, 134),
+                                              fontSize: 16),
                                         ),
                                         TextSpan(
-                                          text: " • " + widget.formattedDur,
-                                          style: TextStyle(
+                                          text: ' • ${widget.formattedDur}',
+                                          style: const TextStyle(
                                               color: Color.fromARGB(
-                                                  255, 101, 119, 134), fontSize: 16),
+                                                  255, 101, 119, 134),
+                                              fontSize: 16),
                                         )
                                       ],
                                     ),
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 5),
-                              Text(widget.tweet.tweet, style: TextStyle(fontSize: 16),),
-                              SizedBox(height: 5),
+                              const SizedBox(height: 5),
+                              Text(
+                                widget.tweet.tweet,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              const SizedBox(height: 5),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
+                                  const Row(
                                     children: [
                                       Icon(
                                         Icons.favorite_border,
@@ -490,7 +513,7 @@ class _CommentPageState extends State<CommentPage> {
                                       ),
                                     ],
                                   ),
-                                  Row(
+                                  const Row(
                                     children: [
                                       Icon(
                                         Icons.repeat_rounded,
@@ -508,7 +531,7 @@ class _CommentPageState extends State<CommentPage> {
                                       ),
                                     ],
                                   ),
-                                  Row(
+                                  const Row(
                                     children: [
                                       Icon(Icons.mode_comment_outlined,
                                           size: 20,
@@ -524,7 +547,7 @@ class _CommentPageState extends State<CommentPage> {
                                       ),
                                     ],
                                   ),
-                                  Row(
+                                  const Row(
                                     children: [
                                       Icon(Icons.insert_chart_outlined_rounded,
                                           size: 20,
@@ -547,13 +570,13 @@ class _CommentPageState extends State<CommentPage> {
                                         size: 20,
                                         color: widget.tweet.isBookmarked
                                             ? Colors.blue
-                                            : Color.fromARGB(
+                                            : const Color.fromARGB(
                                                 255, 101, 119, 134),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 5,
                                       ),
-                                      Icon(Icons.share_outlined,
+                                      const Icon(Icons.share_outlined,
                                           size: 20,
                                           color: Color.fromARGB(
                                               255, 101, 119, 134)),
@@ -583,7 +606,7 @@ class _CommentPageState extends State<CommentPage> {
           tweet: widget.tweet,
           onTweetEdited: (editedTweet) {
             widget.onTweetEdited(
-                editedTweet); // Pass the edited tweet to the parent widget
+                editedTweet); //kirim edited tweet ke parent widget
           },
         ),
       ),
@@ -595,20 +618,20 @@ class _CommentPageState extends State<CommentPage> {
     setState(() {
       isLiked = !isLiked;
     });
-    widget.onLikePressed(); // Notify parent widget
+    widget.onLikePressed(); // peringati parent widget
   }
 
   void onRetweetPressed() {
     setState(() {
       isRetweeted = !isRetweeted;
     });
-    widget.onRetweetPressed(); // Notify parent widget
+    widget.onRetweetPressed();
   }
 
   void onBookmarkPressed() {
     setState(() {
       isBookmarked = !isBookmarked;
     });
-    widget.onBookmarkPressed(); // Notify parent widget
+    widget.onBookmarkPressed();
   }
 }

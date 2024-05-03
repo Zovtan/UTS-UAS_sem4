@@ -38,17 +38,3 @@ class ProfileData {
     profiles.add(profile);
   }
 }
-
-
-
-  /* void deleteBook(int index) {
-    if (index >= 0 && index < books.length) {
-      books.removeAt(index);
-    }
-  }
-
-  void updateBook(int index, String title, String author) {
-    if (index >= 0 && index < books.length) {
-      books[index] = Profile(title: title, author: author);
-    }
-  } */

@@ -6,13 +6,14 @@ class EditTweetPage extends StatefulWidget {
   final Tweet tweet;
   final Function(Tweet) onTweetEdited;
 
-  EditTweetPage({required this.tweet, required this.onTweetEdited});
+  const EditTweetPage(
+      {super.key, required this.tweet, required this.onTweetEdited});
 
   @override
-  _EditTweetPageState createState() => _EditTweetPageState();
+  EditTweetPageState createState() => EditTweetPageState();
 }
 
-class _EditTweetPageState extends State<EditTweetPage> {
+class EditTweetPageState extends State<EditTweetPage> {
   late TextEditingController _tweetController;
 
   @override
@@ -25,33 +26,36 @@ class _EditTweetPageState extends State<EditTweetPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: CloseButton(),
-        title: Text('Edit Tweet'),
+        leading: const CloseButton(),
+        title: const Text('Edit Tweet'),
         backgroundColor: Colors.black,
-        actions: [ElevatedButton(
-              onPressed: () {
-                //larang edit jika tweet kosong
-                if (_tweetController.text.isNotEmpty)
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              //larang edit jika tweet kosong
+              if (_tweetController.text.isNotEmpty) {
                 _editTweet();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
               ),
-              child: Text(
-                'Save Changes',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
+            ),
+            child: const Text(
+              'Save Changes',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
-            ),],
+            ),
+          ),
+        ],
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -59,7 +63,7 @@ class _EditTweetPageState extends State<EditTweetPage> {
               children: [
                 Container(
                   width: 35,
-                  margin: EdgeInsetsDirectional.only(end: 10),
+                  margin: const EdgeInsetsDirectional.only(end: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -76,8 +80,8 @@ class _EditTweetPageState extends State<EditTweetPage> {
                   child: TextField(
                     autofocus: true,
                     controller: _tweetController,
-                    maxLines: null, // Allow multiple lines for editing
-                    decoration: InputDecoration(
+                    maxLines: null, // memperbolehkan membuat baris baru saat membuat tweet
+                    decoration: const InputDecoration(
                       hintText: "Don't leave edited tweet empty",
                       border: InputBorder.none,
                       hintStyle: TextStyle(
@@ -95,7 +99,7 @@ class _EditTweetPageState extends State<EditTweetPage> {
   }
 
   void _editTweet() {
-    // Create the edited tweet based on the text in the TextField
+    //update editedtweet berdasarkan _tweetController
     Tweet editedTweet = Tweet(
       twtId: widget.tweet.twtId,
       userId: widget.tweet.userId,
@@ -112,10 +116,10 @@ class _EditTweetPageState extends State<EditTweetPage> {
       commentCount: widget.tweet.commentCount,
     );
 
-    // Pass the edited tweet back to the previous screen
+    // Kirim editedTweet ke halaman sebelumnya
     widget.onTweetEdited(editedTweet);
 
-    // Close the current screen
+    // tutup page ini
     Navigator.of(context).pop();
   }
 }
