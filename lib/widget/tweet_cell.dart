@@ -193,6 +193,7 @@ class _TweetCellState extends State<TweetCell> {
                               tweet: widget.tweet,
                               commentCount: widget.commentCount,
                               currId: widget.currId,
+                              formattedDur: widget.formattedDur,
                               formatNumber: _formatNumber,
                               onTweetEdited: widget.onTweetEdited,
                               onDeleteTweet: widget.onDeleteTweet,

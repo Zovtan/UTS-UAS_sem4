@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:intl/intl.dart';
 import 'package:twitter/class/tweets.dart';
@@ -11,6 +9,7 @@ class CommentPage extends StatefulWidget {
   final Tweet tweet;
   final int commentCount;
   final int currId;
+  final String formattedDur;
   final Function(int) formatNumber;
   final Function(Tweet) onTweetEdited;
   final Function(int) onDeleteTweet;
@@ -23,6 +22,7 @@ class CommentPage extends StatefulWidget {
     required this.tweet,
     required this.commentCount,
     required this.currId,
+    required this.formattedDur,
     required this.formatNumber,
     required this.onTweetEdited,
     required this.onDeleteTweet,
@@ -245,7 +245,7 @@ class _CommentPageState extends State<CommentPage> {
                             ),
                           ),
                           Divider(
-                            color: Color.fromARGB(255, 101, 119, 134),
+                            color: Color.fromARGB(120, 101, 119, 134),
                             height: 1,
                           ),
                           //retweet, qtweet, likes, bookmark
@@ -308,7 +308,7 @@ class _CommentPageState extends State<CommentPage> {
                             ),
                           ),
                           Divider(
-                            color: Color.fromARGB(255, 101, 119, 134),
+                            color: Color.fromARGB(120, 101, 119, 134),
                             height: 1,
                           ),
                           SizedBox(
@@ -381,7 +381,7 @@ class _CommentPageState extends State<CommentPage> {
                             height: 5,
                           ),
                           Divider(
-                            color: Color.fromARGB(255, 101, 119, 134),
+                            color: Color.fromARGB(120, 101, 119, 134),
                             height: 1,
                           ),
                         ],
@@ -391,19 +391,173 @@ class _CommentPageState extends State<CommentPage> {
                 )
               ],
             ),
+
             //komentar
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.5, // Adjust height as needed
+              height: MediaQuery.of(context).size.height *
+                  0.5, // Adjust height as needed
               child: ListView.builder(
-                physics: NeverScrollableScrollPhysics(), //mencegah double scroll
+                physics:
+                    NeverScrollableScrollPhysics(), //mencegah double scroll
                 shrinkWrap: true,
                 itemCount: comments.length,
                 itemBuilder: (BuildContext context, int index) {
                   Comment comment = comments[index];
-                  return ListTile(
-                    title: Text(comment.comment),
-                    subtitle:
-                        Text('${comment.username} - ${comment.displayName}'),
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 35,
+                        margin: EdgeInsets.symmetric(horizontal: 5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ProfilePicture(
+                              name: comment.displayName,
+                              radius: 18,
+                              fontsize: 10,
+                              count: 2,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: comment.displayName,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        TextSpan(
+                                          text: " " + comment.username,
+                                          style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 101, 119, 134)),
+                                        ),
+                                        TextSpan(
+                                          text: " • " + widget.formattedDur,
+                                          style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 101, 119, 134)),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 5),
+                              Text(widget.tweet.tweet),
+                              SizedBox(height: 5),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+
+                                            Icons.favorite_border,
+                                        size: 16,
+                                        color:Color.fromARGB(
+                                                255, 101, 119, 134),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        '0',
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 101, 119, 134),
+                                            fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.repeat_rounded,
+                                        size: 16,
+                                        color:Color.fromARGB(
+                                                255, 101, 119, 134),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        '0',
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 101, 119, 134),
+                                            fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.mode_comment_outlined,
+                                          size: 16,
+                                          color: Color.fromARGB(
+                                              255, 101, 119, 134)),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        '0',
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 101, 119, 134),
+                                            fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.insert_chart_outlined_rounded,
+                                          size: 16,
+                                          color: Color.fromARGB(
+                                              255, 101, 119, 134)),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        '0',
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 101, 119, 134),
+                                            fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.bookmark_border,
+                                        size: 16,
+                                        color: widget.tweet.isBookmarked
+                                            ? Colors.blue
+                                            : Color.fromARGB(
+                                                255, 101, 119, 134),
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Icon(Icons.share_outlined,
+                                          size: 16,
+                                          color: Color.fromARGB(
+                                              255, 101, 119, 134)),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
                   );
                 },
               ),

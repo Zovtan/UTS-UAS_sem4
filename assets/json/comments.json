@@ -4,38 +4,38 @@
       "comments": [
         {
           "comment_id": 1,
-          "username": "TravelEnthusiast",
-          "displayName": "@traveler",
+          "username": "@TravelEnthusiast",
+          "displayName": "traveler",
           "comment": "Looks like you had an amazing time! I love exploring new cities."
         },
         {
           "comment_id": 2,
-          "username": "CityExplorer",
-          "displayName": "@citylover",
+          "username": "@CityExplorer",
+          "displayName": "citylover",
           "comment": "Which places did you visit? I'm planning a trip there soon!"
         },
         {
           "comment_id": 3,
-          "username": "TravelEnthusiast",
-          "displayName": "@traveler",
+          "username": "@TravelEnthusiast",
+          "displayName": "traveler",
           "comment": "Looks like you had an amazing time! I love exploring new cities."
         },
         {
           "comment_id": 4,
-          "username": "CityExplorer",
-          "displayName": "@citylover",
+          "username": "@CityExplorer",
+          "displayName": "citylover",
           "comment": "Which places did you visit? I'm planning a trip there soon!"
         },
         {
           "comment_id": 5,
-          "username": "TravelEnthusiast",
-          "displayName": "@traveler",
+          "username": "@TravelEnthusiast",
+          "displayName": "traveler",
           "comment": "Looks like you had an amazing time! I love exploring new cities."
         },
         {
           "comment_id": 6,
-          "username": "CityExplorer",
-          "displayName": "@citylover",
+          "username": "@CityExplorer",
+          "displayName": "citylover",
           "comment": "Which places did you visit? I'm planning a trip there soon!"
         }
       ]
@@ -45,14 +45,14 @@
       "comments": [
         {
           "comment_id": 1,
-          "username": "BlogReader",
-          "displayName": "@blogfan",
+          "username": "@BlogReader",
+          "displayName": "blogfan",
           "comment": "Can't wait to read it! Your blog posts are always insightful."
         },
         {
           "comment_id": 2,
-          "username": "TechGeek",
-          "displayName": "@techlover",
+          "username": "@TechGeek",
+          "displayName": "techlover",
           "comment": "Looking forward to checking out the latest tech trends in your post!"
         }
       ]
@@ -62,14 +62,14 @@
       "comments": [
         {
           "comment_id": 1,
-          "username": "GadgetFanatic",
-          "displayName": "@gadgetlover",
+          "username": "@GadgetFanatic",
+          "displayName": "gadgetlover",
           "comment": "That's awesome! What gadget did you get?"
         },
         {
           "comment_id": 2,
-          "username": "Techie",
-          "displayName": "@techie",
+          "username": "@Techie",
+          "displayName": "techie",
           "comment": "Let us know your thoughts after trying it out! I'm curious."
         }
       ]
@@ -79,14 +79,14 @@
       "comments": [
         {
           "comment_id": 1,
-          "username": "SportsEnthusiast",
-          "displayName": "@sportslover",
+          "username": "@SportsEnthusiast",
+          "displayName": "sportslover",
           "comment": "What a game indeed! The comeback was unbelievable."
         },
         {
           "comment_id": 2,
-          "username": "TeamSupporter",
-          "displayName": "@teamsupport",
+          "username": "@TeamSupporter",
+          "displayName": "teamsupport",
           "comment": "I was on the edge of my seat the entire time! Go team!"
         }
       ]
