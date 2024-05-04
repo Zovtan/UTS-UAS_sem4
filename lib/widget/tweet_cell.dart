@@ -343,7 +343,7 @@ class TweetCellState extends State<TweetCell> {
           tweet: widget.tweet,
           onTweetEdited: (editedTweet) {
             widget.onTweetEdited(
-                editedTweet); // Pass the edited tweet to the parent widget
+                editedTweet); // kirim edited tweet ke mainpage
           },
         ),
       ),
