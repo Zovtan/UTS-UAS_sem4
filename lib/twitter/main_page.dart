@@ -39,7 +39,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: TwitterBottomBar(),
+      bottomNavigationBar: const TwitterBottomBar(),
       body: CustomScrollView(
         slivers: [
           TwitterAppBar(
@@ -91,6 +91,7 @@ class _MainPageState extends State<MainPage> {
           ),
         ],
       ),
+      
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
         onPressed: () {
@@ -98,6 +99,7 @@ class _MainPageState extends State<MainPage> {
             context: context,
             builder: (BuildContext context) {
               return AddTweetPage(
+                //terima newTweet dan setState agar dapat muncul di page
                 onTweetAdded: (newTweet) {
                   setState(() {
                     tweetData.addTweet(Tweet(

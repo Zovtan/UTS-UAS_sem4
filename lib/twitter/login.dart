@@ -83,6 +83,8 @@ class _LoginState extends State<Login> {
                 ),
               ),
               const SizedBox(height: 20.0),
+              
+              //login
               ElevatedButton(
                 onPressed: () {
                   String identifier =
@@ -129,6 +131,8 @@ class _LoginState extends State<Login> {
                   'Login',
                 ),
               ),
+
+              //sign in
               const SizedBox(height: 10.0),
               TextButton(
                 onPressed: () {

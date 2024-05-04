@@ -33,7 +33,9 @@ class TweetCellState extends State<TweetCell> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        //kolom 1
         Container(
+          //pfp
           width: 35,
           margin: const EdgeInsets.symmetric(horizontal: 5),
           child: Column(
@@ -48,12 +50,15 @@ class TweetCellState extends State<TweetCell> {
             ],
           ),
         ),
+
+        //kolom 2
         Expanded(
           child: Container(
             margin: const EdgeInsets.all(5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                //nama, waktu dan opsi
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -115,6 +120,8 @@ class TweetCellState extends State<TweetCell> {
                       ),
                   ],
                 ),
+
+                // isi tweet dan image
                 const SizedBox(height: 5),
                 Text(
                   widget.tweet.tweet,
@@ -128,10 +135,11 @@ class TweetCellState extends State<TweetCell> {
                   ),
                   const SizedBox(height: 5),
                 ],
+
+                //icons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Like, Retweet, Comment, and other icons
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -196,6 +204,7 @@ class TweetCellState extends State<TweetCell> {
                         ],
                       ),
                     ),
+
                     //navigasi ke komen
                     GestureDetector(
                       onTap: () {
@@ -317,6 +326,7 @@ class TweetCellState extends State<TweetCell> {
     );
   }
 
+  //jika ada int yg lbh dari 999 singkatkan
   String _formatNumber(int number) {
     if (number >= 1000) {
       double numberInK = number / 1000;

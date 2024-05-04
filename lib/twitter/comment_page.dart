@@ -74,31 +74,6 @@ class _CommentPageState extends State<CommentPage> {
     isBookmarked = widget.tweet.isBookmarked;
   }
 
-  Future<void> _loadComments() async {
-    // baca file json
-    String jsonString = await DefaultAssetBundle.of(context)
-        .loadString('assets/json/comments.json');
-    // Parse JSON
-    List<dynamic> jsonList = jsonDecode(jsonString);
-    // komen yg sesuai dengan tweet yg dibalas
-    Map<String, dynamic>? tweetComments = jsonList.firstWhere(
-      (element) => element['twtId'] == widget.tweet.twtId,
-      orElse: () => null,
-    );
-    // isi list dgn json
-    if (tweetComments != null) {
-      List<dynamic> commentsList = tweetComments['comments'];
-      setState(() {
-        comments = commentsList.map((json) => Comment.fromJson(json)).toList();
-      });
-    } else {
-      //kirim kossong jika tdk ada komen
-      setState(() {
-        comments = [];
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     //format waktu
@@ -115,7 +90,7 @@ class _CommentPageState extends State<CommentPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            //tweet utama
+            //tweet utama (baris 1)
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -123,7 +98,7 @@ class _CommentPageState extends State<CommentPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      //pfp, name, follow
+                      //pfp, name, follow, opsi
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -203,6 +178,8 @@ class _CommentPageState extends State<CommentPage> {
                             ),
                         ],
                       ),
+
+                      // tweet dan image
                       const SizedBox(height: 5),
                       Text(
                         widget.tweet.tweet,
@@ -216,6 +193,8 @@ class _CommentPageState extends State<CommentPage> {
                         ),
                         const SizedBox(height: 5),
                       ],
+                      
+                      //info
                       Column(
                         children: [
                           //waktu dan view
@@ -262,7 +241,8 @@ class _CommentPageState extends State<CommentPage> {
                           const SizedBox(
                             height: 7,
                           ),
-                          //retweet, qtweet, likes, bookmark
+
+                          //jumlah retweet, qtweet, likes, bookmark
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5),
                             child: Row(
@@ -341,7 +321,8 @@ class _CommentPageState extends State<CommentPage> {
                           ),
                         ],
                       ),
-                      // Like, Retweet, Comment, and other icons
+
+                      // icons
                       Column(
                         children: [
                           Row(
@@ -418,7 +399,7 @@ class _CommentPageState extends State<CommentPage> {
               ],
             ),
 
-            //komentar
+            //komentar (baris 2)
             SizedBox(
               height: MediaQuery.of(context).size.height *
                   0.5, // diberi ukuran supaya bisa dirender oleh singlechildslider
@@ -432,6 +413,8 @@ class _CommentPageState extends State<CommentPage> {
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      //kolom 1
+                      //pfp
                       Container(
                         width: 35,
                         margin: const EdgeInsets.symmetric(horizontal: 5),
@@ -447,6 +430,8 @@ class _CommentPageState extends State<CommentPage> {
                           ],
                         ),
                       ),
+
+                      //nama dan durasi
                       Expanded(
                         child: Container(
                           margin: const EdgeInsets.all(5),
@@ -459,7 +444,8 @@ class _CommentPageState extends State<CommentPage> {
                                 children: [
                                   Expanded(
                                     child: RichText(
-                                      overflow: TextOverflow.ellipsis, //jika ada overflow tambal pakai ...
+                                      overflow: TextOverflow
+                                          .ellipsis, //jika ada overflow tambal pakai ...
                                       text: TextSpan(
                                         children: [
                                           TextSpan(
@@ -488,12 +474,16 @@ class _CommentPageState extends State<CommentPage> {
                                   ),
                                 ],
                               ),
+
+                              //isi komentar
                               const SizedBox(height: 5),
                               Text(
                                 comment.comment,
                                 style: const TextStyle(fontSize: 16),
                               ),
                               const SizedBox(height: 5),
+
+                              //icons
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -600,6 +590,31 @@ class _CommentPageState extends State<CommentPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _loadComments() async {
+    // baca file json
+    String jsonString = await DefaultAssetBundle.of(context)
+        .loadString('assets/json/comments.json');
+    // Parse JSON
+    List<dynamic> jsonList = jsonDecode(jsonString);
+    // komen yg sesuai dengan tweet yg dibalas
+    Map<String, dynamic>? tweetComments = jsonList.firstWhere(
+      (element) => element['twtId'] == widget.tweet.twtId,
+      orElse: () => null,
+    );
+    // isi list dgn json
+    if (tweetComments != null) {
+      List<dynamic> commentsList = tweetComments['comments'];
+      setState(() {
+        comments = commentsList.map((json) => Comment.fromJson(json)).toList();
+      });
+    } else {
+      //kirim kossong jika tdk ada komen
+      setState(() {
+        comments = [];
+      });
+    }
   }
 
   void _editTweet() {

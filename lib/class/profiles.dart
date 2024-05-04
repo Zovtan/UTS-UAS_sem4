@@ -34,7 +34,7 @@ class ProfileData {
         password: "99999"),
   ];
 
-    void addProfile(Profile profile) {
+  void addProfile(Profile profile) {
     profiles.add(profile);
   }
 }

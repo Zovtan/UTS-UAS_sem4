@@ -100,10 +100,10 @@ class TweetData {
         tweet: "Took me an hour to climb up here",
         image: "assets/images/image4.png",
         timestamp: "2024-05-02T20:00:00Z",
-        likes: 250,
-        retweets: 80,
-        qtweets: 10,
-        views: 444,
+        likes: 750,
+        retweets: 120,
+        qtweets: 70,
+        views: 844,
         bookmarks: 1),
     Tweet(
         twtId: 6,
@@ -128,10 +128,10 @@ class TweetData {
             "...",
         image: "none",
         timestamp: "2024-05-04T20:00:00Z",
-        likes: 250,
-        retweets: 80,
+        likes: 20,
+        retweets: 20,
         qtweets: 10,
-        views: 300,
+        views: 360,
         bookmarks: 90),
         Tweet(
         twtId: 8,
@@ -142,16 +142,16 @@ class TweetData {
             "Cooked a good bunch of treasure bugs",
         image: "assets/images/image6.jpg",
         timestamp: "2024-05-04T22:00:00Z",
-        likes: 250,
-        retweets: 80,
-        qtweets: 10,
-        views: 300,
-        bookmarks: 90),
+        likes: 199,
+        retweets: 99,
+        qtweets: 99,
+        views: 993,
+        bookmarks: 990),
   ];
 
   void addTweet(Tweet tweet) {
     tweets.insert(0,
-        tweet); // supaya saat tweet baru ditambah, akan diletakkan di paling atas
+        tweet); // supaya saat tweet baru ditambah, akan diletakkan di paling atasR
   }
 
   void updateTweet(Tweet editedTweet) {
