@@ -57,27 +57,34 @@ class TweetCellState extends State<TweetCell> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: widget.tweet.displayName,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          TextSpan(
-                            text: ' ${widget.tweet.username}',
-                            style: const TextStyle(
+                    Expanded(
+                      child: RichText(
+                        overflow: TextOverflow.ellipsis, //jika ada overflow tambal pakai ...
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: widget.tweet.displayName,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            TextSpan(
+                              text: ' ${widget.tweet.username}',
+                              style: const TextStyle(
                                 color: Color.fromARGB(255, 101, 119, 134),
-                                fontSize: 16),
-                          ),
-                          TextSpan(
-                            text: ' • ${widget.formattedDur}',
-                            style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                            TextSpan(
+                              text: ' • ${widget.formattedDur}',
+                              style: const TextStyle(
                                 color: Color.fromARGB(255, 101, 119, 134),
-                                fontSize: 16),
-                          )
-                        ],
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     //hanya muncul jika ada tweet sendiri

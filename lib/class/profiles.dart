@@ -20,18 +20,18 @@ class ProfileData {
   List<Profile> profiles = [
     Profile(
         id: 1,
-        username: "@eagat",
-        displayName: "are",
-        email: "ea@gmail.com",
+        username: "@test",
+        displayName: "tester",
+        email: "test@gmail.com",
         phone: "12345",
-        password: "a"),
+        password: "test"),
     Profile(
         id: 2,
-        username: "@1",
-        displayName: "1e",
-        email: "1@g",
-        phone: "2",
-        password: "1"),
+        username: "@gorlockthebambino",
+        displayName: "Bambino",
+        email: "",
+        phone: "99999",
+        password: "99999"),
   ];
 
     void addProfile(Profile profile) {

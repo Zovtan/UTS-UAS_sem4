@@ -457,37 +457,40 @@ class _CommentPageState extends State<CommentPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: comment.displayName,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        ),
-                                        TextSpan(
-                                          text: ' ${comment.username}',
-                                          style: const TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 101, 119, 134),
-                                              fontSize: 16),
-                                        ),
-                                        TextSpan(
-                                          text: ' • ${widget.formattedDur}',
-                                          style: const TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 101, 119, 134),
-                                              fontSize: 16),
-                                        )
-                                      ],
+                                  Expanded(
+                                    child: RichText(
+                                      overflow: TextOverflow.ellipsis, //jika ada overflow tambal pakai ...
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: comment.displayName,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          TextSpan(
+                                            text: ' ${comment.username}',
+                                            style: const TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 101, 119, 134),
+                                                fontSize: 16),
+                                          ),
+                                          TextSpan(
+                                            text: ' • ${widget.formattedDur}',
+                                            style: const TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 101, 119, 134),
+                                                fontSize: 16),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
                               const SizedBox(height: 5),
                               Text(
-                                widget.tweet.tweet,
+                                comment.comment,
                                 style: const TextStyle(fontSize: 16),
                               ),
                               const SizedBox(height: 5),
