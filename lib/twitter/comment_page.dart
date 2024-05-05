@@ -193,7 +193,7 @@ class _CommentPageState extends State<CommentPage> {
                         ),
                         const SizedBox(height: 5),
                       ],
-                      
+
                       //info
                       Column(
                         children: [
@@ -484,11 +484,11 @@ class _CommentPageState extends State<CommentPage> {
                               const SizedBox(height: 5),
 
                               //icons
-                              Row(
+                              const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Row(
+                                  Row(
                                     children: [
                                       Icon(
                                         Icons.favorite_border,
@@ -506,7 +506,7 @@ class _CommentPageState extends State<CommentPage> {
                                       ),
                                     ],
                                   ),
-                                  const Row(
+                                  Row(
                                     children: [
                                       Icon(
                                         Icons.repeat_rounded,
@@ -524,7 +524,7 @@ class _CommentPageState extends State<CommentPage> {
                                       ),
                                     ],
                                   ),
-                                  const Row(
+                                  Row(
                                     children: [
                                       Icon(Icons.mode_comment_outlined,
                                           size: 20,
@@ -540,7 +540,7 @@ class _CommentPageState extends State<CommentPage> {
                                       ),
                                     ],
                                   ),
-                                  const Row(
+                                  Row(
                                     children: [
                                       Icon(Icons.insert_chart_outlined_rounded,
                                           size: 20,
@@ -561,15 +561,13 @@ class _CommentPageState extends State<CommentPage> {
                                       Icon(
                                         Icons.bookmark_border,
                                         size: 20,
-                                        color: widget.tweet.isBookmarked
-                                            ? Colors.blue
-                                            : const Color.fromARGB(
-                                                255, 101, 119, 134),
+                                        color:
+                                            Color.fromARGB(255, 101, 119, 134),
                                       ),
-                                      const SizedBox(
+                                      SizedBox(
                                         width: 5,
                                       ),
-                                      const Icon(Icons.share_outlined,
+                                      Icon(Icons.share_outlined,
                                           size: 20,
                                           color: Color.fromARGB(
                                               255, 101, 119, 134)),
