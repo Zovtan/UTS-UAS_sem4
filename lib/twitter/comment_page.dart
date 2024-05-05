@@ -631,7 +631,7 @@ class _CommentPageState extends State<CommentPage> {
     );
   }
 
-  // implementasi fungsi utk render value yg terupdate
+  // implementasi fungsi utk render ulang value yg terupdate dan memulai fungsi yg dikirim dari tweet_cell
   void onLikePressed() {
     setState(() {
       isLiked = !isLiked;
