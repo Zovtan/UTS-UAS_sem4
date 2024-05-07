@@ -17,6 +17,8 @@ class TwitterAppBar extends StatelessWidget {
           0, //menghilangkan efek ganti warna saat ada item dibawah appbar
       backgroundColor: Colors.black,
       elevation: 0,
+      floating: true,
+      snap: true, //ini yg menyembunyikan appbar saat scrolling
       centerTitle: true,
       title: Image.asset(
         'assets/images/twitterXlogo.avif',
@@ -80,8 +82,6 @@ class TwitterAppBar extends StatelessWidget {
           ),
         ),
       ],
-      floating: true,
-      snap: true,
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(10.0),
         child: Container(

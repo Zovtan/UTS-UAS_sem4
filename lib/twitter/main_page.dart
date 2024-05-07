@@ -50,7 +50,9 @@ class _MainPageState extends State<MainPage> {
             delegate: SliverChildBuilderDelegate(
               childCount: tweetData.tweets.length * 2 - 1, //menggandakan jumlah tweet
               (BuildContext context, int index) {
-                //setiap tweet dgn index ganjil di ganti dgn divider, supaya semua tweet bisa muncul maka jumlah tweet digandakan. jika ada tweet ganda yg belum dihapus tersisa maka akan dihapus
+                //setiap tweet dgn index ganjil di ganti dgn divider
+                //supaya semua tweet bisa muncul maka jumlah tweet digandakan. 
+                //jika ada tweet ganda yg belum dihapus tersisa maka akan dihapus
                 if (index.isOdd) {
                   return const Divider(
                     color: Color.fromARGB(120, 101, 119, 134),

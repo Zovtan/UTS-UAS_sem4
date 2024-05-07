@@ -41,6 +41,7 @@ class _SignInState extends State<SignIn> {
         ),
       ),
       body: SingleChildScrollView(
+        //textfield
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -120,6 +121,8 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
               const SizedBox(height: 20),
+
+              //tombol submit
               ElevatedButton(
                 onPressed: () {
                   bool isValid = true;

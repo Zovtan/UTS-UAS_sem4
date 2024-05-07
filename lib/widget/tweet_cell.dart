@@ -270,6 +270,7 @@ class TweetCellState extends State<TweetCell> {
                         ],
                       ),
                     ),
+                    
                     Row(
                       children: [
                         const Icon(Icons.insert_chart_outlined_rounded,

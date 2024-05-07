@@ -57,6 +57,7 @@ class _AddTweetPageState extends State<AddTweetPage> {
           ),
         ],
       ),
+      //textfield
       body: Padding(
         padding: const EdgeInsets.all(5),
         child: Row(

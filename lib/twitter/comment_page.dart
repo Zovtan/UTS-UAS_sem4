@@ -60,9 +60,9 @@ class Comment {
 
 class _CommentPageState extends State<CommentPage> {
   List<Comment> comments = [];
-  bool isLiked = false;
-  bool isRetweeted = false;
-  bool isBookmarked = false;
+  late bool isLiked;
+  late bool isRetweeted;
+  late bool isBookmarked;
 
   @override
   void initState() {
