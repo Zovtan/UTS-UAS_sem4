@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:twitter/provider/tweet_prov.dart';
 import 'package:twitter/provider/profile_prov.dart';
 import 'package:twitter/twitter/login.dart';
 
@@ -8,12 +9,16 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ProfileProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ProfileProvider()),
+        ChangeNotifierProvider(create: (context) => TweetProvider()), // Example of adding another provider
+        // Add more providers as needed
+      ],
       child: MaterialApp(
         title: 'Twitter',
         theme: ThemeData(
