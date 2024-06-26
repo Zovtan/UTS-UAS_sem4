@@ -1,31 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:twitter/class/profiles.dart';
+import 'package:provider/provider.dart';
+import 'package:twitter/provider/profile_prov.dart';
 import 'package:twitter/twitter/login.dart';
 
 class SignIn extends StatefulWidget {
-  final ProfileData profileData;
-
-  const SignIn({super.key, required this.profileData});
+  const SignIn({super.key});
 
   @override
   State<SignIn> createState() => _SignInState();
 }
 
 class _SignInState extends State<SignIn> {
-  late ProfileData profileData;
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController displayNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController repeatPasswordController =
-      TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    profileData = widget.profileData;
-  }
+  final TextEditingController repeatPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +32,6 @@ class _SignInState extends State<SignIn> {
         ),
       ),
       body: SingleChildScrollView(
-        //textfield
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -121,112 +111,46 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
               const SizedBox(height: 20),
+              Consumer<ProfileProvider>(
+                builder: (context, profileProvider, child) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      String email = emailController.text.trim().toLowerCase();
+                      String username = usernameController.text.trim().toLowerCase();
+                      String phone = phoneController.text.trim();
+                      String password = passwordController.text.trim();
+                      String repeatPassword = repeatPasswordController.text.trim();
 
-              //tombol submit
-              ElevatedButton(
-                onPressed: () {
-                  bool isValid = true;
-                  String email = emailController.text.trim().toLowerCase();
-                  String username =
-                      usernameController.text.trim().toLowerCase();
-                  String phone = phoneController.text.trim();
-                  String password = passwordController.text.trim();
-                  String repeatPassword = repeatPasswordController.text.trim();
-                  bool isEmailValid =
-                      RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                          .hasMatch(email);
+                      try {
+                        bool isValid = profileProvider.validateAndRegisterProfile(
+                          username: username,
+                          displayName: displayNameController.text.trim(),
+                          email: email,
+                          phone: phone,
+                          password: password,
+                          repeatPassword: repeatPassword,
+                        );
 
-                  // Cek apakah ada username
-                  if (username.isEmpty || displayNameController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                            'Please provide an username and a display name.'),
-                      ),
-                    );
-                    return;
-                  }
-
-                  // cek apakah email dan phone kosong
-                  if (email.isEmpty && phone.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Please provide either email or phone.'),
-                      ),
-                    );
-                    return;
-                  }
-
-                  // cek apakah email valid
-                  if (email.isNotEmpty && !isEmailValid) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Please provide a valid email.'),
-                      ),
-                    );
-                    return;
-                  }
-
-                  //cek apakah ada password
-                  if (password.isEmpty || repeatPassword.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content:
-                            Text('Please provide a password and repeat it.'),
-                      ),
-                    );
-                    return;
-                  }
-
-                  // cek apakah password dan repeatpassword sama
-                  if (password != repeatPassword) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Passwords do not match.'),
-                      ),
-                    );
-                    return;
-                  }
-
-                  //cek apakah profile tersedia
-                  for (var profile in profileData.profiles) {
-                    if ((profile.email == email && email.isNotEmpty) ||
-                        (profile.phone == phone && phone.isNotEmpty) ||
-                        profile.username == username) {
-                      isValid = false;
-                      break;
-                    }
-                  }
-
-                  //jika semua valid
-                  if (isValid) {
-                    profileData.addProfile(Profile(
-                      id: profileData.profiles.length + 1,
-                      username: "@$username", //tambahkan @
-                      displayName: displayNameController.text.trim(),
-                      email: email,
-                      phone: phone,
-                      password: password,
-                    ));
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Login(
-                          profileData: profileData,
-                        ),
-                      ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content:
-                            Text('Email, username, or Phone number is taken'),
-                      ),
-                    );
-                  }
+                        if (isValid) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Login(),
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(e.toString().replaceFirst('Exception: ', '')),
+                          ),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(),
+                    child: const Text('Sign In'),
+                  );
                 },
-                style: ElevatedButton.styleFrom(),
-                child: const Text('Sign In'),
               ),
             ],
           ),

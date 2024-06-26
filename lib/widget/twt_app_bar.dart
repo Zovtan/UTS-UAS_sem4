@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:twitter/twitter/login.dart';
-import 'package:twitter/class/profiles.dart';
 
 class TwitterAppBar extends StatelessWidget {
   final String currDisplayName;
-  final ProfileData profileData;
 
   const TwitterAppBar(
-      {super.key, required this.currDisplayName, required this.profileData});
+      {super.key, required this.currDisplayName});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +49,7 @@ class TwitterAppBar extends StatelessWidget {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Login(profileData: profileData),
+                          builder: (context) => Login(),
                         ),
                         (route) => false,
                       );

@@ -1,31 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:twitter/class/profiles.dart';
+import 'package:twitter/provider/profile_prov.dart';
 import 'package:twitter/twitter/main_page.dart';
 import 'package:twitter/twitter/sign_in.dart';
 
 class Login extends StatefulWidget {
-  final ProfileData profileData;
-
-  const Login({super.key, required this.profileData});
+  const Login({super.key});
 
   @override
   State<Login> createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  late ProfileData profileData;
   TextEditingController identifierController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool passwordVisible = false;
-  String currUsername = "";
-  String currDisplayname = "";
-  int currId = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    profileData = widget.profileData;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +30,6 @@ class _LoginState extends State<Login> {
         ),
       ),
       body: SingleChildScrollView(
-        //textfield
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -77,78 +66,58 @@ class _LoginState extends State<Login> {
                     ),
                     onPressed: () {
                       setState(() {
-                        passwordVisible = !passwordVisible; //update true -> false -> true -> ...
+                        passwordVisible = !passwordVisible;
                       });
                     },
                   ),
                 ),
               ),
               const SizedBox(height: 20.0),
-              
-              //login
-              ElevatedButton(
-                onPressed: () {
-                  String identifier =
-                      identifierController.text.trim().toLowerCase();
-                  String password = passwordController.text.trim();
+              Consumer<ProfileProvider>(
+                builder: (context, profileProvider, child) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      String identifier = identifierController.text.trim().toLowerCase();
+                      String password = passwordController.text.trim();
 
-                  bool isValid = false;
-                  for (var profile in profileData.profiles) {
-                    if ((profile.email == identifier ||
-                            profile.username == "@$identifier" || //cek pakai @
-                            profile.phone == identifier) &&
-                        profile.password == password) {
-                      isValid = true;
-                      currUsername = profile.username;
-                      currDisplayname = profile.displayName;
-                      currId = profile.id;
-                      break;
-                    }
-                  }
+                      Profile? profile = profileProvider.getProfile(identifier, password);
 
-                  if (isValid) {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MainPage(
-                          currId: currId,
-                          currUsername: currUsername,
-                          currDisplayName: currDisplayname,
-                          profileData: profileData,
-                        ),
-                      ),
-                      (route) => false,
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Email or password is incorrect'),
-                      ),
-                    );
-                  }
+                      if (profile != null) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MainPage(
+                              currId: profile.id,
+                              currUsername: profile.username,
+                              currDisplayName: profile.displayName,
+                            ),
+                          ),
+                          (route) => false,
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Email or password is incorrect'),
+                          ),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(),
+                    child: const Text('Login'),
+                  );
                 },
-                style: ElevatedButton.styleFrom(),
-                child: const Text(
-                  'Login',
-                ),
               ),
-
-              //sign in
               const SizedBox(height: 10.0),
               TextButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SignIn(
-                        profileData: profileData,
-                      ),
+                      builder: (context) => const SignIn(),
                     ),
                   );
                 },
-                child: const Text(
-                  'Sign In',
-                ),
+                child: const Text('Sign In'),
               ),
             ],
           ),

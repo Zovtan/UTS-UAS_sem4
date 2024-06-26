@@ -11,14 +11,13 @@ class MainPage extends StatefulWidget {
   final int currId;
   final String currUsername;
   final String currDisplayName;
-  final ProfileData profileData;
 
   const MainPage(
       {super.key,
       required this.currId,
       required this.currUsername,
       required this.currDisplayName,
-      required this.profileData});
+      });
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -33,7 +32,6 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     _countComments();
-    profileData = widget.profileData; // refresh data profil supaya appbar mendapatkan data terbaru
   }
 
   @override
@@ -44,7 +42,6 @@ class _MainPageState extends State<MainPage> {
         slivers: [
           TwitterAppBar(
             currDisplayName: widget.currDisplayName,
-            profileData: profileData,
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(

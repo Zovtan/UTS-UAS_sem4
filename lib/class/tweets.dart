@@ -43,7 +43,7 @@ class TweetData {
         userId: 165,
         username: "@shampoo",
         displayName: "John Shamos",
-        tweet: "THEY JUST HUNTED MY FAMILY",
+        tweet: "AAARGH THEY JUST HUNTED MY FAMILY",
         image: "assets/images/image1.jpeg",
         timestamp: "2024-05-04T08:00:00Z",
         likes: 100,
