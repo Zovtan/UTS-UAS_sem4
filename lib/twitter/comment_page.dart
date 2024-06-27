@@ -9,13 +9,11 @@ import 'package:provider/provider.dart';
 class CommentPage extends StatefulWidget {
   final Tweet tweet;
   final int currId;
-  final String formattedDur;
 
   const CommentPage({
     Key? key,
     required this.tweet,
     required this.currId,
-    required this.formattedDur,
   }) : super(key: key);
 
   @override
@@ -467,7 +465,7 @@ class _CommentPageState extends State<CommentPage> {
                                                 fontSize: 16),
                                           ),
                                           TextSpan(
-                                            text: ' • ${widget.formattedDur}',
+                                            text: ' • ${Provider.of<TweetProvider>(context, listen: false).formatDur(parsedTimestamp)}',
                                             style: TextStyle(
                                                 color: Color.fromARGB(
                                                     255, 101, 119, 134),

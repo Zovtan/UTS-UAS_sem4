@@ -37,11 +37,10 @@ class MainPage extends StatelessWidget {
                       );
                     } else {
                       try {
-                        TweetAndFormattedDur tweetAndFormattedDur =
-                            tweetProvider.getTweetAndFormattedDur(index);
+                        TweetIm tweetIm =
+                            tweetProvider.getTweetIm(index);
                         return TweetCell(
-                          tweet: tweetAndFormattedDur.tweet,
-                          formattedDur: tweetAndFormattedDur.formattedDur,
+                          tweet: tweetIm.tweet,
                           currId: currId,
                         );
                       } catch (e) {

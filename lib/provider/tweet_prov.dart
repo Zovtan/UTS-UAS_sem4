@@ -26,7 +26,7 @@ class TweetProvider with ChangeNotifier {
     String jsonString = await DefaultAssetBundle.of(context)
         .loadString('assets/json/comments.json');
     List<dynamic> jsonList = jsonDecode(jsonString);
-    
+
     for (var tweet in _tweetData.tweets) {
       var commentsInTweet = jsonList.firstWhere(
         (comment) => comment['twtId'] == tweet.twtId,
@@ -37,24 +37,26 @@ class TweetProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Method to get formatted duration and tweet by index
-  TweetAndFormattedDur getTweetAndFormattedDur(int index) {
+// Method to get formatted duration
+  String formatDur(DateTime parsedTimestamp) {
+    var durTime = DateTime.now().difference(parsedTimestamp);
+    if (durTime.inDays > 0) {
+      return "${durTime.inDays}d";
+    } else if (durTime.inHours > 0) {
+      return "${durTime.inHours}h";
+    } else if (durTime.inMinutes > 0) {
+      return "${durTime.inMinutes}m";
+    } else {
+      return "Less than a minute";
+    }
+  }
+
+// Method to get tweet by index
+  TweetIm getTweetIm(int index) {
     int tweetIndex = index ~/ 2;
     if (tweetIndex < tweets.length) {
       Tweet tweet = tweets[tweetIndex];
-      DateTime parsedTimestamp = DateTime.parse(tweet.timestamp);
-      var durTime = DateTime.now().difference(parsedTimestamp);
-      String formattedDur;
-      if (durTime.inDays > 0) {
-        formattedDur = "${durTime.inDays}d";
-      } else if (durTime.inHours > 0) {
-        formattedDur = "${durTime.inHours}h";
-      } else if (durTime.inMinutes > 0) {
-        formattedDur = "${durTime.inMinutes}m";
-      } else {
-        formattedDur = "Less than a minute";
-      }
-      return TweetAndFormattedDur(tweet: tweet, formattedDur: formattedDur);
+      return TweetIm(tweet: tweet);
     } else {
       throw Exception("Tweet index out of bounds");
     }
@@ -118,12 +120,10 @@ class TweetProvider with ChangeNotifier {
   }
 }
 
-class TweetAndFormattedDur {
+class TweetIm {
   final Tweet tweet;
-  final String formattedDur;
 
-  TweetAndFormattedDur({
+  TweetIm({
     required this.tweet,
-    required this.formattedDur,
   });
 }

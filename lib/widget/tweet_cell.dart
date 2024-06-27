@@ -7,13 +7,11 @@ import 'package:provider/provider.dart';
 
 class TweetCell extends StatelessWidget {
   final Tweet tweet;
-  final String formattedDur;
   final int currId;
 
   const TweetCell({
     Key? key,
     required this.tweet,
-    required this.formattedDur,
     required this.currId,
   }) : super(key: key);
 
@@ -23,6 +21,7 @@ class TweetCell extends StatelessWidget {
       builder: (context, tweetProvider, _) {
         // Calculate total retweets
         int ttlRetweets = tweet.retweets + tweet.qtweets;
+        DateTime parsedTimestamp = DateTime.parse(tweet.timestamp);
 
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +74,7 @@ class TweetCell extends StatelessWidget {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: ' • $formattedDur',
+                                  text: ' • ${tweetProvider.formatDur(parsedTimestamp)}',
                                   style: const TextStyle(
                                     color: Color.fromARGB(255, 101, 119, 134),
                                     fontSize: 16,
@@ -158,7 +157,6 @@ class TweetCell extends StatelessWidget {
                                 builder: (context) => CommentPage(
                                   tweet: tweet,
                                   currId: currId,
-                                  formattedDur: formattedDur,
                                 ),
                               ),
                             );
