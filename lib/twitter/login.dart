@@ -95,18 +95,6 @@ class _LoginState extends State<Login> {
                               setState(() {
                                 isLoading = false;
                               });
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MainPage(
-                                    currId: profileProvider.profile!.id,
-                                    currUsername:
-                                        profileProvider.profile!.username,
-                                    currDisplayName:
-                                        profileProvider.profile!.displayName,
-                                  ),
-                                ),
-                              );
                             } catch (e) {
                               setState(() {
                                 isLoading = false;

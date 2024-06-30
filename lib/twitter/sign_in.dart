@@ -102,19 +102,15 @@ class _SignInState extends State<SignIn> {
                             setState(() {
                               isLoading = true;
                             });
-                            String email = emailController.text.trim().toLowerCase();
-                            String username = usernameController.text.trim().toLowerCase();
-                            String password = passwordController.text.trim();
-                            String repeatPassword = repeatPasswordController.text.trim();
 
                             try {
                               await profileProvider.register(
                                 context: context,
-                                username: username,
-                                displayName: displayNameController.text.trim(),
-                                email: email,
-                                password: password,
-                                repeatPassword: repeatPassword,
+                                username: usernameController.text,
+                                displayName: displayNameController.text,
+                                email: emailController.text,
+                                password: passwordController.text,
+                                repeatPassword: repeatPasswordController.text,
                               );
 
                               ScaffoldMessenger.of(context).showSnackBar(
