@@ -8,7 +8,7 @@ import 'package:twitter/widget/twt_bottom_bar.dart';
 import 'package:twitter/widget/add_tweet.dart';
 
 class MainPage extends StatelessWidget {
-  final int currId;
+  final int? currId;
   final String currUsername;
   final String currDisplayName;
 
@@ -69,7 +69,7 @@ class MainPage extends StatelessWidget {
                             .tweets
                             .length +
                         1,
-                    userId: currId,
+                    userId: currId ?? 0,
                     username: currUsername,
                     displayName: currDisplayName,
                     tweet: newTweet,

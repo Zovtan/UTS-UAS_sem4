@@ -1,75 +1,120 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:twitter/class/profiles.dart';
+import 'package:http/http.dart' as http;
+import 'package:twitter/model/profiles_mdl.dart';
+import 'package:twitter/twitter/login.dart'; // Assuming you have a profile model defined
 
 class ProfileProvider with ChangeNotifier {
-  final ProfileData _profileData = ProfileData();
+  final String baseUrl =
+      'http://10.0.2.2:3031/profile'; // For Android emulator in Visual Studio
 
-  ProfileData get profileData => _profileData;
+  Profile? _profile;
+  String? _errorMessage;
 
-  void addProfile(Profile profile) {
-    _profileData.addProfile(profile);
-    notifyListeners();
-  }
+  Profile? get profile => _profile;
+  String? get errorMessage => _errorMessage;
 
-  Profile? getProfile(String identifier, String password) {
-    for (var profile in _profileData.profiles) {
-      if ((profile.email == identifier ||
-          profile.username == "@$identifier" ||
-          profile.phone == identifier) &&
-          profile.password == password) {
-        return profile;
+  Future<void> readProfile(int id) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/$id'));
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        _profile = Profile.fromJson(responseData['profile']);
+        _errorMessage = null;
+        notifyListeners();
+      } else {
+        throw Exception('Failed to load profile: ${response.statusCode}');
       }
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+      throw Exception('Failed to load profile: $e');
     }
-    return null;
   }
 
-  bool validateAndRegisterProfile({
+  Future<void> login(
+      String identifier, String password, BuildContext context) async {
+    try {
+      final response = await http.post(Uri.parse('$baseUrl/login'), body: {
+        'identifier': identifier, // Send identifier (email, or username)
+        'password': password,
+      });
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        String token = responseData['token'];
+
+        // Example of storing token using shared preferences or secure storage
+        // SecureStorage.saveToken(token);
+
+        // Navigate to main page on successful login
+        // Navigator.pushReplacementNamed(context, '/main');
+      } else {
+        throw Exception('Failed to login: ${response.statusCode}');
+      }
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Login failed: ${e.toString()}'),
+        ),
+      );
+      throw Exception('Failed to login: $e');
+    }
+  }
+
+  Future<void> register({
     required String username,
     required String displayName,
     required String email,
-    required String phone,
     required String password,
     required String repeatPassword,
-  }) {
-    bool isEmailValid = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
-
-    if (username.isEmpty || displayName.isEmpty) {
-      throw Exception('Please provide a username and a display name.');
-    }
-
-    if (email.isEmpty && phone.isEmpty) {
-      throw Exception('Please provide either email or phone.');
-    }
-
-    if (email.isNotEmpty && !isEmailValid) {
-      throw Exception('Please provide a valid email.');
-    }
-
-    if (password.isEmpty || repeatPassword.isEmpty) {
-      throw Exception('Please provide a password and repeat it.');
-    }
-
-    if (password != repeatPassword) {
-      throw Exception('Passwords do not match.');
-    }
-
-    for (var profile in _profileData.profiles) {
-      if ((profile.email == email && email.isNotEmpty) ||
-          (profile.phone == phone && phone.isNotEmpty) ||
-          profile.username == username) {
-        throw Exception('Email, username, or phone number is taken.');
+    required BuildContext context,
+  }) async {
+    try {
+      if (password != repeatPassword) {
+        throw Exception('Passwords do not match');
       }
+
+      final response = await http.post(Uri.parse('$baseUrl/register'), body: {
+        'username': username,
+        'displayName': displayName,
+        'email': email,
+        'password': password,
+        'confirmPassword': repeatPassword
+      });
+
+      if (response.statusCode == 201) {
+        final responseData = json.decode(response.body);
+        int userId =
+            responseData['userId']; // Adjust based on your API response
+
+        // Update local profile state or navigate to next screen on successful registration
+        _profile = Profile(
+            username: username,
+            displayName: displayName,
+            email: email,
+            password: password);
+
+        // Example of navigating to login screen after successful registration
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Login(),
+          ),
+        );
+      } else {
+        throw Exception('Failed to register: ${response.statusCode}');
+      }
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Registration failed: ${e.toString()}'),
+        ),
+      );
+      throw Exception('Failed to register: $e');
     }
-
-    addProfile(Profile(
-      id: _profileData.profiles.length + 1,
-      username: "@$username",
-      displayName: displayName,
-      email: email,
-      phone: phone,
-      password: password,
-    ));
-
-    return true;
   }
 }

@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 class TweetCell extends StatelessWidget {
   final Tweet tweet;
-  final int currId;
+  final int? currId;
 
   const TweetCell({
     Key? key,

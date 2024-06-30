@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:twitter/class/profiles.dart';
 import 'package:twitter/provider/profile_prov.dart';
 import 'package:twitter/twitter/main_page.dart';
 import 'package:twitter/twitter/sign_in.dart';
 
 class Login extends StatefulWidget {
-  const Login({super.key});
+  const Login({Key? key});
 
   @override
   State<Login> createState() => _LoginState();
@@ -16,6 +15,7 @@ class _LoginState extends State<Login> {
   TextEditingController identifierController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool passwordVisible = false;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -75,36 +75,52 @@ class _LoginState extends State<Login> {
               const SizedBox(height: 20.0),
               Consumer<ProfileProvider>(
                 builder: (context, profileProvider, child) {
-                  return ElevatedButton(
-                    onPressed: () {
-                      String identifier = identifierController.text.trim().toLowerCase();
-                      String password = passwordController.text.trim();
+                  return isLoading
+                      ? Center(child: CircularProgressIndicator())
+                      : ElevatedButton(
+                          onPressed: () async {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            String identifier =
+                                identifierController.text.trim().toLowerCase();
+                            String password = passwordController.text.trim();
 
-                      Profile? profile = profileProvider.getProfile(identifier, password);
-
-                      if (profile != null) {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MainPage(
-                              currId: profile.id,
-                              currUsername: profile.username,
-                              currDisplayName: profile.displayName,
-                            ),
-                          ),
-                          (route) => false,
+                            try {
+                              await profileProvider.login(
+                                identifier,
+                                password,
+                                context,
+                              );
+                              setState(() {
+                                isLoading = false;
+                              });
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MainPage(
+                                    currId: profileProvider.profile!.id,
+                                    currUsername:
+                                        profileProvider.profile!.username,
+                                    currDisplayName:
+                                        profileProvider.profile!.displayName,
+                                  ),
+                                ),
+                              );
+                            } catch (e) {
+                              setState(() {
+                                isLoading = false;
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Login failed: ${e.toString()}'),
+                                ),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(),
+                          child: const Text('Login'),
                         );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Email or password is incorrect'),
-                          ),
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(),
-                    child: const Text('Login'),
-                  );
                 },
               ),
               const SizedBox(height: 10.0),

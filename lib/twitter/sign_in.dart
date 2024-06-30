@@ -4,7 +4,7 @@ import 'package:twitter/provider/profile_prov.dart';
 import 'package:twitter/twitter/login.dart';
 
 class SignIn extends StatefulWidget {
-  const SignIn({super.key});
+  const SignIn({Key? key}) : super(key: key);
 
   @override
   State<SignIn> createState() => _SignInState();
@@ -14,9 +14,9 @@ class _SignInState extends State<SignIn> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController displayNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController repeatPasswordController = TextEditingController();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -65,32 +65,14 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
               const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      maxLines: 1,
-                      keyboardType: TextInputType.emailAddress,
-                      controller: emailController,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: TextField(
-                      maxLines: 1,
-                      keyboardType: TextInputType.phone,
-                      controller: phoneController,
-                      decoration: const InputDecoration(
-                        labelText: 'Phone',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                ],
+              TextField(
+                maxLines: 1,
+                keyboardType: TextInputType.emailAddress,
+                controller: emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 20),
               TextField(
@@ -113,43 +95,46 @@ class _SignInState extends State<SignIn> {
               const SizedBox(height: 20),
               Consumer<ProfileProvider>(
                 builder: (context, profileProvider, child) {
-                  return ElevatedButton(
-                    onPressed: () {
-                      String email = emailController.text.trim().toLowerCase();
-                      String username = usernameController.text.trim().toLowerCase();
-                      String phone = phoneController.text.trim();
-                      String password = passwordController.text.trim();
-                      String repeatPassword = repeatPasswordController.text.trim();
+                  return isLoading
+                      ? Center(child: CircularProgressIndicator())
+                      : ElevatedButton(
+                          onPressed: () async {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            String email = emailController.text.trim().toLowerCase();
+                            String username = usernameController.text.trim().toLowerCase();
+                            String password = passwordController.text.trim();
+                            String repeatPassword = repeatPasswordController.text.trim();
 
-                      try {
-                        bool isValid = profileProvider.validateAndRegisterProfile(
-                          username: username,
-                          displayName: displayNameController.text.trim(),
-                          email: email,
-                          phone: phone,
-                          password: password,
-                          repeatPassword: repeatPassword,
-                        );
+                            try {
+                              await profileProvider.register(
+                                context: context,
+                                username: username,
+                                displayName: displayNameController.text.trim(),
+                                email: email,
+                                password: password,
+                                repeatPassword: repeatPassword,
+                              );
 
-                        if (isValid) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Login(),
-                            ),
-                          );
-                        }
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(e.toString().replaceFirst('Exception: ', '')),
-                          ),
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Registration successful!')),
+                              );
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(e.toString().replaceFirst('Exception: ', '')),
+                                ),
+                              );
+                            } finally {
+                              setState(() {
+                                isLoading = false;
+                              });
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(),
+                          child: const Text('Sign In'),
                         );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(),
-                    child: const Text('Sign In'),
-                  );
                 },
               ),
             ],

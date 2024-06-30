@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 class CommentPage extends StatefulWidget {
   final Tweet tweet;
-  final int currId;
+  final int? currId;
 
   const CommentPage({
     Key? key,
