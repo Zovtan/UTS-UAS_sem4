@@ -15,10 +15,11 @@ class TweetCell extends StatelessWidget {
     required this.currId,
   }) : super(key: key);
 
+  
   @override
   Widget build(BuildContext context) {
     return Consumer<TweetProvider>(
-      builder: (context, tweetProvider, _) {
+      builder: (context, TweetProvider, _) {
         // Calculate total retweets
         int ttlRetweets = tweet.retweets + tweet.qtweets;
         DateTime parsedTimestamp = DateTime.parse(tweet.timestamp);
@@ -74,7 +75,7 @@ class TweetCell extends StatelessWidget {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: ' • ${tweetProvider.formatDur(parsedTimestamp)}',
+                                  text: ' • ${TweetProvider.formatDur(parsedTimestamp)}',
                                   style: const TextStyle(
                                     color: Color.fromARGB(255, 101, 119, 134),
                                     fontSize: 16,
@@ -99,9 +100,9 @@ class TweetCell extends StatelessWidget {
                             ],
                             onSelected: (value) {
                               if (value == 'Edit') {
-                                tweetProvider.editTweet(context, tweet);
+                                TweetProvider.editTweet(context, tweet);
                               } else if (value == 'Delete') {
-                                tweetProvider.deleteTweet(tweet.twtId);
+                                TweetProvider.deleteTweet(tweet.twtId);
                               }
                             },
                             child: const Icon(
@@ -136,17 +137,17 @@ class TweetCell extends StatelessWidget {
                           tweet.isLiked ? Icons.favorite : Icons.favorite_border,
                           tweet.isLiked ? Colors.red : const Color.fromARGB(255, 101, 119, 134),
                           () {
-                            tweetProvider.toggleLike(tweet);
+                            TweetProvider.toggleLike(tweet);
                           },
-                          tweetProvider.formatNumber(tweet.likes),
+                          TweetProvider.formatNumber(tweet.likes),
                         ),
                         _buildGestureDetector(
                           tweet.isRetweeted ? Icons.repeat : Icons.repeat_rounded,
                           tweet.isRetweeted ? Colors.green : const Color.fromARGB(255, 101, 119, 134),
                           () {
-                            tweetProvider.toggleRetweet(tweet);
+                            TweetProvider.toggleRetweet(tweet);
                           },
-                          tweetProvider.formatNumber(ttlRetweets),
+                          TweetProvider.formatNumber(ttlRetweets),
                         ),
                         _buildGestureDetector(
                           Icons.mode_comment_outlined,
@@ -161,14 +162,14 @@ class TweetCell extends StatelessWidget {
                               ),
                             );
                           },
-                          tweetProvider.formatNumber(tweet.commentCount),
+                          TweetProvider.formatNumber(tweet.commentCount),
                         ),
-                        _buildIcon(Icons.insert_chart_outlined_rounded, tweetProvider.formatNumber(tweet.views)),
+                        _buildIcon(Icons.insert_chart_outlined_rounded, TweetProvider.formatNumber(tweet.views)),
                         _buildGestureDetector(
                           tweet.isBookmarked ? Icons.bookmark : Icons.bookmark_border,
                           tweet.isBookmarked ? Colors.blue : const Color.fromARGB(255, 101, 119, 134),
                           () {
-                            tweetProvider.toggleBookmark(tweet);
+                            TweetProvider.toggleBookmark(tweet);
                           },
                           '',
                         ),

@@ -56,7 +56,8 @@ class TweetData {
         userId: 166,
         username: "@thebestemployee",
         displayName: "Mission Control",
-        tweet: "Can't believe the last batch of new recruits fell into a deep pit",
+        tweet:
+            "Can't believe the last batch of new recruits fell into a deep pit",
         image: "none",
         timestamp: "2024-05-03T10:30:00Z",
         likes: 200,
@@ -69,8 +70,7 @@ class TweetData {
         userId: 167,
         username: "@trendieteen",
         displayName: "Popular Pepino",
-        tweet:
-            "They got Jacob!",
+        tweet: "They got Jacob!",
         image: "assets/images/image2.png",
         timestamp: "2024-05-03T15:45:00Z",
         likes: 150,
@@ -83,8 +83,7 @@ class TweetData {
         userId: 168,
         username: "@wanderingmonk",
         displayName: "Mikudrin",
-        tweet:
-            "I look sooo good 💅💅💅",
+        tweet: "I look sooo good 💅💅💅",
         image: "assets/images/image3.png",
         timestamp: "2024-05-04T12:15:00Z",
         likes: 300,
@@ -110,8 +109,7 @@ class TweetData {
         userId: 170,
         username: "@judgementkazzy",
         displayName: "Uncle Kaz",
-        tweet:
-            "What have I run into this time...",
+        tweet: "What have I run into this time...",
         image: "assets/images/image5.png",
         timestamp: "2024-05-01T20:00:00Z",
         likes: 6900,
@@ -124,8 +122,7 @@ class TweetData {
         userId: 171,
         username: "@thechosenundead",
         displayName: "Local Knight",
-        tweet:
-            "...",
+        tweet: "...",
         image: "none",
         timestamp: "2024-05-04T20:00:00Z",
         likes: 20,
@@ -133,13 +130,12 @@ class TweetData {
         qtweets: 10,
         views: 360,
         bookmarks: 90),
-        Tweet(
+    Tweet(
         twtId: 8,
         userId: 172,
         username: "@dungeondwelver",
         displayName: "Senshi",
-        tweet:
-            "Cooked a good bunch of treasure bugs",
+        tweet: "Cooked a good bunch of treasure bugs",
         image: "assets/images/image6.jpg",
         timestamp: "2024-05-04T22:00:00Z",
         likes: 199,
@@ -151,7 +147,7 @@ class TweetData {
 
   void addTweet(Tweet tweet) {
     tweets.insert(0,
-        tweet); // supaya saat tweet baru ditambah, akan diletakkan di paling atasR
+        tweet); // supaya saat tweet baru ditambah, akan diletakkan di paling atas
   }
 
   void updateTweet(Tweet editedTweet) {

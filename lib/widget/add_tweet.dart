@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
+import 'package:provider/provider.dart';
+import 'package:twitter/class/tweets.dart';
+import 'package:twitter/provider/tweet_prov.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddTweetPage extends StatefulWidget {
-  final Function(String) onTweetAdded;
+  final String currUsername;
   final String currDisplayName;
 
   const AddTweetPage({
-    super.key,
-    required this.onTweetAdded,
+    Key? key,
+    required this.currUsername,
     required this.currDisplayName,
-  });
+  }) : super(key: key);
 
   @override
   State<AddTweetPage> createState() => _AddTweetPageState();
@@ -18,11 +22,20 @@ class AddTweetPage extends StatefulWidget {
 class _AddTweetPageState extends State<AddTweetPage> {
   late TextEditingController _tweetController;
   String newTweet = '';
+  int? currId;
 
   @override
   void initState() {
     super.initState();
     _tweetController = TextEditingController();
+    _loadCurrId();
+  }
+
+  Future<void> _loadCurrId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      currId = prefs.getInt('currUserId');
+    });
   }
 
   @override
@@ -34,10 +47,10 @@ class _AddTweetPageState extends State<AddTweetPage> {
         actions: [
           ElevatedButton(
             onPressed: () {
-              // larang kirim jika isi tweet kosong
+              // Prevent posting if tweet is empty
               if (newTweet.isNotEmpty) {
-                widget.onTweetAdded(newTweet);
-                Navigator.of(context).pop(); // tutup page
+                _addTweet(context);
+                Navigator.of(context).pop(); // Close page
               }
             },
             style: ElevatedButton.styleFrom(
@@ -57,7 +70,6 @@ class _AddTweetPageState extends State<AddTweetPage> {
           ),
         ],
       ),
-      //textfield
       body: Padding(
         padding: const EdgeInsets.all(5),
         child: Row(
@@ -107,11 +119,36 @@ class _AddTweetPageState extends State<AddTweetPage> {
     );
   }
 
-  //hapus isi tweetController saat keluar
+  void _addTweet(BuildContext context) {
+    if (currId != null) {
+      Provider.of<TweetProvider>(context, listen: false).addTweet(
+        Tweet(
+          twtId: Provider.of<TweetProvider>(context, listen: false).tweets.length + 1,
+          userId: currId!,
+          username: widget.currUsername,
+          displayName: widget.currDisplayName,
+          tweet: newTweet,
+          image: "none",
+          timestamp: DateTime.now().toIso8601String(),
+          likes: 0,
+          retweets: 0,
+          qtweets: 0,
+          views: 0,
+          bookmarks: 0,
+          commentCount: 0,
+        ),
+      );
+    } else {
+      // Handle the case where currId is not loaded yet
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('User ID not found')),
+      );
+    }
+  }
+
   @override
   void dispose() {
     _tweetController.dispose();
     super.dispose();
   }
 }
-

@@ -184,7 +184,7 @@ class _CommentPageState extends State<CommentPage> {
 
                       // Info
                       Consumer<TweetProvider>(
-                        builder: (context, tweetProvider, _) {
+                        builder: (context, TweetProvider, _) {
                           return Column(
                             children: [
                               // Timestamp and view count
@@ -204,7 +204,7 @@ class _CommentPageState extends State<CommentPage> {
                                                 fontSize: 16),
                                           ),
                                           TextSpan(
-                                            text: tweetProvider.formatNumber(
+                                            text: TweetProvider.formatNumber(
                                                 widget.tweet.views),
                                             style: const TextStyle(
                                                 color: Colors.white,
@@ -243,7 +243,7 @@ class _CommentPageState extends State<CommentPage> {
                                         children: [
                                           TextSpan(
                                             text:
-                                                '${tweetProvider.formatNumber(widget.tweet.retweets)} ',
+                                                '${TweetProvider.formatNumber(widget.tweet.retweets)} ',
                                             style: const TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 16),
@@ -257,7 +257,7 @@ class _CommentPageState extends State<CommentPage> {
                                           ),
                                           TextSpan(
                                             text:
-                                                '  ${tweetProvider.formatNumber(widget.tweet.qtweets)} ',
+                                                '  ${TweetProvider.formatNumber(widget.tweet.qtweets)} ',
                                             style: const TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 16),
@@ -271,7 +271,7 @@ class _CommentPageState extends State<CommentPage> {
                                           ),
                                           TextSpan(
                                             text:
-                                                '  ${tweetProvider.formatNumber(widget.tweet.likes)} ',
+                                                '  ${TweetProvider.formatNumber(widget.tweet.likes)} ',
                                             style: const TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 16),
@@ -285,7 +285,7 @@ class _CommentPageState extends State<CommentPage> {
                                           ),
                                           TextSpan(
                                             text:
-                                                '  ${tweetProvider.formatNumber(widget.tweet.bookmarks)} ',
+                                                '  ${TweetProvider.formatNumber(widget.tweet.bookmarks)} ',
                                             style: const TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 16),

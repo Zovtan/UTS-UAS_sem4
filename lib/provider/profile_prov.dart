@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:twitter/model/profiles_mdl.dart';
-import 'package:twitter/twitter/login.dart'; // Assuming you have a profile model defined
+import 'package:twitter/twitter/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:twitter/twitter/main_page.dart';
 
@@ -34,47 +34,48 @@ class ProfileProvider with ChangeNotifier {
     }
   }
 
-  Future<void> login(String identifier, String password, BuildContext context) async {
-  try {
-    final response = await http.post(Uri.parse('$baseUrl/login'), body: {
-      'identifier': identifier,
-      'password': password,
-    });
+  Future<void> login(
+      String identifier, String password, BuildContext context) async {
+    try {
+      final response = await http.post(Uri.parse('$baseUrl/login'), body: {
+        'identifier': identifier,
+        'password': password,
+      });
 
-    if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-      String token = responseData['token'];
-      int userId = responseData['id'];
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        String token = responseData['token'];
+        int userId = responseData['id'];
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('token', token);
-      await prefs.setInt('userId', userId);
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MainPage(
-            currId: responseData['id'],
-            currUsername: responseData['username'],
-            currDisplayName: responseData['displayName'],
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', token);
+        await prefs.setInt('currUserId', userId);
+        
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainPage(
+              currId: responseData['id'],
+              currUsername: responseData['username'],
+              currDisplayName: responseData['displayName'],
+            ),
           ),
+        );
+      } else {
+        throw Exception('Failed to login: ${response.statusCode}');
+      }
+    } catch (e) {
+      String errorMessage = 'Failed to login: $e';
+      print(errorMessage); // Log the error for debugging
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Login failed: $e'),
         ),
       );
-    } else {
-      throw Exception('Failed to login: ${response.statusCode}');
+      throw Exception(errorMessage);
     }
-  } catch (e) {
-    String errorMessage = 'Failed to login: $e';
-    print(errorMessage); // Log the error for debugging
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Login failed: $e'),
-      ),
-    );
-    throw Exception(errorMessage);
   }
-}
-
 
   Future<void> register({
     required String username,
@@ -98,9 +99,6 @@ class ProfileProvider with ChangeNotifier {
       });
 
       if (response.statusCode == 201) {
-        /* final responseData = json.decode(response.body);
-        int userId = responseData['userId']; */ // Adjust based on your API response
-
         // Update local profile state or navigate to next screen on successful registration
         _profile = Profile(
             username: username,

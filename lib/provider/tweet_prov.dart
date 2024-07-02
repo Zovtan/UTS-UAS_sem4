@@ -1,9 +1,32 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:twitter/class/tweets.dart';
+import 'package:twitter/model/tweets_mdl.dart';
 import 'package:twitter/widget/edit_tweet.dart';
+import 'package:http/http.dart' as http;
 
 class TweetProvider with ChangeNotifier {
+  //new way
+  List<TweetMdl> _tweets = [];
+  List<TweetMdl> get tweetsMdl => _tweets;
+
+  Future<void> fetchTweets() async {
+    final url = 'http://localhost:3031/tweets/';
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final List<dynamic> tweetList = json.decode(response.body)['tweets'];
+        _tweets = tweetList.map((json) => TweetMdl.fromJson(json)).toList();
+        notifyListeners();
+      } else {
+        throw Exception('Failed to load tweets');
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  //old way
   final TweetData _tweetData = TweetData();
   List<Tweet> get tweets => _tweetData.tweets;
 

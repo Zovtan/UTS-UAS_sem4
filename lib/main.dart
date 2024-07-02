@@ -16,8 +16,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
-        ChangeNotifierProvider(create: (context) => TweetProvider()), // Example of adding another provider
-        // Add more providers as needed
+        ChangeNotifierProvider(create: (context) => TweetProvider()),
       ],
       child: MaterialApp(
         title: 'Twitter',

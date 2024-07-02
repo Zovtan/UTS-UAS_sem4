@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:twitter/class/tweets.dart';
 import 'package:twitter/provider/tweet_prov.dart';
 import 'package:twitter/widget/tweet_cell.dart';
 import 'package:twitter/widget/twt_app_bar.dart';
@@ -27,7 +26,7 @@ class MainPage extends StatelessWidget {
         slivers: [
           TwitterAppBar(currDisplayName: currDisplayName),
           Consumer<TweetProvider>(
-            builder: (context, tweetProvider, child) {
+            builder: (context, TweetProvider, child) {
               return SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
@@ -37,8 +36,7 @@ class MainPage extends StatelessWidget {
                       );
                     } else {
                       try {
-                        TweetIm tweetIm =
-                            tweetProvider.getTweetIm(index);
+                        TweetIm tweetIm = TweetProvider.getTweetIm(index);
                         return TweetCell(
                           tweet: tweetIm.tweet,
                           currId: currId,
@@ -48,7 +46,7 @@ class MainPage extends StatelessWidget {
                       }
                     }
                   },
-                  childCount: tweetProvider.tweets.length * 2 - 1,
+                  childCount: TweetProvider.tweets.length * 2 - 1,
                 ),
               );
             },
@@ -62,27 +60,7 @@ class MainPage extends StatelessWidget {
             context: context,
             builder: (BuildContext context) {
               return AddTweetPage(
-                onTweetAdded: (newTweet) {
-                  Provider.of<TweetProvider>(context, listen: false)
-                      .addTweet(Tweet(
-                    twtId: Provider.of<TweetProvider>(context, listen: false)
-                            .tweets
-                            .length +
-                        1,
-                    userId: currId ?? 0,
-                    username: currUsername,
-                    displayName: currDisplayName,
-                    tweet: newTweet,
-                    image: "none",
-                    timestamp: DateTime.now().toIso8601String(),
-                    likes: 0,
-                    retweets: 0,
-                    qtweets: 0,
-                    views: 0,
-                    bookmarks: 0,
-                    commentCount: 0,
-                  ));
-                },
+                currUsername: currUsername,
                 currDisplayName: currDisplayName,
               );
             },

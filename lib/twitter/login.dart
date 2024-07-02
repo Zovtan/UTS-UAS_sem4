@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter/provider/profile_prov.dart';
-import 'package:twitter/twitter/main_page.dart';
 import 'package:twitter/twitter/sign_in.dart';
 
 class Login extends StatefulWidget {
@@ -83,8 +82,8 @@ class _LoginState extends State<Login> {
                               isLoading = true;
                             });
                             String identifier =
-                                identifierController.text.trim().toLowerCase();
-                            String password = passwordController.text.trim();
+                                identifierController.text;
+                            String password = passwordController.text;
 
                             try {
                               await profileProvider.login(
