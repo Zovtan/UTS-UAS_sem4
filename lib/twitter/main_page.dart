@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:twitter/model/tweets_mdl.dart';
 import 'package:twitter/provider/tweet_prov.dart';
 import 'package:twitter/widget/tweet_cell.dart';
 import 'package:twitter/widget/twt_app_bar.dart';
@@ -22,36 +23,47 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: const TwitterBottomBar(),
-      body: CustomScrollView(
-        slivers: [
-          TwitterAppBar(currDisplayName: currDisplayName),
-          Consumer<TweetProvider>(
-            builder: (context, TweetProvider, child) {
-              return SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    if (index.isOdd) {
-                      return const Divider(
-                        color: Color.fromARGB(120, 101, 119, 134),
-                      );
-                    } else {
-                      try {
-                        TweetIm tweetIm = TweetProvider.getTweetIm(index);
-                        return TweetCell(
-                          tweet: tweetIm.tweet,
-                          currId: currId,
+      body: Consumer<TweetProvider>(
+        builder: (context, tweetProvider, child) {
+          if (tweetProvider.isLoading) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (tweetProvider.hasError) {
+            return Center(
+              child: Text('Failed to load tweets'),
+            );
+          } else {
+            return CustomScrollView(
+              slivers: [
+                TwitterAppBar(currDisplayName: currDisplayName),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      if (index.isOdd) {
+                        return const Divider(
+                          color: Color.fromARGB(120, 101, 119, 134),
                         );
-                      } catch (e) {
-                        return const SizedBox();
+                      } else {
+                        int tweetIndex = index ~/ 2;
+                        if (tweetIndex < tweetProvider.tweets.length) {
+                          TweetMdl tweet = tweetProvider.tweets[tweetIndex];
+                          return TweetCell(
+                            tweet: tweet,
+                            currId: currId,
+                          );
+                        } else {
+                          return const SizedBox();
+                        }
                       }
-                    }
-                  },
-                  childCount: TweetProvider.tweets.length * 2 - 1,
+                    },
+                    childCount: tweetProvider.tweets.length * 2 - 1,
+                  ),
                 ),
-              );
-            },
-          ),
-        ],
+              ],
+            );
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),

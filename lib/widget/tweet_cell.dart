@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
-import 'package:twitter/class/tweets.dart';
+import 'package:twitter/model/tweets_mdl.dart';
 import 'package:twitter/provider/tweet_prov.dart';
 import 'package:twitter/twitter/comment_page.dart';
 import 'package:provider/provider.dart';
 
 class TweetCell extends StatelessWidget {
-  final Tweet tweet;
+  final TweetMdl tweet;
   final int? currId;
 
   const TweetCell({
@@ -121,19 +121,19 @@ class TweetCell extends StatelessWidget {
                       style: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 5),
-                    if (tweet.image != "none") ...[
+                    /* if (tweet.image != "none") ...[
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
-                        child: Image.asset(tweet.image),
+                        child: Image.asset(tweet.image.toString()),
                       ),
                       const SizedBox(height: 5),
                     ],
-
+ */
                     // Icons
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _buildGestureDetector(
+/*                         _buildGestureDetector(
                           tweet.isLiked ? Icons.favorite : Icons.favorite_border,
                           tweet.isLiked ? Colors.red : const Color.fromARGB(255, 101, 119, 134),
                           () {
@@ -148,7 +148,7 @@ class TweetCell extends StatelessWidget {
                             TweetProvider.toggleRetweet(tweet);
                           },
                           TweetProvider.formatNumber(ttlRetweets),
-                        ),
+                        ), */
                         _buildGestureDetector(
                           Icons.mode_comment_outlined,
                           const Color.fromARGB(255, 101, 119, 134),
@@ -165,14 +165,14 @@ class TweetCell extends StatelessWidget {
                           TweetProvider.formatNumber(tweet.commentCount),
                         ),
                         _buildIcon(Icons.insert_chart_outlined_rounded, TweetProvider.formatNumber(tweet.views)),
-                        _buildGestureDetector(
+/*                         _buildGestureDetector(
                           tweet.isBookmarked ? Icons.bookmark : Icons.bookmark_border,
                           tweet.isBookmarked ? Colors.blue : const Color.fromARGB(255, 101, 119, 134),
                           () {
                             TweetProvider.toggleBookmark(tweet);
                           },
                           '',
-                        ),
+                        ), */
                         _buildIcon(Icons.share_outlined, ''),
                       ],
                     ),

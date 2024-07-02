@@ -4,7 +4,7 @@ class TweetMdl {
   final String username;
   final String displayName;
   final String tweet;
-  final String image;
+  final String? image;
   final String timestamp;
   final int likes;
   final int retweets;
@@ -12,9 +12,6 @@ class TweetMdl {
   final int views;
   final int bookmarks;
   final int commentCount;
-  final bool isLiked;
-  final bool isRetweeted;
-  final bool isBookmarked;
 
   TweetMdl({
     required this.twtId,
@@ -22,7 +19,7 @@ class TweetMdl {
     required this.username,
     required this.displayName,
     required this.tweet,
-    required this.image,
+    this.image,
     required this.timestamp,
     required this.likes,
     required this.retweets,
@@ -30,9 +27,6 @@ class TweetMdl {
     required this.views,
     required this.bookmarks,
     required this.commentCount,
-    this.isLiked = false,
-    this.isRetweeted = false,
-    this.isBookmarked = false,
   });
 
   factory TweetMdl.fromJson(Map<String, dynamic> json) {
@@ -50,9 +44,6 @@ class TweetMdl {
       views: json['views'],
       bookmarks: json['bookmarks'],
       commentCount: json['commentCount'],
-      isLiked: json['isLiked'],
-      isRetweeted: json['isRetweeted'],
-      isBookmarked: json['isBookmarked'],
     );
   }
 
@@ -71,9 +62,6 @@ class TweetMdl {
       'views': views,
       'bookmarks': bookmarks,
       'commentCount': commentCount,
-      'isLiked': isLiked,
-      'isRetweeted': isRetweeted,
-      'isBookmarked': isBookmarked,
     };
   }
 }

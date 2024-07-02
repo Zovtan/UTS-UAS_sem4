@@ -1,66 +1,195 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:twitter/class/tweets.dart';
+import 'package:http/http.dart' as http;
 import 'package:twitter/model/tweets_mdl.dart';
 import 'package:twitter/widget/edit_tweet.dart';
-import 'package:http/http.dart' as http;
 
 class TweetProvider with ChangeNotifier {
-  //new way
+  final String baseUrl = 'http://10.0.2.2:3031/tweets';
+
   List<TweetMdl> _tweets = [];
-  List<TweetMdl> get tweetsMdl => _tweets;
+  List<TweetMdl> get tweets => _tweets;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  bool _hasError = false;
+  bool get hasError => _hasError;
+
+  TweetProvider() {
+    fetchTweets(); // Initial fetch when provider is created
+  }
 
   Future<void> fetchTweets() async {
-    final url = 'http://localhost:3031/tweets/';
+    _setLoadingState(true);
+    _setErrorState(false);
+
     try {
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(Uri.parse(baseUrl));
       if (response.statusCode == 200) {
-        final List<dynamic> tweetList = json.decode(response.body)['tweets'];
-        _tweets = tweetList.map((json) => TweetMdl.fromJson(json)).toList();
-        notifyListeners();
+        List<dynamic> jsonList = json.decode(response.body)['tweets'] ?? [];
+        _tweets = jsonList.map((json) => TweetMdl.fromJson(json)).toList();
       } else {
-        throw Exception('Failed to load tweets');
+        _setErrorState(true);
+        print('Error fetching tweets: ${response.statusCode}');
       }
-    } catch (error) {
-      throw error;
+    } catch (e) {
+      _setErrorState(true);
+      print('Error fetching tweets: $e');
+    } finally {
+      _setLoadingState(false);
     }
   }
 
-  //old way
-  final TweetData _tweetData = TweetData();
-  List<Tweet> get tweets => _tweetData.tweets;
 
-  void addTweet(Tweet tweet) {
-    _tweetData.addTweet(tweet);
-    notifyListeners();
-  }
+  Future<void> fetchTweet(int twtId) async {
+    _setLoadingState(true);
+    _setErrorState(false);
 
-  void updateTweet(Tweet tweet) {
-    _tweetData.updateTweet(tweet);
-    notifyListeners();
-  }
-
-  void deleteTweet(int twtId) {
-    _tweetData.deleteTweet(twtId);
-    notifyListeners();
-  }
-
-  Future<void> countComments(BuildContext context) async {
-    String jsonString = await DefaultAssetBundle.of(context)
-        .loadString('assets/json/comments.json');
-    List<dynamic> jsonList = jsonDecode(jsonString);
-
-    for (var tweet in _tweetData.tweets) {
-      var commentsInTweet = jsonList.firstWhere(
-        (comment) => comment['twtId'] == tweet.twtId,
-        orElse: () => {'comments': []},
-      )['comments'];
-      tweet.commentCount = commentsInTweet.length;
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/$twtId'));
+      if (response.statusCode == 200) {
+        var json = jsonDecode(response.body)['tweet'];
+        var tweet = TweetMdl.fromJson(json);
+        _tweets[_tweets.indexWhere((t) => t.twtId == twtId)] = tweet;
+      } else {
+        _setErrorState(true);
+      }
+    } catch (e) {
+      _setErrorState(true);
+    } finally {
+      _setLoadingState(false);
     }
-    notifyListeners();
   }
 
-// Method to get formatted duration
+  Future<void> addTweet(TweetMdl tweet) async {
+    _setLoadingState(true);
+    _setErrorState(false);
+
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/post'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(tweet.toJson()),
+      );
+      if (response.statusCode == 201) {
+        await fetchTweets();
+      } else {
+        _setErrorState(true);
+      }
+    } catch (e) {
+      _setErrorState(true);
+    } finally {
+      _setLoadingState(false);
+    }
+  }
+
+  Future<void> updateTweet(TweetMdl tweet) async {
+    _setLoadingState(true);
+    _setErrorState(false);
+
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/${tweet.twtId}'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(tweet.toJson()),
+      );
+      if (response.statusCode == 200) {
+        await fetchTweet(tweet.twtId);
+      } else {
+        _setErrorState(true);
+      }
+    } catch (e) {
+      _setErrorState(true);
+    } finally {
+      _setLoadingState(false);
+    }
+  }
+
+  Future<void> deleteTweet(int twtId) async {
+    _setLoadingState(true);
+    _setErrorState(false);
+
+    try {
+      final response = await http.delete(Uri.parse('$baseUrl/$twtId'));
+      if (response.statusCode == 200) {
+        _tweets.removeWhere((tweet) => tweet.twtId == twtId);
+      } else {
+        _setErrorState(true);
+      }
+    } catch (e) {
+      _setErrorState(true);
+    } finally {
+      _setLoadingState(false);
+    }
+  }
+
+  Future<void> toggleLike(TweetMdl tweet) async {
+    _setLoadingState(true);
+    _setErrorState(false);
+
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/like/${tweet.twtId}'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'userId': tweet.userId}),
+      );
+      if (response.statusCode == 200) {
+        await fetchTweet(tweet.twtId);
+      } else {
+        _setErrorState(true);
+      }
+    } catch (e) {
+      _setErrorState(true);
+    } finally {
+      _setLoadingState(false);
+    }
+  }
+
+  Future<void> toggleRetweet(TweetMdl tweet) async {
+    _setLoadingState(true);
+    _setErrorState(false);
+
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/retweet/${tweet.twtId}'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'userId': tweet.userId}),
+      );
+      if (response.statusCode == 200) {
+        await fetchTweet(tweet.twtId);
+      } else {
+        _setErrorState(true);
+      }
+    } catch (e) {
+      _setErrorState(true);
+    } finally {
+      _setLoadingState(false);
+    }
+  }
+
+  Future<void> toggleBookmark(TweetMdl tweet) async {
+    _setLoadingState(true);
+    _setErrorState(false);
+
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/bookmark/${tweet.twtId}'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'userId': tweet.userId}),
+      );
+      if (response.statusCode == 200) {
+        await fetchTweet(tweet.twtId);
+      } else {
+        _setErrorState(true);
+      }
+    } catch (e) {
+      _setErrorState(true);
+    } finally {
+      _setLoadingState(false);
+    }
+  }
+
   String formatDur(DateTime parsedTimestamp) {
     var durTime = DateTime.now().difference(parsedTimestamp);
     if (durTime.inDays > 0) {
@@ -74,18 +203,6 @@ class TweetProvider with ChangeNotifier {
     }
   }
 
-// Method to get tweet by index
-  TweetIm getTweetIm(int index) {
-    int tweetIndex = index ~/ 2;
-    if (tweetIndex < tweets.length) {
-      Tweet tweet = tweets[tweetIndex];
-      return TweetIm(tweet: tweet);
-    } else {
-      throw Exception("Tweet index out of bounds");
-    }
-  }
-
-  // Method to format number
   String formatNumber(int number) {
     if (number >= 1000) {
       double numberInK = number / 1000;
@@ -95,58 +212,30 @@ class TweetProvider with ChangeNotifier {
     }
   }
 
-  // Method to edit tweet
-  void editTweet(BuildContext context, Tweet tweet) {
+  void editTweet(BuildContext context, TweetMdl tweet) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => EditTweetPage(
           tweet: tweet,
           onTweetEdited: (editedTweet) {
-            updateTweet(editedTweet); // Update tweet in provider
+            updateTweet(editedTweet);
           },
         ),
       ),
     );
   }
 
-  // Method to toggle like
-  void toggleLike(Tweet tweet) {
-    tweet.isLiked = !tweet.isLiked;
-    if (tweet.isLiked) {
-      tweet.likes++;
-    } else {
-      tweet.likes--;
+void _setLoadingState(bool state) {
+    _isLoading = state;
+    if (state == false) {
+      notifyListeners();
     }
-    updateTweet(tweet); // Update tweet in provider
   }
 
-  // Method to toggle retweet
-  void toggleRetweet(Tweet tweet) {
-    tweet.isRetweeted = !tweet.isRetweeted;
-    if (tweet.isRetweeted) {
-      tweet.retweets++;
-    } else {
-      tweet.retweets--;
+  void _setErrorState(bool state) {
+    _hasError = state;
+    if (state == true) {
+      notifyListeners();
     }
-    updateTweet(tweet); // Update tweet in provider
   }
-
-  // Method to toggle bookmark
-  void toggleBookmark(Tweet tweet) {
-    tweet.isBookmarked = !tweet.isBookmarked;
-    if (tweet.isBookmarked) {
-      tweet.bookmarks++;
-    } else {
-      tweet.bookmarks--;
-    }
-    updateTweet(tweet); // Update tweet in provider
-  }
-}
-
-class TweetIm {
-  final Tweet tweet;
-
-  TweetIm({
-    required this.tweet,
-  });
 }

@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:intl/intl.dart';
-import 'package:twitter/class/tweets.dart';
+import 'package:twitter/model/tweets_mdl.dart';
 import 'package:twitter/provider/tweet_prov.dart';
 import 'package:provider/provider.dart';
 
 class CommentPage extends StatefulWidget {
-  final Tweet tweet;
+  final TweetMdl tweet;
   final int? currId;
 
   const CommentPage({
@@ -53,9 +53,6 @@ class _CommentPageState extends State<CommentPage> {
   void initState() {
     super.initState();
     _loadComments();
-    isLiked = widget.tweet.isLiked;
-    isRetweeted = widget.tweet.isRetweeted;
-    isBookmarked = widget.tweet.isBookmarked;
   }
 
   @override
@@ -174,13 +171,13 @@ class _CommentPageState extends State<CommentPage> {
                         style: const TextStyle(fontSize: 16),
                       ),
                       const SizedBox(height: 5),
-                      if (widget.tweet.image != "none") ...[
+                      /* if (widget.tweet.image != "none") ...[
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: Image.asset(widget.tweet.image),
+                          child: Image.asset(widget.tweet.image.toString()),
                         ),
                         const SizedBox(height: 5),
-                      ],
+                      ], */
 
                       // Info
                       Consumer<TweetProvider>(
@@ -323,7 +320,7 @@ class _CommentPageState extends State<CommentPage> {
                               const Icon(Icons.mode_comment_outlined,
                                   size: 24,
                                   color: Color.fromARGB(255, 101, 119, 134)),
-                              GestureDetector(
+                              /* GestureDetector(
                                 onTap: () {
                                   setState(() {
                                     isRetweeted = !isRetweeted;
@@ -382,7 +379,7 @@ class _CommentPageState extends State<CommentPage> {
                                       : const Color.fromARGB(
                                           255, 101, 119, 134),
                                 ),
-                              ),
+                              ), */
                               const Icon(Icons.share_outlined,
                                   size: 24,
                                   color: Color.fromARGB(255, 101, 119, 134)),

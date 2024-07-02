@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:provider/provider.dart';
-import 'package:twitter/class/tweets.dart';
+import 'package:twitter/model/tweets_mdl.dart';
 import 'package:twitter/provider/tweet_prov.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,7 +22,7 @@ class AddTweetPage extends StatefulWidget {
 class _AddTweetPageState extends State<AddTweetPage> {
   late TextEditingController _tweetController;
   String newTweet = '';
-  int? currId;
+  int? currUserId;
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _AddTweetPageState extends State<AddTweetPage> {
   Future<void> _loadCurrId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      currId = prefs.getInt('currUserId');
+      currUserId = prefs.getInt('currUserId');
     });
   }
 
@@ -110,6 +110,17 @@ class _AddTweetPageState extends State<AddTweetPage> {
                       });
                     },
                   ),
+                  Consumer<TweetProvider>(
+                    builder: (context, tweetProvider, _) {
+                      if (tweetProvider.isLoading) {
+                        return const CircularProgressIndicator();
+                      } else if (tweetProvider.hasError) {
+                        return Text('Error loading tweets');
+                      } else {
+                        return const SizedBox(); // Or any other default content
+                      }
+                    },
+                  ),
                 ],
               ),
             ),
@@ -120,28 +131,27 @@ class _AddTweetPageState extends State<AddTweetPage> {
   }
 
   void _addTweet(BuildContext context) {
-    if (currId != null) {
-      Provider.of<TweetProvider>(context, listen: false).addTweet(
-        Tweet(
-          twtId: Provider.of<TweetProvider>(context, listen: false).tweets.length + 1,
-          userId: currId!,
-          username: widget.currUsername,
-          displayName: widget.currDisplayName,
-          tweet: newTweet,
-          image: "none",
-          timestamp: DateTime.now().toIso8601String(),
-          likes: 0,
-          retweets: 0,
-          qtweets: 0,
-          views: 0,
-          bookmarks: 0,
-          commentCount: 0,
-        ),
+    if (currUserId != null) {
+      TweetMdl newTweet = TweetMdl(
+        twtId: 0, // Adjust this according to your backend logic or generate unique IDs
+        userId: currUserId!,
+        username: widget.currUsername,
+        displayName: widget.currDisplayName,
+        tweet: _tweetController.text,
+        image: "none",
+        timestamp: DateTime.now().toIso8601String(),
+        likes: 0,
+        retweets: 0,
+        qtweets: 0,
+        views: 0,
+        bookmarks: 0,
+        commentCount: 0,
       );
+
+      Provider.of<TweetProvider>(context, listen: false).addTweet(newTweet);
     } else {
-      // Handle the case where currId is not loaded yet
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('User ID not found')),
+        const SnackBar(content: Text('User ID not found')),
       );
     }
   }
@@ -152,3 +162,4 @@ class _AddTweetPageState extends State<AddTweetPage> {
     super.dispose();
   }
 }
+

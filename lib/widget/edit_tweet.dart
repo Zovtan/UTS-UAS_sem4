@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
-import 'package:twitter/class/tweets.dart';
+import 'package:twitter/model/tweets_mdl.dart'; // Update import to match your TweetMdl file
 
 class EditTweetPage extends StatefulWidget {
-  final Tweet tweet;
-  final Function(Tweet) onTweetEdited;
+  final TweetMdl tweet;
+  final Function(TweetMdl) onTweetEdited;
 
-  const EditTweetPage(
-      {super.key, required this.tweet, required this.onTweetEdited});
+  const EditTweetPage({Key? key, required this.tweet, required this.onTweetEdited});
 
   @override
   EditTweetPageState createState() => EditTweetPageState();
@@ -32,7 +31,6 @@ class EditTweetPageState extends State<EditTweetPage> {
         actions: [
           ElevatedButton(
             onPressed: () {
-              //larang edit jika tweet kosong
               if (_tweetController.text.isNotEmpty) {
                 _editTweet();
               }
@@ -59,7 +57,6 @@ class EditTweetPageState extends State<EditTweetPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            //textfield
             Row(
               children: [
                 Container(
@@ -81,7 +78,7 @@ class EditTweetPageState extends State<EditTweetPage> {
                   child: TextField(
                     autofocus: true,
                     controller: _tweetController,
-                    maxLines: null, // memperbolehkan membuat baris baru saat membuat tweet
+                    maxLines: null,
                     decoration: const InputDecoration(
                       hintText: "Don't leave edited tweet empty",
                       border: InputBorder.none,
@@ -100,8 +97,7 @@ class EditTweetPageState extends State<EditTweetPage> {
   }
 
   void _editTweet() {
-    //update editedtweet berdasarkan _tweetController
-    Tweet editedTweet = Tweet(
+    TweetMdl editedTweet = TweetMdl(
       twtId: widget.tweet.twtId,
       userId: widget.tweet.userId,
       username: widget.tweet.username,
@@ -117,10 +113,8 @@ class EditTweetPageState extends State<EditTweetPage> {
       commentCount: widget.tweet.commentCount,
     );
 
-    // Kirim editedTweet ke halaman sebelumnya
     widget.onTweetEdited(editedTweet);
 
-    // tutup page ini
     Navigator.of(context).pop();
   }
 }
