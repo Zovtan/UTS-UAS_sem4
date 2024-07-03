@@ -15,11 +15,10 @@ class TweetCell extends StatelessWidget {
     required this.currId,
   }) : super(key: key);
 
-  
   @override
   Widget build(BuildContext context) {
     return Consumer<TweetProvider>(
-      builder: (context, TweetProvider, _) {
+      builder: (context, tweetProvider, _) {
         // Calculate total retweets
         int ttlRetweets = tweet.retweets + tweet.qtweets;
         DateTime parsedTimestamp = DateTime.parse(tweet.timestamp);
@@ -75,7 +74,8 @@ class TweetCell extends StatelessWidget {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: ' • ${TweetProvider.formatDur(parsedTimestamp)}',
+                                  text:
+                                      ' • ${tweetProvider.formatDur(parsedTimestamp)}',
                                   style: const TextStyle(
                                     color: Color.fromARGB(255, 101, 119, 134),
                                     fontSize: 16,
@@ -100,9 +100,9 @@ class TweetCell extends StatelessWidget {
                             ],
                             onSelected: (value) {
                               if (value == 'Edit') {
-                                TweetProvider.editTweet(context, tweet);
+                                tweetProvider.editTweet(context, tweet);
                               } else if (value == 'Delete') {
-                                TweetProvider.deleteTweet(tweet.twtId);
+                                tweetProvider.deleteTweet(tweet.twtId);
                               }
                             },
                             child: const Icon(
@@ -121,34 +121,39 @@ class TweetCell extends StatelessWidget {
                       style: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 5),
-                    /* if (tweet.image != "none") ...[
+                    if (tweet.image != null) ...[
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
-                        child: Image.asset(tweet.image.toString()),
+                        child: Image.network(
+                          tweet.image.toString(),
+                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) { //The loadingBuilder parameter of the Image.network widget is used to display a grey container with a CircularProgressIndicator while the image is loading.
+                            if (loadingProgress == null) {
+                              return child;
+                            } else {
+                              return Container(
+                                width: double.infinity,
+                                height: 200,
+                                color: Colors.grey,
+                              );
+                            }
+                          },
+                          errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) { //The errorBuilder parameter is used to display a grey container with an error icon if the image fails to load.
+                            return Container(
+                              width: double.infinity,
+                              height: 200,
+                              color: Colors.grey,
+                              child: const Icon(Icons.error, color: Colors.white),
+                            );
+                          },
+                        ),
                       ),
                       const SizedBox(height: 5),
                     ],
- */
+
                     // Icons
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-/*                         _buildGestureDetector(
-                          tweet.isLiked ? Icons.favorite : Icons.favorite_border,
-                          tweet.isLiked ? Colors.red : const Color.fromARGB(255, 101, 119, 134),
-                          () {
-                            TweetProvider.toggleLike(tweet);
-                          },
-                          TweetProvider.formatNumber(tweet.likes),
-                        ),
-                        _buildGestureDetector(
-                          tweet.isRetweeted ? Icons.repeat : Icons.repeat_rounded,
-                          tweet.isRetweeted ? Colors.green : const Color.fromARGB(255, 101, 119, 134),
-                          () {
-                            TweetProvider.toggleRetweet(tweet);
-                          },
-                          TweetProvider.formatNumber(ttlRetweets),
-                        ), */
                         _buildGestureDetector(
                           Icons.mode_comment_outlined,
                           const Color.fromARGB(255, 101, 119, 134),
@@ -162,17 +167,10 @@ class TweetCell extends StatelessWidget {
                               ),
                             );
                           },
-                          TweetProvider.formatNumber(tweet.commentCount),
+                          tweetProvider.formatNumber(tweet.commentCount),
                         ),
-                        _buildIcon(Icons.insert_chart_outlined_rounded, TweetProvider.formatNumber(tweet.views)),
-/*                         _buildGestureDetector(
-                          tweet.isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                          tweet.isBookmarked ? Colors.blue : const Color.fromARGB(255, 101, 119, 134),
-                          () {
-                            TweetProvider.toggleBookmark(tweet);
-                          },
-                          '',
-                        ), */
+                        _buildIcon(Icons.insert_chart_outlined_rounded,
+                            tweetProvider.formatNumber(tweet.views)),
                         _buildIcon(Icons.share_outlined, ''),
                       ],
                     ),
@@ -186,7 +184,8 @@ class TweetCell extends StatelessWidget {
     );
   }
 
-  Widget _buildGestureDetector(IconData icon, Color color, VoidCallback onTap, String text) {
+  Widget _buildGestureDetector(
+      IconData icon, Color color, VoidCallback onTap, String text) {
     return GestureDetector(
       onTap: onTap,
       child: Row(

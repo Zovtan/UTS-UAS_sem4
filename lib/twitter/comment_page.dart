@@ -1,9 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:intl/intl.dart';
 import 'package:twitter/model/tweets_mdl.dart';
 import 'package:twitter/provider/tweet_prov.dart';
+import 'package:twitter/provider/comment_prov.dart';
 import 'package:provider/provider.dart';
 
 class CommentPage extends StatefulWidget {
@@ -20,39 +20,13 @@ class CommentPage extends StatefulWidget {
   State<CommentPage> createState() => _CommentPageState();
 }
 
-class Comment {
-  final int commentId;
-  final String username;
-  final String displayName;
-  final String comment;
-
-  Comment({
-    required this.commentId,
-    required this.username,
-    required this.displayName,
-    required this.comment,
-  });
-
-  factory Comment.fromJson(Map<String, dynamic> json) {
-    return Comment(
-      commentId: json['comment_id'],
-      username: json['username'],
-      displayName: json['displayName'],
-      comment: json['comment'],
-    );
-  }
-}
-
 class _CommentPageState extends State<CommentPage> {
-  List<Comment> comments = [];
-  late bool isLiked;
-  late bool isRetweeted;
-  late bool isBookmarked;
-
   @override
   void initState() {
     super.initState();
-    _loadComments();
+    // Fetch comments when the page is initialized
+    Provider.of<CommentProvider>(context, listen: false)
+        .fetchComments(widget.tweet.twtId);
   }
 
   @override
@@ -171,13 +145,34 @@ class _CommentPageState extends State<CommentPage> {
                         style: const TextStyle(fontSize: 16),
                       ),
                       const SizedBox(height: 5),
-                      /* if (widget.tweet.image != "none") ...[
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.asset(widget.tweet.image.toString()),
+                      if (widget.tweet.image != null) ...[
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Image.network(
+                          widget.tweet.image.toString(),
+                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            } else {
+                              return Container(
+                                width: double.infinity,
+                                height: 200,
+                                color: Colors.grey,
+                              );
+                            }
+                          },
+                          errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                            return Container(
+                              width: double.infinity,
+                              height: 200,
+                              color: Colors.grey,
+                              child: const Icon(Icons.error, color: Colors.white),
+                            );
+                          },
                         ),
-                        const SizedBox(height: 5),
-                      ], */
+                      ),
+                      const SizedBox(height: 5),
+                    ],
 
                       // Info
                       Consumer<TweetProvider>(
@@ -311,8 +306,8 @@ class _CommentPageState extends State<CommentPage> {
                         },
                       ),
 
-// Icons
-                      Column(
+                      // Icons
+                      /* Column(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -320,78 +315,47 @@ class _CommentPageState extends State<CommentPage> {
                               const Icon(Icons.mode_comment_outlined,
                                   size: 24,
                                   color: Color.fromARGB(255, 101, 119, 134)),
-                              /* GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    isRetweeted = !isRetweeted;
-                                  });
-                                  Provider.of<TweetProvider>(context,
-                                          listen: false)
-                                      .toggleRetweet(widget.tweet);
-                                },
-                                child: Icon(
-                                  isRetweeted
-                                      ? Icons.repeat
-                                      : Icons.repeat_rounded,
-                                  size: 24,
-                                  color: isRetweeted
-                                      ? Colors.green
-                                      : const Color.fromARGB(
-                                          255, 101, 119, 134),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    isLiked = !isLiked;
-                                  });
-                                  Provider.of<TweetProvider>(context,
-                                          listen: false)
-                                      .toggleLike(widget.tweet);
-                                },
-                                child: Icon(
-                                  isLiked
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  size: 24,
-                                  color: isLiked
-                                      ? Colors.red
-                                      : const Color.fromARGB(
-                                          255, 101, 119, 134),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    isBookmarked = !isBookmarked;
-                                  });
-                                  Provider.of<TweetProvider>(context,
-                                          listen: false)
-                                      .toggleBookmark(widget.tweet);
-                                },
-                                child: Icon(
-                                  isBookmarked
-                                      ? Icons.bookmark
-                                      : Icons.bookmark_border,
-                                  size: 24,
-                                  color: isBookmarked
-                                      ? Colors.blue
-                                      : const Color.fromARGB(
-                                          255, 101, 119, 134),
-                                ),
-                              ), */
                               const Icon(Icons.share_outlined,
                                   size: 24,
                                   color: Color.fromARGB(255, 101, 119, 134)),
+                              IconButton(
+                                icon: Icon(
+                                  widget.tweet.isBookmarked
+                                      ? Icons.bookmark
+                                      : Icons.bookmark_outline,
+                                  color: widget.tweet.isBookmarked
+                                      ? Colors.blue
+                                      : Color.fromARGB(255, 101, 119, 134),
+                                ),
+                                onPressed: () {
+                                  Provider.of<TweetProvider>(context,
+                                          listen: false)
+                                      .toggleBookmark(widget.tweet.twtId);
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  widget.tweet.isLiked
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: widget.tweet.isLiked
+                                      ? Colors.red
+                                      : Color.fromARGB(255, 101, 119, 134),
+                                ),
+                                onPressed: () {
+                                  Provider.of<TweetProvider>(context,
+                                          listen: false)
+                                      .toggleLike(widget.tweet.twtId);
+                                },
+                              ),
                             ],
                           ),
-                          const SizedBox(height: 7),
-                          const Divider(
-                            color: Color.fromARGB(120, 101, 119, 134),
-                            height: 1,
-                          ),
-                          const SizedBox(height: 7),
                         ],
+                      ), */
+                      const SizedBox(height: 7),
+                      const Divider(
+                        color: Color.fromARGB(120, 101, 119, 134),
+                        height: 1,
                       ),
                     ],
                   ),
@@ -400,217 +364,40 @@ class _CommentPageState extends State<CommentPage> {
             ),
 
             // Comments (second row)
-            SizedBox(
-              height: MediaQuery.of(context).size.height *
-                  0.5, // Set size for proper rendering in SingleChildScrollView
-              child: ListView.builder(
-                physics:
-                    NeverScrollableScrollPhysics(), // Prevent double scroll
-                shrinkWrap: true,
-                itemCount: comments.length,
-                itemBuilder: (BuildContext context, int index) {
-                  Comment comment = comments[index];
-                  return Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Column 1
-                      // Profile picture
-                      Container(
-                        width: 35,
-                        margin: EdgeInsets.symmetric(horizontal: 5),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ProfilePicture(
-                              name: comment.displayName,
-                              radius: 18,
-                              fontsize: 10,
-                              count: 2,
-                            ),
-                          ],
+            const SizedBox(height: 10),
+            Consumer<CommentProvider>(
+              builder: (context, commentProvider, _) {
+                if (commentProvider.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (commentProvider.comments.isEmpty) {
+                  return const Center(child: Text('No comments yet.'));
+                } else {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: commentProvider.comments.length,
+                    itemBuilder: (context, index) {
+                      final comment = commentProvider.comments[index];
+                      return ListTile(
+                        leading: ProfilePicture(
+                          name: comment.displayName,
+                          radius: 18,
+                          fontsize: 10,
+                          count: 2,
                         ),
-                      ),
-
-                      // Name and duration
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.all(5),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: RichText(
-                                      overflow: TextOverflow
-                                          .ellipsis, // Use ellipsis for overflow
-                                      text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: comment.displayName,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                          TextSpan(
-                                            text: ' ${comment.username}',
-                                            style: TextStyle(
-                                                color: Color.fromARGB(
-                                                    255, 101, 119, 134),
-                                                fontSize: 16),
-                                          ),
-                                          TextSpan(
-                                            text: ' • ${Provider.of<TweetProvider>(context, listen: false).formatDur(parsedTimestamp)}',
-                                            style: TextStyle(
-                                                color: Color.fromARGB(
-                                                    255, 101, 119, 134),
-                                                fontSize: 16),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              // Comment text
-                              SizedBox(height: 5),
-                              Text(
-                                comment.comment,
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              SizedBox(height: 5),
-
-                              // Icons
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.favorite_border,
-                                        size: 20,
-                                        color:
-                                            Color.fromARGB(255, 101, 119, 134),
-                                      ),
-                                      SizedBox(width: 5),
-                                      Text(
-                                        '0',
-                                        style: TextStyle(
-                                            color: Color.fromARGB(
-                                                255, 101, 119, 134),
-                                            fontSize: 16),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.repeat_rounded,
-                                        size: 20,
-                                        color:
-                                            Color.fromARGB(255, 101, 119, 134),
-                                      ),
-                                      SizedBox(width: 5),
-                                      Text(
-                                        '0',
-                                        style: TextStyle(
-                                            color: Color.fromARGB(
-                                                255, 101, 119, 134),
-                                            fontSize: 16),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.mode_comment_outlined,
-                                        size: 20,
-                                        color:
-                                            Color.fromARGB(255, 101, 119, 134),
-                                      ),
-                                      SizedBox(width: 5),
-                                      Text(
-                                        '0',
-                                        style: TextStyle(
-                                            color: Color.fromARGB(
-                                                255, 101, 119, 134),
-                                            fontSize: 16),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.insert_chart_outlined_rounded,
-                                        size: 20,
-                                        color:
-                                            Color.fromARGB(255, 101, 119, 134),
-                                      ),
-                                      SizedBox(width: 5),
-                                      Text(
-                                        '0',
-                                        style: TextStyle(
-                                            color: Color.fromARGB(
-                                                255, 101, 119, 134),
-                                            fontSize: 16),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.bookmark_border,
-                                        size: 20,
-                                        color:
-                                            Color.fromARGB(255, 101, 119, 134),
-                                      ),
-                                      SizedBox(width: 5),
-                                      Icon(
-                                        Icons.share_outlined,
-                                        size: 20,
-                                        color:
-                                            Color.fromARGB(255, 101, 119, 134),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
+                        title: Text(comment.displayName),
+                        subtitle: Text(comment.comment),
+                        trailing: Text(DateFormat('h:mm a • dd MMM yy')
+                            .format(DateTime.parse(widget.tweet.timestamp))),
+                      );
+                    },
                   );
-                },
-              ),
+                }
+              },
             ),
           ],
         ),
       ),
     );
-  }
-
-  Future<void> _loadComments() async {
-    String jsonString = await DefaultAssetBundle.of(context)
-        .loadString('assets/json/comments.json');
-    List<dynamic> jsonList = jsonDecode(jsonString);
-    Map<String, dynamic>? tweetComments = jsonList.firstWhere(
-      (element) => element['twtId'] == widget.tweet.twtId,
-      orElse: () => null,
-    );
-    if (tweetComments != null) {
-      List<dynamic> commentsList = tweetComments['comments'];
-      setState(() {
-        comments = commentsList.map((json) => Comment.fromJson(json)).toList();
-      });
-    } else {
-      setState(() {
-        comments = [];
-      });
-    }
   }
 }

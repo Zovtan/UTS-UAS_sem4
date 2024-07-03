@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:twitter/provider/comment_prov.dart';
 import 'package:twitter/provider/tweet_prov.dart';
 import 'package:twitter/provider/profile_prov.dart';
 import 'package:twitter/twitter/login.dart';
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ChangeNotifierProvider(create: (context) => TweetProvider()),
+        ChangeNotifierProvider(create: (context) => CommentProvider()),
       ],
       child: MaterialApp(
         title: 'Twitter',
