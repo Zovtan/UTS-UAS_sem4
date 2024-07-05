@@ -146,6 +146,11 @@ class _AddTweetPageState extends State<AddTweetPage> {
         views: 0,
         bookmarks: 0,
         commentCount: 0,
+        interactions: Interactions(
+    isLiked: false,
+    isRetweeted: false,
+    isBookmarked: false,
+  ),
       );
 
       Provider.of<TweetProvider>(context, listen: false).addTweet(newTweet);

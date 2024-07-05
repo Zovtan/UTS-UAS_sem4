@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:twitter/model/tweets_mdl.dart';
 import 'package:twitter/widget/edit_tweet.dart';
 
@@ -16,16 +17,34 @@ class TweetProvider with ChangeNotifier {
   bool _hasError = false;
   bool get hasError => _hasError;
 
+  int _userId = 0; // Class-level variable to store userId
+  int get userId => _userId; // Getter for userId
+
   TweetProvider() {
     fetchTweets(); // Initial fetch when provider is created
   }
 
+  // Method to fetch userId from SharedPreferences
+  Future<void> fetchUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _userId = prefs.getInt('currUserId') ?? 0;
+    notifyListeners(); // Notify listeners after updating userId
+  }
+
+// Fetch tweets from the server
   Future<void> fetchTweets() async {
     _setLoadingState(true);
     _setErrorState(false);
 
     try {
-      final response = await http.get(Uri.parse(baseUrl));
+      if (_userId == 0) {
+        await fetchUserId(); // Ensure userId is fetched before making the request
+      }
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/$_userId'),
+      );
+
       if (response.statusCode == 200) {
         List<dynamic> jsonList = json.decode(response.body)['tweets'] ?? [];
         _tweets = jsonList.map((json) => TweetMdl.fromJson(json)).toList();
@@ -41,26 +60,6 @@ class TweetProvider with ChangeNotifier {
     }
   }
 
-
-  Future<void> fetchTweet(int twtId) async {
-    _setLoadingState(true);
-    _setErrorState(false);
-
-    try {
-      final response = await http.get(Uri.parse('$baseUrl/$twtId'));
-      if (response.statusCode == 200) {
-        var json = jsonDecode(response.body)['tweet'];
-        var tweet = TweetMdl.fromJson(json);
-        _tweets[_tweets.indexWhere((t) => t.twtId == twtId)] = tweet;
-      } else {
-        _setErrorState(true);
-      }
-    } catch (e) {
-      _setErrorState(true);
-    } finally {
-      _setLoadingState(false);
-    }
-  }
 
   Future<void> addTweet(TweetMdl tweet) async {
     _setLoadingState(true);
@@ -95,7 +94,7 @@ class TweetProvider with ChangeNotifier {
         body: jsonEncode(tweet.toJson()),
       );
       if (response.statusCode == 200) {
-        await fetchTweet(tweet.twtId);
+        await fetchTweets();
       } else {
         _setErrorState(true);
       }
@@ -129,13 +128,17 @@ class TweetProvider with ChangeNotifier {
     _setErrorState(false);
 
     try {
+      if (_userId == 0) {
+        await fetchUserId(); // Ensure userId is fetched before making the request
+      }
+
       final response = await http.post(
         Uri.parse('$baseUrl/like/${tweet.twtId}'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'userId': tweet.userId}),
+        body: jsonEncode({'userId': _userId}),
       );
       if (response.statusCode == 200) {
-        await fetchTweet(tweet.twtId);
+        await fetchTweets();
       } else {
         _setErrorState(true);
       }
@@ -151,13 +154,16 @@ class TweetProvider with ChangeNotifier {
     _setErrorState(false);
 
     try {
+      if (_userId == 0) {
+        await fetchUserId(); // Ensure userId is fetched before making the request
+      }
       final response = await http.post(
         Uri.parse('$baseUrl/retweet/${tweet.twtId}'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'userId': tweet.userId}),
+        body: jsonEncode({'userId': _userId}),
       );
       if (response.statusCode == 200) {
-        await fetchTweet(tweet.twtId);
+        await fetchTweets();
       } else {
         _setErrorState(true);
       }
@@ -173,13 +179,16 @@ class TweetProvider with ChangeNotifier {
     _setErrorState(false);
 
     try {
+      if (_userId == 0) {
+        await fetchUserId(); // Ensure userId is fetched before making the request
+      }
       final response = await http.post(
         Uri.parse('$baseUrl/bookmark/${tweet.twtId}'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'userId': tweet.userId}),
+        body: jsonEncode({'userId': _userId}),
       );
       if (response.statusCode == 200) {
-        await fetchTweet(tweet.twtId);
+        await fetchTweets();
       } else {
         _setErrorState(true);
       }
@@ -225,7 +234,7 @@ class TweetProvider with ChangeNotifier {
     );
   }
 
-void _setLoadingState(bool state) {
+  void _setLoadingState(bool state) {
     _isLoading = state;
     if (state == false) {
       notifyListeners();

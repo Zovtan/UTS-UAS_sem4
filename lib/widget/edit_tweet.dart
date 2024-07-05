@@ -6,7 +6,8 @@ class EditTweetPage extends StatefulWidget {
   final TweetMdl tweet;
   final Function(TweetMdl) onTweetEdited;
 
-  const EditTweetPage({Key? key, required this.tweet, required this.onTweetEdited});
+  const EditTweetPage(
+      {Key? key, required this.tweet, required this.onTweetEdited});
 
   @override
   EditTweetPageState createState() => EditTweetPageState();
@@ -111,6 +112,11 @@ class EditTweetPageState extends State<EditTweetPage> {
       views: widget.tweet.views,
       bookmarks: widget.tweet.bookmarks,
       commentCount: widget.tweet.commentCount,
+      interactions: Interactions(
+        isLiked: widget.tweet.interactions.isLiked,
+        isRetweeted: widget.tweet.interactions.isRetweeted,
+        isBookmarked: widget.tweet.interactions.isBookmarked,
+      ),
     );
 
     widget.onTweetEdited(editedTweet);

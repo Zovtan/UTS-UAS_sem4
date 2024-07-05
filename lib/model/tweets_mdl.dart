@@ -6,12 +6,13 @@ class TweetMdl {
   final String tweet;
   final String? image;
   final String timestamp;
-  final int likes;
-  final int retweets;
+  int likes;
+  int retweets;
   final int qtweets;
   final int views;
-  final int bookmarks;
+  int bookmarks;
   final int commentCount;
+  Interactions interactions;
 
   TweetMdl({
     required this.twtId,
@@ -27,6 +28,7 @@ class TweetMdl {
     required this.views,
     required this.bookmarks,
     required this.commentCount,
+    required this.interactions,
   });
 
   factory TweetMdl.fromJson(Map<String, dynamic> json) {
@@ -44,6 +46,7 @@ class TweetMdl {
       views: json['views'],
       bookmarks: json['bookmarks'],
       commentCount: json['commentCount'],
+      interactions: Interactions.fromJson(json['interactions']),
     );
   }
 
@@ -62,6 +65,35 @@ class TweetMdl {
       'views': views,
       'bookmarks': bookmarks,
       'commentCount': commentCount,
+      'interactions': interactions.toJson(),
+    };
+  }
+}
+
+class Interactions {
+  final bool isLiked;
+  final bool isRetweeted;
+  final bool isBookmarked;
+
+  Interactions({
+    required this.isLiked,
+    required this.isRetweeted,
+    required this.isBookmarked,
+  });
+
+  factory Interactions.fromJson(Map<String, dynamic> json) {
+    return Interactions(
+      isLiked: json['isLiked'],
+      isRetweeted: json['isRetweeted'],
+      isBookmarked: json['isBookmarked'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'isLiked': isLiked,
+      'isRetweeted': isRetweeted,
+      'isBookmarked': isBookmarked,
     };
   }
 }

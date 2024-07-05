@@ -126,7 +126,8 @@ class TweetCell extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8.0),
                         child: Image.network(
                           tweet.image.toString(),
-                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) { //The loadingBuilder parameter of the Image.network widget is used to display a grey container with a CircularProgressIndicator while the image is loading.
+                          loadingBuilder: (BuildContext context, Widget child,
+                              ImageChunkEvent? loadingProgress) {
                             if (loadingProgress == null) {
                               return child;
                             } else {
@@ -137,12 +138,14 @@ class TweetCell extends StatelessWidget {
                               );
                             }
                           },
-                          errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) { //The errorBuilder parameter is used to display a grey container with an error icon if the image fails to load.
+                          errorBuilder: (BuildContext context, Object error,
+                              StackTrace? stackTrace) {
                             return Container(
                               width: double.infinity,
                               height: 200,
                               color: Colors.grey,
-                              child: const Icon(Icons.error, color: Colors.white),
+                              child:
+                                  const Icon(Icons.error, color: Colors.white),
                             );
                           },
                         ),
@@ -154,6 +157,46 @@ class TweetCell extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        GestureDetector(
+                          onTap: () {
+                            tweetProvider.toggleLike(tweet);
+                          },
+                          child: Icon(
+                            tweet.interactions.isLiked
+                                ? Icons.favorite
+                                : Icons.favorite_border_outlined,
+                            size: 24,
+                            color: tweet.interactions.isLiked
+                                ? Colors.red
+                                : const Color.fromARGB(255, 101, 119, 134),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            tweetProvider.toggleRetweet(tweet);
+                          },
+                          child: Icon(
+                            Icons.repeat_outlined,
+                            size: 24,
+                            color: tweet.interactions.isRetweeted
+                                ? const Color.fromARGB(255, 0, 186, 124)
+                                : const Color.fromARGB(255, 101, 119, 134),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            tweetProvider.toggleBookmark(tweet);
+                          },
+                          child: Icon(
+                            tweet.interactions.isBookmarked
+                                ? Icons.bookmark
+                                : Icons.bookmark_border_outlined,
+                            size: 24,
+                            color: tweet.interactions.isBookmarked
+                                ? const Color.fromARGB(255, 29, 155, 240)
+                                : const Color.fromARGB(255, 101, 119, 134),
+                          ),
+                        ),
                         _buildGestureDetector(
                           Icons.mode_comment_outlined,
                           const Color.fromARGB(255, 101, 119, 134),
