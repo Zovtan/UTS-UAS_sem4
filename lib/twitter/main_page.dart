@@ -7,17 +7,26 @@ import 'package:twitter/widget/twt_app_bar.dart';
 import 'package:twitter/widget/twt_bottom_bar.dart';
 import 'package:twitter/widget/add_tweet.dart';
 
-class MainPage extends StatelessWidget {
-  final int? currId;
+class MainPage extends StatefulWidget {
   final String currUsername;
   final String currDisplayName;
 
   const MainPage({
     Key? key,
-    required this.currId,
     required this.currUsername,
     required this.currDisplayName,
   }) : super(key: key);
+
+  @override
+  _MainPageState createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Provider.of<TweetProvider>(context, listen: false).fetchTweets();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +43,10 @@ class MainPage extends StatelessWidget {
               child: Text('Failed to load tweets'),
             );
           } else {
+            print(tweetProvider.userId);
             return CustomScrollView(
               slivers: [
-                TwitterAppBar(currDisplayName: currDisplayName),
+                TwitterAppBar(currDisplayName: widget.currDisplayName),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
@@ -50,7 +60,7 @@ class MainPage extends StatelessWidget {
                           TweetMdl tweet = tweetProvider.tweets[tweetIndex];
                           return TweetCell(
                             tweet: tweet,
-                            currId: currId,
+                            currId: tweetProvider.userId,
                           );
                         } else {
                           return const SizedBox();
@@ -72,8 +82,8 @@ class MainPage extends StatelessWidget {
             context: context,
             builder: (BuildContext context) {
               return AddTweetPage(
-                currUsername: currUsername,
-                currDisplayName: currDisplayName,
+                currUsername: widget.currUsername,
+                currDisplayName: widget.currDisplayName,
               );
             },
           );

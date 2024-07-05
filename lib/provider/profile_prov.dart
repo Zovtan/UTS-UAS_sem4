@@ -46,17 +46,17 @@ class ProfileProvider with ChangeNotifier {
         final responseData = json.decode(response.body);
         String token = responseData['token'];
         int userId = responseData['id'];
-
-
+      
         SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.clear(); //hapus sharedPreference
         await prefs.setString('token', token);
         await prefs.setInt('currUserId', userId);
+        
         
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => MainPage(
-              currId: responseData['id'],
               currUsername: responseData['username'],
               currDisplayName: responseData['displayName'],
             ),

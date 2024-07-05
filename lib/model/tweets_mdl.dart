@@ -71,9 +71,9 @@ class TweetMdl {
 }
 
 class Interactions {
-  final bool isLiked;
-  final bool isRetweeted;
-  final bool isBookmarked;
+  bool isLiked;
+  bool isRetweeted;
+  bool isBookmarked;
 
   Interactions({
     required this.isLiked,

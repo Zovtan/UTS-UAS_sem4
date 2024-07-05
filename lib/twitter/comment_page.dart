@@ -25,9 +25,6 @@ class CommentPage extends StatefulWidget {
 class _CommentPageState extends State<CommentPage> {
   List<Comment> comments = [];
   bool isLoading = true;
-  bool isLiked = false;
-  bool isRetweeted = false;
-  bool isBookmarked = false;
 
   @override
   void initState() {
@@ -322,83 +319,140 @@ class _CommentPageState extends State<CommentPage> {
                             // Icons
                             Column(
                               children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    const Icon(Icons.mode_comment_outlined,
-                                        size: 24,
-                                        color:
-                                            Color.fromARGB(255, 101, 119, 134)),
-                                    /* GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          isRetweeted = !isRetweeted;
-                                        });
-                                        Provider.of<TweetProvider>(context,
-                                                listen: false)
-                                            .toggleRetweet(
-                                                widget.tweet.twtId,
-                                                widget.currId,
-                                                isRetweeted);
-                                      },
-                                      child: Icon(
-                                        Icons.repeat_outlined,
-                                        size: 24,
-                                        color: isRetweeted
-                                            ? const Color.fromARGB(
-                                                255, 0, 186, 124)
-                                            : const Color.fromARGB(
-                                                255, 101, 119, 134),
+                                Consumer<TweetProvider>(
+                                    builder: (context, tweetProvider, _) {
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      const Icon(Icons.mode_comment_outlined,
+                                          size: 24,
+                                          color: Color.fromARGB(
+                                              255, 101, 119, 134)),
+                                      GestureDetector(
+                                        onTap: () {
+                                          tweetProvider
+                                              .toggleLike(widget.tweet);
+                                        },
+                                        child: Icon(
+                                          widget.tweet.interactions.isLiked
+                                              ? Icons.favorite
+                                              : Icons.favorite_border_outlined,
+                                          size: 24,
+                                          color:
+                                              widget.tweet.interactions.isLiked
+                                                  ? Colors.red
+                                                  : const Color.fromARGB(
+                                                      255, 101, 119, 134),
+                                        ),
                                       ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          isLiked = !isLiked;
-                                        });
-                                        Provider.of<TweetProvider>(context,
-                                                listen: false)
-                                            .toggleLike(widget.tweet.twtId,
-                                                widget.currId, isLiked);
-                                      },
-                                      child: Icon(
-                                        isLiked
-                                            ? Icons.favorite
-                                            : Icons.favorite_border_outlined,
-                                        size: 24,
-                                        color: isLiked
-                                            ? Colors.red
-                                            : const Color.fromARGB(
-                                                255, 101, 119, 134),
+                                      Text(widget.tweet.likes.toString()),
+                                      GestureDetector(
+                                        onTap: () {
+                                          tweetProvider
+                                              .toggleRetweet(widget.tweet);
+                                        },
+                                        child: Icon(
+                                          Icons.repeat_outlined,
+                                          size: 24,
+                                          color: widget.tweet.interactions
+                                                  .isRetweeted
+                                              ? const Color.fromARGB(
+                                                  255, 0, 186, 124)
+                                              : const Color.fromARGB(
+                                                  255, 101, 119, 134),
+                                        ),
                                       ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          isBookmarked = !isBookmarked;
-                                        });
-                                        Provider.of<TweetProvider>(context,
-                                                listen: false)
-                                            .toggleBookmark(
-                                                widget.tweet.twtId,
-                                                widget.currId,
-                                                isBookmarked);
-                                      },
-                                      child: Icon(
-                                        isBookmarked
-                                            ? Icons.bookmark
-                                            : Icons.bookmark_border_outlined,
-                                        size: 24,
-                                        color: isBookmarked
-                                            ? const Color.fromARGB(
-                                                255, 29, 155, 240)
-                                            : const Color.fromARGB(
-                                                255, 101, 119, 134),
+                                      Text(widget.tweet.retweets.toString()),
+                                      GestureDetector(
+                                        onTap: () {
+                                          tweetProvider
+                                              .toggleBookmark(widget.tweet);
+                                        },
+                                        child: Icon(
+                                          widget.tweet.interactions.isBookmarked
+                                              ? Icons.bookmark
+                                              : Icons.bookmark_border_outlined,
+                                          size: 24,
+                                          color: widget.tweet.interactions
+                                                  .isBookmarked
+                                              ? const Color.fromARGB(
+                                                  255, 29, 155, 240)
+                                              : const Color.fromARGB(
+                                                  255, 101, 119, 134),
+                                        ),
                                       ),
-                                    ), */
-                                  ],
-                                ),
+                                      Text(widget.tweet.bookmarks.toString()),
+                                      /* GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              isRetweeted = !isRetweeted;
+                                            });
+                                            Provider.of<TweetProvider>(context,
+                                                    listen: false)
+                                                .toggleRetweet(
+                                                    widget.tweet.twtId,
+                                                    widget.currId,
+                                                    isRetweeted);
+                                          },
+                                          child: Icon(
+                                            Icons.repeat_outlined,
+                                            size: 24,
+                                            color: isRetweeted
+                                                ? const Color.fromARGB(
+                                                    255, 0, 186, 124)
+                                                : const Color.fromARGB(
+                                                    255, 101, 119, 134),
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              isLiked = !isLiked;
+                                            });
+                                            Provider.of<TweetProvider>(context,
+                                                    listen: false)
+                                                .toggleLike(widget.tweet.twtId,
+                                                    widget.currId, isLiked);
+                                          },
+                                          child: Icon(
+                                            isLiked
+                                                ? Icons.favorite
+                                                : Icons.favorite_border_outlined,
+                                            size: 24,
+                                            color: isLiked
+                                                ? Colors.red
+                                                : const Color.fromARGB(
+                                                    255, 101, 119, 134),
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              isBookmarked = !isBookmarked;
+                                            });
+                                            Provider.of<TweetProvider>(context,
+                                                    listen: false)
+                                                .toggleBookmark(
+                                                    widget.tweet.twtId,
+                                                    widget.currId,
+                                                    isBookmarked);
+                                          },
+                                          child: Icon(
+                                            isBookmarked
+                                                ? Icons.bookmark
+                                                : Icons.bookmark_border_outlined,
+                                            size: 24,
+                                            color: isBookmarked
+                                                ? const Color.fromARGB(
+                                                    255, 29, 155, 240)
+                                                : const Color.fromARGB(
+                                                    255, 101, 119, 134),
+                                          ),
+                                        ), */
+                                    ],
+                                  );
+                                }),
                               ],
                             ),
                           ],

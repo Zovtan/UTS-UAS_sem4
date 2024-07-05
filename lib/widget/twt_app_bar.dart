@@ -1,18 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:twitter/twitter/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class TwitterAppBar extends StatelessWidget {
+class TwitterAppBar extends StatefulWidget {
   final String currDisplayName;
 
-  const TwitterAppBar(
-      {super.key, required this.currDisplayName});
+  const TwitterAppBar({super.key, required this.currDisplayName});
+
+  @override
+  _TwitterAppBarState createState() => _TwitterAppBarState();
+}
+
+class _TwitterAppBarState extends State<TwitterAppBar> {
+  bool _isLoading = false;
+
+  Future<void> _logout() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isCleared = await prefs.clear(); //hapus sharedPreference
+
+    if (isCleared) {
+      print('SharedPreferences cleared successfully.');
+    } else {
+      print('Failed to clear SharedPreferences.');
+    }
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Login(),
+        ),
+        (route) => false,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      scrolledUnderElevation:
-          0, //menghilangkan efek ganti warna saat ada item dibawah appbar
+      scrolledUnderElevation: 0, //menghilangkan efek ganti warna saat ada item dibawah appbar
       backgroundColor: Colors.black,
       elevation: 0,
       floating: true,
@@ -46,13 +81,8 @@ class TwitterAppBar extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Login(),
-                        ),
-                        (route) => false,
-                      );
+                      Navigator.of(context).pop();
+                      _logout();
                     },
                     child: const Text(
                       'Log Out',
@@ -65,7 +95,7 @@ class TwitterAppBar extends StatelessWidget {
           );
         },
         child: ProfilePicture(
-          name: currDisplayName,
+          name: widget.currDisplayName,
           radius: 12,
           fontsize: 10,
           count: 2,
@@ -117,6 +147,14 @@ class TwitterAppBar extends StatelessWidget {
           ),
         ),
       ),
+      flexibleSpace: _isLoading
+          ? Container(
+              color: Colors.black.withOpacity(0.5),
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+          : null,
     );
   }
 }

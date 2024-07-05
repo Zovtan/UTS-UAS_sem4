@@ -37,9 +37,7 @@ class TweetProvider with ChangeNotifier {
     _setErrorState(false);
 
     try {
-      if (_userId == 0) {
         await fetchUserId(); // Ensure userId is fetched before making the request
-      }
 
       final response = await http.get(
         Uri.parse('$baseUrl/$_userId'),
@@ -59,7 +57,6 @@ class TweetProvider with ChangeNotifier {
       _setLoadingState(false);
     }
   }
-
 
   Future<void> addTweet(TweetMdl tweet) async {
     _setLoadingState(true);
@@ -123,15 +120,11 @@ class TweetProvider with ChangeNotifier {
     }
   }
 
-  Future<void> toggleLike(TweetMdl tweet) async {
+  /*   Future<void> toggleLike(TweetMdl tweet) async {
     _setLoadingState(true);
     _setErrorState(false);
 
     try {
-      if (_userId == 0) {
-        await fetchUserId(); // Ensure userId is fetched before making the request
-      }
-
       final response = await http.post(
         Uri.parse('$baseUrl/like/${tweet.twtId}'),
         headers: {'Content-Type': 'application/json'},
@@ -147,23 +140,58 @@ class TweetProvider with ChangeNotifier {
     } finally {
       _setLoadingState(false);
     }
+  } */
+
+//ini utk menghindari refresh satu halaman
+Future<void> toggleLike(TweetMdl tweet) async {
+  _setLoadingState(true);
+  _setErrorState(false);
+
+  try {
+    final response = await http.post(
+      Uri.parse('$baseUrl/like/${tweet.twtId}'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'userId': _userId}),
+    );
+    if (response.statusCode == 200) {
+      // Update local tweet object
+      tweet.interactions.isLiked = !tweet.interactions.isLiked;
+      if (tweet.interactions.isLiked) {
+        tweet.likes++;
+      } else {
+        tweet.likes--;
+      }
+      // Notify listeners to update UI
+      notifyListeners();
+    } else {
+      _setErrorState(true);
+    }
+  } catch (e) {
+    _setErrorState(true);
+  } finally {
+    _setLoadingState(false);
   }
+}
 
   Future<void> toggleRetweet(TweetMdl tweet) async {
     _setLoadingState(true);
     _setErrorState(false);
 
     try {
-      if (_userId == 0) {
-        await fetchUserId(); // Ensure userId is fetched before making the request
-      }
       final response = await http.post(
         Uri.parse('$baseUrl/retweet/${tweet.twtId}'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'userId': _userId}),
       );
       if (response.statusCode == 200) {
-        await fetchTweets();
+      // Update local tweet object
+      tweet.interactions.isRetweeted = !tweet.interactions.isRetweeted;
+      if (tweet.interactions.isRetweeted) {
+        tweet.retweets++;
+      } else {
+        tweet.retweets--;
+      }
+      // Notif
       } else {
         _setErrorState(true);
       }
@@ -179,16 +207,19 @@ class TweetProvider with ChangeNotifier {
     _setErrorState(false);
 
     try {
-      if (_userId == 0) {
-        await fetchUserId(); // Ensure userId is fetched before making the request
-      }
       final response = await http.post(
         Uri.parse('$baseUrl/bookmark/${tweet.twtId}'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'userId': _userId}),
       );
       if (response.statusCode == 200) {
-        await fetchTweets();
+      tweet.interactions.isBookmarked = !tweet.interactions.isBookmarked;
+      if (tweet.interactions.isBookmarked) {
+        tweet.bookmarks++;
+      } else {
+        tweet.bookmarks--;
+      }
+      // Notif
       } else {
         _setErrorState(true);
       }

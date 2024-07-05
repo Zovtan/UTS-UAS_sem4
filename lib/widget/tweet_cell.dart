@@ -171,6 +171,7 @@ class TweetCell extends StatelessWidget {
                                 : const Color.fromARGB(255, 101, 119, 134),
                           ),
                         ),
+                        Text(tweet.likes.toString()),
                         GestureDetector(
                           onTap: () {
                             tweetProvider.toggleRetweet(tweet);
@@ -183,6 +184,7 @@ class TweetCell extends StatelessWidget {
                                 : const Color.fromARGB(255, 101, 119, 134),
                           ),
                         ),
+                        Text(tweetProvider.formatNumber(ttlRetweets)),
                         GestureDetector(
                           onTap: () {
                             tweetProvider.toggleBookmark(tweet);
@@ -197,6 +199,7 @@ class TweetCell extends StatelessWidget {
                                 : const Color.fromARGB(255, 101, 119, 134),
                           ),
                         ),
+                        Text(tweet.bookmarks.toString()),
                         _buildGestureDetector(
                           Icons.mode_comment_outlined,
                           const Color.fromARGB(255, 101, 119, 134),
@@ -212,9 +215,18 @@ class TweetCell extends StatelessWidget {
                           },
                           tweetProvider.formatNumber(tweet.commentCount),
                         ),
-                        _buildIcon(Icons.insert_chart_outlined_rounded,
-                            tweetProvider.formatNumber(tweet.views)),
-                        _buildIcon(Icons.share_outlined, ''),
+                        _buildGestureDetector(
+                          Icons.insert_chart_outlined_rounded,
+                          const Color.fromARGB(255, 101, 119, 134),
+                          () {},
+                          tweetProvider.formatNumber(tweet.views),
+                        ),
+                        _buildGestureDetector(
+                          Icons.share_outlined,
+                          const Color.fromARGB(255, 101, 119, 134),
+                          () {},
+                          '',
+                        ),
                       ],
                     ),
                   ],
@@ -248,26 +260,6 @@ class TweetCell extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildIcon(IconData icon, String text) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          size: 20,
-          color: const Color.fromARGB(255, 101, 119, 134),
-        ),
-        const SizedBox(width: 5),
-        Text(
-          text,
-          style: const TextStyle(
-            color: Color.fromARGB(255, 101, 119, 134),
-            fontSize: 16,
-          ),
-        ),
-      ],
     );
   }
 }
