@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
-import 'package:twitter/model/tweets_mdl.dart'; // Update import to match your TweetMdl file
 
 class EditTweetPage extends StatefulWidget {
-  final TweetMdl tweet;
-  final Function(TweetMdl) onTweetEdited;
+  final String currDisplayName;
+  final String tweet;
+  final Function(String) onTweetEdited;
 
   const EditTweetPage(
-      {Key? key, required this.tweet, required this.onTweetEdited});
+      {Key? key, required this.currDisplayName, required this.tweet, required this.onTweetEdited});
 
   @override
   EditTweetPageState createState() => EditTweetPageState();
@@ -15,11 +15,12 @@ class EditTweetPage extends StatefulWidget {
 
 class EditTweetPageState extends State<EditTweetPage> {
   late TextEditingController _tweetController;
+  bool isLoading = false; // Add isLoading state
 
   @override
   void initState() {
     super.initState();
-    _tweetController = TextEditingController(text: widget.tweet.tweet);
+    _tweetController = TextEditingController(text: widget.tweet);
   }
 
   @override
@@ -31,65 +32,81 @@ class EditTweetPageState extends State<EditTweetPage> {
         backgroundColor: Colors.black,
         actions: [
           ElevatedButton(
-            onPressed: () {
-              if (_tweetController.text.isNotEmpty) {
-                _editTweet();
-              }
-            },
+            onPressed: isLoading
+                ? null
+                : () async {
+                    // Disable button when isLoading is true
+                    setState(() {
+                      isLoading =
+                          true; // Set isLoading to true before async operation
+                    });
+
+                    final editedTweet = _tweetController.text.trim();
+                    if (editedTweet.isEmpty) {
+                      _showSnackBar(context, "Tweet cannot be empty");
+                    } else {
+                      await widget.onTweetEdited(editedTweet);
+                      _showSnackBar(context, "Tweet edited");
+                      Navigator.of(context).pop();
+                    }
+
+                    setState(() {
+                      isLoading =
+                          false; // Set isLoading back to false after async operation completes
+                    });
+                  },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
-            child: const Text(
-              'Save Changes',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
+            child: isLoading
+                ? CircularProgressIndicator() // Show loading indicator when isLoading is true
+                : const Text(
+                    'Save Changes',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
           ),
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              children: [
-                Container(
-                  width: 35,
-                  margin: const EdgeInsetsDirectional.only(end: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ProfilePicture(
-                        name: widget.tweet.displayName,
-                        radius: 31,
-                        fontsize: 10,
-                        count: 2,
-                      ),
-                    ],
+            Container(
+              width: 35,
+              margin: const EdgeInsetsDirectional.only(end: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ProfilePicture(
+                    name: widget.currDisplayName,
+                    radius: 31,
+                    fontsize: 10,
+                    count: 2,
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: TextField(
+                autofocus: true,
+                controller: _tweetController,
+                maxLines: null,
+                decoration: const InputDecoration(
+                  hintText: "Don't leave edited tweet empty",
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(
+                    color: Color.fromARGB(255, 101, 119, 134),
                   ),
                 ),
-                Expanded(
-                  child: TextField(
-                    autofocus: true,
-                    controller: _tweetController,
-                    maxLines: null,
-                    decoration: const InputDecoration(
-                      hintText: "Don't leave edited tweet empty",
-                      border: InputBorder.none,
-                      hintStyle: TextStyle(
-                        color: Color.fromARGB(255, 101, 119, 134),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ],
         ),
@@ -97,30 +114,10 @@ class EditTweetPageState extends State<EditTweetPage> {
     );
   }
 
-  void _editTweet() {
-    TweetMdl editedTweet = TweetMdl(
-      twtId: widget.tweet.twtId,
-      userId: widget.tweet.userId,
-      username: widget.tweet.username,
-      displayName: widget.tweet.displayName,
-      tweet: _tweetController.text,
-      image: widget.tweet.image,
-      timestamp: widget.tweet.timestamp,
-      likes: widget.tweet.likes,
-      retweets: widget.tweet.retweets,
-      qtweets: widget.tweet.qtweets,
-      views: widget.tweet.views,
-      bookmarks: widget.tweet.bookmarks,
-      commentCount: widget.tweet.commentCount,
-      interactions: Interactions(
-        isLiked: widget.tweet.interactions.isLiked,
-        isRetweeted: widget.tweet.interactions.isRetweeted,
-        isBookmarked: widget.tweet.interactions.isBookmarked,
-      ),
+  void _showSnackBar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
     );
-
-    widget.onTweetEdited(editedTweet);
-
-    Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

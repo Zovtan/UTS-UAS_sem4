@@ -37,7 +37,7 @@ class TweetProvider with ChangeNotifier {
     _setErrorState(false);
 
     try {
-        await fetchUserId(); // Ensure userId is fetched before making the request
+      await fetchUserId(); // Ensure userId is fetched before making the request
 
       final response = await http.get(
         Uri.parse('$baseUrl/$_userId'),
@@ -58,37 +58,41 @@ class TweetProvider with ChangeNotifier {
     }
   }
 
-  Future<void> addTweet(TweetMdl tweet) async {
+  Future<void> addTweet(String tweet) async {
     _setLoadingState(true);
     _setErrorState(false);
 
     try {
+      await fetchUserId();
       final response = await http.post(
-        Uri.parse('$baseUrl/post'),
+        Uri.parse('$baseUrl/'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(tweet.toJson()),
+        body: jsonEncode({'userId': _userId, 'tweet': tweet}),
       );
       if (response.statusCode == 201) {
         await fetchTweets();
       } else {
         _setErrorState(true);
+        print('Error adding tweet: ${response.statusCode}');
       }
     } catch (e) {
       _setErrorState(true);
+      print('Error adding tweet: $e');
     } finally {
       _setLoadingState(false);
     }
   }
 
-  Future<void> updateTweet(TweetMdl tweet) async {
+  Future<void> updateTweet(int twtId, String tweet) async {
     _setLoadingState(true);
     _setErrorState(false);
 
     try {
-      final response = await http.put(
-        Uri.parse('$baseUrl/${tweet.twtId}'),
+      await fetchUserId();
+      final response = await http.patch(
+        Uri.parse('$baseUrl/$twtId'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(tweet.toJson()),
+        body: jsonEncode({'userId': _userId, 'tweet': tweet}),
       );
       if (response.statusCode == 200) {
         await fetchTweets();
@@ -97,11 +101,28 @@ class TweetProvider with ChangeNotifier {
       }
     } catch (e) {
       _setErrorState(true);
+      print(e);
     } finally {
       _setLoadingState(false);
     }
   }
 
+  void editTweet(BuildContext context, String currDisplayName, int twtId, String tweet) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => EditTweetPage(
+          currDisplayName: currDisplayName,
+          tweet: tweet,
+          onTweetEdited: (editedTweet) {
+            updateTweet(
+                twtId, editedTweet); // Pass editedTweet instead of tweet
+          },
+        ),
+      ),
+    );
+  }
+
+//need fix
   Future<void> deleteTweet(int twtId) async {
     _setLoadingState(true);
     _setErrorState(false);
@@ -113,14 +134,21 @@ class TweetProvider with ChangeNotifier {
       } else {
         _setErrorState(true);
       }
+      if (response.statusCode == 200) {
+        await fetchTweets();
+      } else {
+        _setErrorState(true);
+      }
     } catch (e) {
+      print(e);
       _setErrorState(true);
     } finally {
       _setLoadingState(false);
     }
   }
 
-  /*   Future<void> toggleLike(TweetMdl tweet) async {
+//ini utk menghindari refresh satu halaman
+  Future<void> toggleLike(TweetMdl tweet) async {
     _setLoadingState(true);
     _setErrorState(false);
 
@@ -131,7 +159,15 @@ class TweetProvider with ChangeNotifier {
         body: jsonEncode({'userId': _userId}),
       );
       if (response.statusCode == 200) {
-        await fetchTweets();
+        // Update local tweet object
+        tweet.interactions.isLiked = !tweet.interactions.isLiked;
+        if (tweet.interactions.isLiked) {
+          tweet.likes++;
+        } else {
+          tweet.likes--;
+        }
+        // Notify listeners to update UI
+        notifyListeners();
       } else {
         _setErrorState(true);
       }
@@ -140,38 +176,7 @@ class TweetProvider with ChangeNotifier {
     } finally {
       _setLoadingState(false);
     }
-  } */
-
-//ini utk menghindari refresh satu halaman
-Future<void> toggleLike(TweetMdl tweet) async {
-  _setLoadingState(true);
-  _setErrorState(false);
-
-  try {
-    final response = await http.post(
-      Uri.parse('$baseUrl/like/${tweet.twtId}'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'userId': _userId}),
-    );
-    if (response.statusCode == 200) {
-      // Update local tweet object
-      tweet.interactions.isLiked = !tweet.interactions.isLiked;
-      if (tweet.interactions.isLiked) {
-        tweet.likes++;
-      } else {
-        tweet.likes--;
-      }
-      // Notify listeners to update UI
-      notifyListeners();
-    } else {
-      _setErrorState(true);
-    }
-  } catch (e) {
-    _setErrorState(true);
-  } finally {
-    _setLoadingState(false);
   }
-}
 
   Future<void> toggleRetweet(TweetMdl tweet) async {
     _setLoadingState(true);
@@ -184,14 +189,14 @@ Future<void> toggleLike(TweetMdl tweet) async {
         body: jsonEncode({'userId': _userId}),
       );
       if (response.statusCode == 200) {
-      // Update local tweet object
-      tweet.interactions.isRetweeted = !tweet.interactions.isRetweeted;
-      if (tweet.interactions.isRetweeted) {
-        tweet.retweets++;
-      } else {
-        tweet.retweets--;
-      }
-      // Notif
+        // Update local tweet object
+        tweet.interactions.isRetweeted = !tweet.interactions.isRetweeted;
+        if (tweet.interactions.isRetweeted) {
+          tweet.retweets++;
+        } else {
+          tweet.retweets--;
+        }
+        // Notif
       } else {
         _setErrorState(true);
       }
@@ -213,13 +218,13 @@ Future<void> toggleLike(TweetMdl tweet) async {
         body: jsonEncode({'userId': _userId}),
       );
       if (response.statusCode == 200) {
-      tweet.interactions.isBookmarked = !tweet.interactions.isBookmarked;
-      if (tweet.interactions.isBookmarked) {
-        tweet.bookmarks++;
-      } else {
-        tweet.bookmarks--;
-      }
-      // Notif
+        tweet.interactions.isBookmarked = !tweet.interactions.isBookmarked;
+        if (tweet.interactions.isBookmarked) {
+          tweet.bookmarks++;
+        } else {
+          tweet.bookmarks--;
+        }
+        // Notif
       } else {
         _setErrorState(true);
       }
@@ -250,19 +255,6 @@ Future<void> toggleLike(TweetMdl tweet) async {
     } else {
       return number.toString();
     }
-  }
-
-  void editTweet(BuildContext context, TweetMdl tweet) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => EditTweetPage(
-          tweet: tweet,
-          onTweetEdited: (editedTweet) {
-            updateTweet(editedTweet);
-          },
-        ),
-      ),
-    );
   }
 
   void _setLoadingState(bool state) {

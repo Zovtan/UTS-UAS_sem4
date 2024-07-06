@@ -137,7 +137,7 @@ class _CommentPageState extends State<CommentPage> {
                                       if (value == 'Edit') {
                                         Provider.of<TweetProvider>(context,
                                                 listen: false)
-                                            .editTweet(context, widget.tweet);
+                                            .editTweet(context, widget.tweet.displayName, widget.tweet.twtId, widget.tweet.tweet);
                                       } else if (value == 'Delete') {
                                         Provider.of<TweetProvider>(context,
                                                 listen: false)
@@ -160,24 +160,35 @@ class _CommentPageState extends State<CommentPage> {
                               style: const TextStyle(fontSize: 16),
                             ),
                             const SizedBox(height: 5),
-                            if (widget.tweet.image == null) ...[
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Container(
-                                  width: double
-                                      .infinity, // You can set the desired width
-                                  height: 200, // Set the desired height
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                            ] else if (widget.tweet.image == "none") ...[
-                              const SizedBox(height: 5),
-                            ] else ...[
+                            if (widget.tweet.image != null) ...[
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8.0),
                                 child: Image.network(
-                                    widget.tweet.image.toString()),
+                                  widget.tweet.image.toString(),
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    } else {
+                                      return Container(
+                                        width: double.infinity,
+                                        height: 200,
+                                        color: Colors.grey,
+                                      );
+                                    }
+                                  },
+                                  errorBuilder: (BuildContext context,
+                                      Object error, StackTrace? stackTrace) {
+                                    return Container(
+                                      width: double.infinity,
+                                      height: 200,
+                                      color: Colors.grey,
+                                      child: const Icon(Icons.error,
+                                          color: Colors.white),
+                                    );
+                                  },
+                                ),
                               ),
                               const SizedBox(height: 5),
                             ],
@@ -240,71 +251,73 @@ class _CommentPageState extends State<CommentPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          RichText(
-                                            text: TextSpan(
-                                              children: [
-                                                TextSpan(
-                                                  text:
-                                                      '${TweetProvider.formatNumber(widget.tweet.retweets)} ',
+                                          Expanded(
+                                            child: Container(
+                                              constraints: BoxConstraints(
+                                                  maxWidth: double.infinity),
+                                              child: RichText(
+                                                text: TextSpan(
                                                   style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 16),
+                                                    color: Colors.white,
+                                                    fontSize: 15,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                  children: [
+                                                    TextSpan(
+                                                      text:
+                                                          '${TweetProvider.formatNumber(widget.tweet.retweets)} ',
+                                                    ),
+                                                    const TextSpan(
+                                                      text: 'Reposts ',
+                                                      style: TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255, 101, 119, 134),
+                                                      ),
+                                                    ),
+                                                    TextSpan(
+                                                      text:
+                                                          '${TweetProvider.formatNumber(widget.tweet.qtweets)} ',
+                                                    ),
+                                                    const TextSpan(
+                                                      text: 'Quotes ',
+                                                      style: TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255, 101, 119, 134),
+                                                      ),
+                                                    ),
+                                                    TextSpan(
+                                                      text:
+                                                          '${TweetProvider.formatNumber(widget.tweet.likes)} ',
+                                                    ),
+                                                    const TextSpan(
+                                                      text: 'Likes ',
+                                                      style: TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255, 101, 119, 134),
+                                                      ),
+                                                    ),
+                                                    TextSpan(
+                                                      text:
+                                                          '${TweetProvider.formatNumber(widget.tweet.bookmarks)} ',
+                                                    ),
+                                                    const TextSpan(
+                                                      text: 'Bookmarks',
+                                                      style: TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255, 101, 119, 134),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                                const TextSpan(
-                                                  text: 'Reposts',
-                                                  style: TextStyle(
-                                                      color: Color.fromARGB(
-                                                          255, 101, 119, 134),
-                                                      fontSize: 16),
-                                                ),
-                                                TextSpan(
-                                                  text:
-                                                      '  ${TweetProvider.formatNumber(widget.tweet.qtweets)} ',
-                                                  style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 16),
-                                                ),
-                                                const TextSpan(
-                                                  text: 'Quotes',
-                                                  style: TextStyle(
-                                                      color: Color.fromARGB(
-                                                          255, 101, 119, 134),
-                                                      fontSize: 16),
-                                                ),
-                                                TextSpan(
-                                                  text:
-                                                      '  ${TweetProvider.formatNumber(widget.tweet.likes)} ',
-                                                  style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 16),
-                                                ),
-                                                const TextSpan(
-                                                  text: 'Likes',
-                                                  style: TextStyle(
-                                                      color: Color.fromARGB(
-                                                          255, 101, 119, 134),
-                                                      fontSize: 16),
-                                                ),
-                                                TextSpan(
-                                                  text:
-                                                      '  ${TweetProvider.formatNumber(widget.tweet.bookmarks)} ',
-                                                  style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 16),
-                                                ),
-                                                const TextSpan(
-                                                  text: 'Bookmarks',
-                                                  style: TextStyle(
-                                                      color: Color.fromARGB(
-                                                          255, 101, 119, 134),
-                                                      fontSize: 16),
-                                                ),
-                                              ],
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
+
                                     const SizedBox(height: 7),
                                     const Divider(
                                       color: Color.fromARGB(120, 101, 119, 134),
@@ -325,131 +338,48 @@ class _CommentPageState extends State<CommentPage> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      const Icon(Icons.mode_comment_outlined,
-                                          size: 24,
-                                          color: Color.fromARGB(
-                                              255, 101, 119, 134)),
-                                      GestureDetector(
-                                        onTap: () {
-                                          tweetProvider
-                                              .toggleLike(widget.tweet);
-                                        },
-                                        child: Icon(
+                                      _buildGestureDetector(
+                                        Icons.mode_comment_outlined,
+                                        const Color.fromARGB(
+                                            255, 101, 119, 134),
+                                        () {},
+                                      ),
+                                      _buildGestureDetector(
                                           widget.tweet.interactions.isLiked
                                               ? Icons.favorite
                                               : Icons.favorite_border_outlined,
-                                          size: 24,
-                                          color:
-                                              widget.tweet.interactions.isLiked
-                                                  ? Colors.red
-                                                  : const Color.fromARGB(
-                                                      255, 101, 119, 134),
-                                        ),
-                                      ),
-                                      Text(widget.tweet.likes.toString()),
-                                      GestureDetector(
-                                        onTap: () {
-                                          tweetProvider
-                                              .toggleRetweet(widget.tweet);
-                                        },
-                                        child: Icon(
+                                          widget.tweet.interactions.isLiked
+                                              ? Colors.red
+                                              : const Color.fromARGB(
+                                                  255, 101, 119, 134),
+                                          () => tweetProvider
+                                              .toggleLike(widget.tweet)),
+                                      _buildGestureDetector(
                                           Icons.repeat_outlined,
-                                          size: 24,
-                                          color: widget.tweet.interactions
-                                                  .isRetweeted
+                                          widget.tweet.interactions.isRetweeted
                                               ? const Color.fromARGB(
                                                   255, 0, 186, 124)
                                               : const Color.fromARGB(
                                                   255, 101, 119, 134),
-                                        ),
-                                      ),
-                                      Text(widget.tweet.retweets.toString()),
-                                      GestureDetector(
-                                        onTap: () {
-                                          tweetProvider
-                                              .toggleBookmark(widget.tweet);
-                                        },
-                                        child: Icon(
+                                          () => tweetProvider
+                                              .toggleRetweet(widget.tweet)),
+                                      _buildGestureDetector(
                                           widget.tweet.interactions.isBookmarked
                                               ? Icons.bookmark
                                               : Icons.bookmark_border_outlined,
-                                          size: 24,
-                                          color: widget.tweet.interactions
-                                                  .isBookmarked
+                                          widget.tweet.interactions.isBookmarked
                                               ? const Color.fromARGB(
                                                   255, 29, 155, 240)
                                               : const Color.fromARGB(
                                                   255, 101, 119, 134),
-                                        ),
+                                          () => tweetProvider
+                                              .toggleBookmark(widget.tweet)),
+                                      _buildGestureDetector(
+                                        Icons.share_outlined,
+                                        const Color.fromARGB(
+                                            255, 101, 119, 134),
+                                        () {},
                                       ),
-                                      Text(widget.tweet.bookmarks.toString()),
-                                      /* GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              isRetweeted = !isRetweeted;
-                                            });
-                                            Provider.of<TweetProvider>(context,
-                                                    listen: false)
-                                                .toggleRetweet(
-                                                    widget.tweet.twtId,
-                                                    widget.currId,
-                                                    isRetweeted);
-                                          },
-                                          child: Icon(
-                                            Icons.repeat_outlined,
-                                            size: 24,
-                                            color: isRetweeted
-                                                ? const Color.fromARGB(
-                                                    255, 0, 186, 124)
-                                                : const Color.fromARGB(
-                                                    255, 101, 119, 134),
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              isLiked = !isLiked;
-                                            });
-                                            Provider.of<TweetProvider>(context,
-                                                    listen: false)
-                                                .toggleLike(widget.tweet.twtId,
-                                                    widget.currId, isLiked);
-                                          },
-                                          child: Icon(
-                                            isLiked
-                                                ? Icons.favorite
-                                                : Icons.favorite_border_outlined,
-                                            size: 24,
-                                            color: isLiked
-                                                ? Colors.red
-                                                : const Color.fromARGB(
-                                                    255, 101, 119, 134),
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              isBookmarked = !isBookmarked;
-                                            });
-                                            Provider.of<TweetProvider>(context,
-                                                    listen: false)
-                                                .toggleBookmark(
-                                                    widget.tweet.twtId,
-                                                    widget.currId,
-                                                    isBookmarked);
-                                          },
-                                          child: Icon(
-                                            isBookmarked
-                                                ? Icons.bookmark
-                                                : Icons.bookmark_border_outlined,
-                                            size: 24,
-                                            color: isBookmarked
-                                                ? const Color.fromARGB(
-                                                    255, 29, 155, 240)
-                                                : const Color.fromARGB(
-                                                    255, 101, 119, 134),
-                                          ),
-                                        ), */
                                     ],
                                   );
                                 }),
@@ -470,6 +400,22 @@ class _CommentPageState extends State<CommentPage> {
                 ],
               ),
             ),
+    );
+  }
+
+  //ikon custom
+  Widget _buildGestureDetector(IconData icon, Color color, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 24,
+            color: color,
+          ),
+        ],
+      ),
     );
   }
 }

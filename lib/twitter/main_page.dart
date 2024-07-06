@@ -82,7 +82,6 @@ class _MainPageState extends State<MainPage> {
             context: context,
             builder: (BuildContext context) {
               return AddTweetPage(
-                currUsername: widget.currUsername,
                 currDisplayName: widget.currDisplayName,
               );
             },

@@ -100,7 +100,7 @@ class TweetCell extends StatelessWidget {
                             ],
                             onSelected: (value) {
                               if (value == 'Edit') {
-                                tweetProvider.editTweet(context, tweet);
+                                tweetProvider.editTweet(context, tweet.displayName, tweet.twtId, tweet.tweet);
                               } else if (value == 'Delete') {
                                 tweetProvider.deleteTweet(tweet.twtId);
                               }
@@ -157,49 +157,6 @@ class TweetCell extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            tweetProvider.toggleLike(tweet);
-                          },
-                          child: Icon(
-                            tweet.interactions.isLiked
-                                ? Icons.favorite
-                                : Icons.favorite_border_outlined,
-                            size: 24,
-                            color: tweet.interactions.isLiked
-                                ? Colors.red
-                                : const Color.fromARGB(255, 101, 119, 134),
-                          ),
-                        ),
-                        Text(tweet.likes.toString()),
-                        GestureDetector(
-                          onTap: () {
-                            tweetProvider.toggleRetweet(tweet);
-                          },
-                          child: Icon(
-                            Icons.repeat_outlined,
-                            size: 24,
-                            color: tweet.interactions.isRetweeted
-                                ? const Color.fromARGB(255, 0, 186, 124)
-                                : const Color.fromARGB(255, 101, 119, 134),
-                          ),
-                        ),
-                        Text(tweetProvider.formatNumber(ttlRetweets)),
-                        GestureDetector(
-                          onTap: () {
-                            tweetProvider.toggleBookmark(tweet);
-                          },
-                          child: Icon(
-                            tweet.interactions.isBookmarked
-                                ? Icons.bookmark
-                                : Icons.bookmark_border_outlined,
-                            size: 24,
-                            color: tweet.interactions.isBookmarked
-                                ? const Color.fromARGB(255, 29, 155, 240)
-                                : const Color.fromARGB(255, 101, 119, 134),
-                          ),
-                        ),
-                        Text(tweet.bookmarks.toString()),
                         _buildGestureDetector(
                           Icons.mode_comment_outlined,
                           const Color.fromARGB(255, 101, 119, 134),
@@ -214,6 +171,34 @@ class TweetCell extends StatelessWidget {
                             );
                           },
                           tweetProvider.formatNumber(tweet.commentCount),
+                        ),
+                        _buildGestureDetector(
+                          tweet.interactions.isLiked
+                              ? Icons.favorite
+                              : Icons.favorite_border_outlined,
+                          tweet.interactions.isLiked
+                              ? Colors.red
+                              : const Color.fromARGB(255, 101, 119, 134),
+                          () => tweetProvider.toggleLike(tweet),
+                          tweetProvider.formatNumber(tweet.likes),
+                        ),
+                        _buildGestureDetector(
+                          Icons.repeat_outlined,
+                          tweet.interactions.isRetweeted
+                              ? const Color.fromARGB(255, 0, 186, 124)
+                              : const Color.fromARGB(255, 101, 119, 134),
+                          () => tweetProvider.toggleRetweet(tweet),
+                          tweetProvider.formatNumber(ttlRetweets),
+                        ),
+                        _buildGestureDetector(
+                          tweet.interactions.isBookmarked
+                              ? Icons.bookmark
+                              : Icons.bookmark_border_outlined,
+                          tweet.interactions.isBookmarked
+                              ? const Color.fromARGB(255, 29, 155, 240)
+                              : const Color.fromARGB(255, 101, 119, 134),
+                          () => tweetProvider.toggleBookmark(tweet),
+                          '',
                         ),
                         _buildGestureDetector(
                           Icons.insert_chart_outlined_rounded,
@@ -239,6 +224,7 @@ class TweetCell extends StatelessWidget {
     );
   }
 
+  //ikon custom
   Widget _buildGestureDetector(
       IconData icon, Color color, VoidCallback onTap, String text) {
     return GestureDetector(
@@ -255,7 +241,7 @@ class TweetCell extends StatelessWidget {
             text,
             style: const TextStyle(
               color: Color.fromARGB(255, 101, 119, 134),
-              fontSize: 16,
+              fontSize: 14,
             ),
           ),
         ],

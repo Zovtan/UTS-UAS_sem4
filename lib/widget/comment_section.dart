@@ -102,18 +102,18 @@ class CommentsSection extends StatelessWidget {
                             const SizedBox(height: 5),
 
                             // Icons
-                            Row(
+                            const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Row(
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       Icons.favorite_border,
                                       size: 20,
                                       color: Color.fromARGB(255, 101, 119, 134),
                                     ),
-                                    const SizedBox(width: 5),
-                                    const Text(
+                                    SizedBox(width: 5),
+                                    Text(
                                       '0',
                                       style: TextStyle(
                                           color: Color.fromARGB(255, 101, 119, 134),
@@ -123,13 +123,13 @@ class CommentsSection extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       Icons.repeat_rounded,
                                       size: 20,
                                       color: Color.fromARGB(255, 101, 119, 134),
                                     ),
-                                    const SizedBox(width: 5),
-                                    const Text(
+                                    SizedBox(width: 5),
+                                    Text(
                                       '0',
                                       style: TextStyle(
                                           color: Color.fromARGB(255, 101, 119, 134),
@@ -139,13 +139,13 @@ class CommentsSection extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       Icons.mode_comment_outlined,
                                       size: 20,
                                       color: Color.fromARGB(255, 101, 119, 134),
                                     ),
-                                    const SizedBox(width: 5),
-                                    const Text(
+                                    SizedBox(width: 5),
+                                    Text(
                                       '0',
                                       style: TextStyle(
                                           color: Color.fromARGB(255, 101, 119, 134),
@@ -155,13 +155,13 @@ class CommentsSection extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       Icons.insert_chart_outlined_rounded,
                                       size: 20,
                                       color: Color.fromARGB(255, 101, 119, 134),
                                     ),
-                                    const SizedBox(width: 5),
-                                    const Text(
+                                    SizedBox(width: 5),
+                                    Text(
                                       '0',
                                       style: TextStyle(
                                           color: Color.fromARGB(255, 101, 119, 134),
@@ -171,13 +171,13 @@ class CommentsSection extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       Icons.bookmark_border,
                                       size: 20,
                                       color: Color.fromARGB(255, 101, 119, 134),
                                     ),
-                                    const SizedBox(width: 5),
-                                    const Icon(
+                                    SizedBox(width: 5),
+                                    Icon(
                                       Icons.share_outlined,
                                       size: 20,
                                       color: Color.fromARGB(255, 101, 119, 134),
