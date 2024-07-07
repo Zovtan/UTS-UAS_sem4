@@ -45,7 +45,7 @@ class _LoginState extends State<Login> {
                 keyboardType: TextInputType.text,
                 controller: identifierController,
                 decoration: const InputDecoration(
-                  labelText: "Phone, email, or username",
+                  labelText: "Email or username",
                   border: OutlineInputBorder(),
                 ),
               ),

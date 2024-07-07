@@ -107,7 +107,8 @@ class TweetProvider with ChangeNotifier {
     }
   }
 
-  void editTweet(BuildContext context, String currDisplayName, int twtId, String tweet) {
+  void editTweet(
+      BuildContext context, String currDisplayName, int twtId, String tweet) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => EditTweetPage(
@@ -122,30 +123,33 @@ class TweetProvider with ChangeNotifier {
     );
   }
 
-//need fix
-  Future<void> deleteTweet(int twtId) async {
-    _setLoadingState(true);
-    _setErrorState(false);
+  Future<bool> deleteTweet(int twtId) async {
+  _setLoadingState(true);
+  _setErrorState(false);
 
-    try {
-      final response = await http.delete(Uri.parse('$baseUrl/$twtId'));
-      if (response.statusCode == 200) {
-        _tweets.removeWhere((tweet) => tweet.twtId == twtId);
-      } else {
-        _setErrorState(true);
-      }
-      if (response.statusCode == 200) {
-        await fetchTweets();
-      } else {
-        _setErrorState(true);
-      }
-    } catch (e) {
-      print(e);
+  try {
+    await fetchUserId();
+    final response = await http.delete(
+      Uri.parse('$baseUrl/$twtId'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'userId': _userId}),
+    );
+    if (response.statusCode == 200) {
+      await fetchTweets();
+      return true;
+    } else {
       _setErrorState(true);
-    } finally {
-      _setLoadingState(false);
+      return false;
     }
+  } catch (e) {
+    print(e);
+    _setErrorState(true);
+    return false;
+  } finally {
+    _setLoadingState(false);
   }
+}
+
 
 //ini utk menghindari refresh satu halaman
   Future<void> toggleLike(TweetMdl tweet) async {

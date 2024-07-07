@@ -68,89 +68,130 @@ class _CommentPageState extends State<CommentPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Profile picture, name, follow, options
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
+                            Consumer<TweetProvider>(
+                              builder: (context, tweetProvider, _) {
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    // ProfilePicture widget and name display
-                                    ProfilePicture(
-                                      name: widget.tweet.displayName,
-                                      radius: 18,
-                                      fontsize: 10,
-                                      count: 2,
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                    Row(
                                       children: [
-                                        Text(
-                                          widget.tweet.displayName,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
+                                        // ProfilePicture widget and name display
+                                        ProfilePicture(
+                                          name: widget.tweet.displayName,
+                                          radius: 18,
+                                          fontsize: 10,
+                                          count: 2,
                                         ),
-                                        Text(
-                                          widget.tweet.username,
-                                          style: const TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 101, 119, 134),
-                                              fontSize: 16),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              widget.tweet.displayName,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                            Text(
+                                              widget.tweet.username,
+                                              style: const TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 101, 119, 134),
+                                                  fontSize: 16),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
+                                    if (widget.tweet.userId != widget.currId)
+                                      SizedBox(
+                                        height: 25,
+                                        child: ElevatedButton(
+                                          onPressed: () {},
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all<Color>(
+                                                    Colors.white),
+                                          ),
+                                          child: const Text(
+                                            "Follow",
+                                            style: TextStyle(
+                                                color: Colors.black, fontSize: 16),
+                                          ),
+                                        ),
+                                      ),
+                                    if (widget.tweet.userId == widget.currId)
+                                      PopupMenuButton<String>(
+                                        itemBuilder: (BuildContext context) => [
+                                          const PopupMenuItem<String>(
+                                            value: 'Edit',
+                                            child: Text('Edit tweet'),
+                                          ),
+                                          const PopupMenuItem<String>(
+                                            value: 'Delete',
+                                            child: Text('Delete tweet'),
+                                          ),
+                                        ],
+                                        onSelected: (value) {
+                                          if (value == 'Edit') {
+                                            tweetProvider.editTweet(
+                                                context,
+                                                widget.tweet.displayName,
+                                                widget.tweet.twtId,
+                                                widget.tweet.tweet);
+                                          } else if (value == 'Delete') {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text('Delete Tweet'),
+                                                  content: Text(
+                                                      'Are you sure you want to delete this tweet?'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: Text('Cancel'),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                        tweetProvider
+                                                            .deleteTweet(
+                                                                widget.tweet.twtId)
+                                                            .then((success) {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            SnackBar(
+                                                              content: Text(success
+                                                                  ? 'Tweet deleted successfully'
+                                                                  : 'Failed to delete tweet'),
+                                                            ),
+                                                          );
+                                                        });
+                                                      },
+                                                      child: Text('Delete'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          }
+                                        },
+                                        child: const Icon(
+                                          Icons.more_vert_rounded,
+                                          color: Color.fromARGB(255, 101, 119, 134),
+                                          size: 15,
+                                        ),
+                                      ),
                                   ],
-                                ),
-                                if (widget.tweet.userId != widget.currId)
-                                  SizedBox(
-                                    height: 25,
-                                    child: ElevatedButton(
-                                      onPressed: () {},
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                                Colors.white),
-                                      ),
-                                      child: const Text(
-                                        "Follow",
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 16),
-                                      ),
-                                    ),
-                                  ),
-                                if (widget.tweet.userId == widget.currId)
-                                  PopupMenuButton<String>(
-                                    itemBuilder: (BuildContext context) => [
-                                      const PopupMenuItem<String>(
-                                        value: 'Edit',
-                                        child: Text('Edit tweet'),
-                                      ),
-                                      const PopupMenuItem<String>(
-                                        value: 'Delete',
-                                        child: Text('Delete tweet'),
-                                      ),
-                                    ],
-                                    onSelected: (value) {
-                                      if (value == 'Edit') {
-                                        Provider.of<TweetProvider>(context,
-                                                listen: false)
-                                            .editTweet(context, widget.tweet.displayName, widget.tweet.twtId, widget.tweet.tweet);
-                                      } else if (value == 'Delete') {
-                                        Provider.of<TweetProvider>(context,
-                                                listen: false)
-                                            .deleteTweet(widget.tweet.twtId);
-                                      }
-                                    },
-                                    child: const Icon(
-                                      Icons.more_vert_rounded,
-                                      color: Color.fromARGB(255, 101, 119, 134),
-                                      size: 15,
-                                    ),
-                                  ),
-                              ],
+                                );
+                              }
                             ),
 
                             // Tweet text and image

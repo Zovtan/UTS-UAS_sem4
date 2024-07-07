@@ -100,9 +100,48 @@ class TweetCell extends StatelessWidget {
                             ],
                             onSelected: (value) {
                               if (value == 'Edit') {
-                                tweetProvider.editTweet(context, tweet.displayName, tweet.twtId, tweet.tweet);
+                                tweetProvider.editTweet(
+                                    context,
+                                    tweet.displayName,
+                                    tweet.twtId,
+                                    tweet.tweet);
                               } else if (value == 'Delete') {
-                                tweetProvider.deleteTweet(tweet.twtId);
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Delete Tweet'),
+                                      content: Text(
+                                          'Are you sure you want to delete this tweet?'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                            tweetProvider
+                                                .deleteTweet(tweet.twtId)
+                                                .then((success) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(success
+                                                      ? 'Tweet deleted successfully'
+                                                      : 'Failed to delete tweet'),
+                                                ),
+                                              );
+                                            });
+                                          },
+                                          child: Text('Delete'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                               }
                             },
                             child: const Icon(
