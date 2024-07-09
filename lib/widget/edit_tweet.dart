@@ -7,7 +7,7 @@ class EditTweetPage extends StatefulWidget {
   final Function(String) onTweetEdited;
 
   const EditTweetPage(
-      {Key? key, required this.currDisplayName, required this.tweet, required this.onTweetEdited});
+      {super.key, required this.currDisplayName, required this.tweet, required this.onTweetEdited});
 
   @override
   EditTweetPageState createState() => EditTweetPageState();
@@ -15,7 +15,7 @@ class EditTweetPage extends StatefulWidget {
 
 class EditTweetPageState extends State<EditTweetPage> {
   late TextEditingController _tweetController;
-  bool isLoading = false; // Add isLoading state
+  bool isLoading = false; //memakai state loading lokal karena terlalu ribet dlm prov
 
   @override
   void initState() {
@@ -62,7 +62,7 @@ class EditTweetPageState extends State<EditTweetPage> {
               ),
             ),
             child: isLoading
-                ? CircularProgressIndicator() // Show loading indicator when isLoading is true
+                ? const CircularProgressIndicator()
                 : const Text(
                     'Save Changes',
                     style: TextStyle(

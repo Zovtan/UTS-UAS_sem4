@@ -10,10 +10,10 @@ class CommentsSection extends StatelessWidget {
   final DateTime parsedTimestamp;
 
   const CommentsSection({
-    Key? key,
+    super.key,
     required this.comments,
     required this.parsedTimestamp,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

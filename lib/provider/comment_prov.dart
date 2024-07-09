@@ -15,25 +15,22 @@ class CommentProvider with ChangeNotifier {
   bool _hasError = false;
   bool get hasError => _hasError;
 
+
+  //hanya mengambil komentar
   Future<void> fetchComments(int twtId) async {
     _setLoadingState(true);
     _setErrorState(false);
 
     try {
       final response = await http.get(Uri.parse('$baseUrl/$twtId'));
-      print('$baseUrl/$twtId');
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
       if (response.statusCode == 200) {
         List<dynamic> jsonList = json.decode(response.body)['comments'] ?? [];
         _comments = jsonList.map((json) => Comment.fromJson(json)).toList();
       } else {
         _setErrorState(true);
-        print('Error fetching comments: ${response.statusCode}');
       }
     } catch (e) {
       _setErrorState(true);
-      print('Error fetching comments: $e');
     } finally {
       _setLoadingState(false);
     }

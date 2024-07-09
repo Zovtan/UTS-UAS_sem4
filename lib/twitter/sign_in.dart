@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:twitter/provider/profile_prov.dart';
 
 class SignIn extends StatefulWidget {
-  const SignIn({Key? key}) : super(key: key);
+  const SignIn({super.key});
 
   @override
   State<SignIn> createState() => _SignInState();
@@ -15,7 +15,6 @@ class _SignInState extends State<SignIn> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController repeatPasswordController = TextEditingController();
-  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -94,14 +93,10 @@ class _SignInState extends State<SignIn> {
               const SizedBox(height: 20),
               Consumer<ProfileProvider>(
                 builder: (context, profileProvider, child) {
-                  return isLoading
-                      ? Center(child: CircularProgressIndicator())
+                  return profileProvider.isLoading
+                      ? const Center(child: CircularProgressIndicator())
                       : ElevatedButton(
                           onPressed: () async {
-                            setState(() {
-                              isLoading = true;
-                            });
-
                             try {
                               await profileProvider.register(
                                 context: context,
@@ -121,10 +116,6 @@ class _SignInState extends State<SignIn> {
                                   content: Text(e.toString().replaceFirst('Exception: ', '')),
                                 ),
                               );
-                            } finally {
-                              setState(() {
-                                isLoading = false;
-                              });
                             }
                           },
                           style: ElevatedButton.styleFrom(),

@@ -12,16 +12,16 @@ class MainPage extends StatefulWidget {
   final String currDisplayName;
 
   const MainPage({
-    Key? key,
+    super.key,
     required this.currUsername,
     required this.currDisplayName,
-  }) : super(key: key);
+  });
 
   @override
-  _MainPageState createState() => _MainPageState();
+  MainPageState createState() => MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class MainPageState extends State<MainPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -35,21 +35,21 @@ class _MainPageState extends State<MainPage> {
       body: Consumer<TweetProvider>(
         builder: (context, tweetProvider, child) {
           if (tweetProvider.isLoading) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (tweetProvider.hasError) {
-            return Center(
+            return const Center(
               child: Text('Failed to load tweets'),
             );
           } else {
-            print(tweetProvider.userId);
             return CustomScrollView(
               slivers: [
                 TwitterAppBar(currDisplayName: widget.currDisplayName),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
+                      //setiap index ganjil, tweet di ganti dgn divider. tetapi index tweet digandakan terlebih dahulu supaya tdk ada yg terpotong
                       if (index.isOdd) {
                         return const Divider(
                           color: Color.fromARGB(120, 101, 119, 134),

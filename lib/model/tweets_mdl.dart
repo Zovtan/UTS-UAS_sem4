@@ -3,7 +3,7 @@ class TweetMdl {
   final int userId;
   final String username;
   final String displayName;
-   String tweet;
+  String tweet;
   final String? image;
   final String timestamp;
   int likes;

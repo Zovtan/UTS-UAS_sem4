@@ -9,10 +9,10 @@ class TwitterAppBar extends StatefulWidget {
   const TwitterAppBar({super.key, required this.currDisplayName});
 
   @override
-  _TwitterAppBarState createState() => _TwitterAppBarState();
+  TwitterAppBarState createState() => TwitterAppBarState();
 }
 
-class _TwitterAppBarState extends State<TwitterAppBar> {
+class TwitterAppBarState extends State<TwitterAppBar> {
   bool _isLoading = false;
 
   Future<void> _logout() async {
@@ -21,13 +21,7 @@ class _TwitterAppBarState extends State<TwitterAppBar> {
     });
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isCleared = await prefs.clear(); //hapus sharedPreference
-
-    if (isCleared) {
-      print('SharedPreferences cleared successfully.');
-    } else {
-      print('Failed to clear SharedPreferences.');
-    }
+    await prefs.clear(); //hapus sharedPreference
 
     if (mounted) {
       setState(() {
@@ -37,7 +31,7 @@ class _TwitterAppBarState extends State<TwitterAppBar> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => Login(),
+          builder: (context) => const Login(),
         ),
         (route) => false,
       );
@@ -130,7 +124,7 @@ class _TwitterAppBarState extends State<TwitterAppBar> {
                 decoration: const BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
-                        color: Colors.blue, // Border color
+                        color: Colors.blue,
                         width: 5),
                   ),
                 ),

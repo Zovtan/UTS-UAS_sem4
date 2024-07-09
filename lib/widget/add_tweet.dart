@@ -7,9 +7,9 @@ class AddTweetPage extends StatefulWidget {
   final String currDisplayName;
 
   const AddTweetPage({
-    Key? key,
+    super.key,
     required this.currDisplayName,
-  }) : super(key: key);
+  });
 
   @override
   State<AddTweetPage> createState() => _AddTweetPageState();
@@ -37,7 +37,6 @@ class _AddTweetPageState extends State<AddTweetPage> {
                 onPressed: tweetProvider.isLoading
                     ? null
                     : () {
-                      
                         if (_tweetController.text.trim().isEmpty) {
                           _showSnackBar(context, "Tweet cannot be empty");
                         } else {

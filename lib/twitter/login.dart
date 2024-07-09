@@ -4,7 +4,7 @@ import 'package:twitter/provider/profile_prov.dart';
 import 'package:twitter/twitter/sign_in.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key});
+  const Login({super.key});
 
   @override
   State<Login> createState() => _LoginState();
@@ -14,7 +14,6 @@ class _LoginState extends State<Login> {
   TextEditingController identifierController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool passwordVisible = false;
-  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -74,15 +73,11 @@ class _LoginState extends State<Login> {
               const SizedBox(height: 20.0),
               Consumer<ProfileProvider>(
                 builder: (context, profileProvider, child) {
-                  return isLoading
-                      ? Center(child: CircularProgressIndicator())
+                  return profileProvider.isLoading
+                      ? const Center(child: CircularProgressIndicator())
                       : ElevatedButton(
                           onPressed: () async {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            String identifier =
-                                identifierController.text;
+                            String identifier = identifierController.text;
                             String password = passwordController.text;
 
                             try {
@@ -91,16 +86,10 @@ class _LoginState extends State<Login> {
                                 password,
                                 context,
                               );
-                              setState(() {
-                                isLoading = false;
-                              });
                             } catch (e) {
-                              setState(() {
-                                isLoading = false;
-                              });
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('Login failed: ${e.toString()}'),
+                                  content: Text(e.toString().replaceFirst('Exception: ', '')),
                                 ),
                               );
                             }

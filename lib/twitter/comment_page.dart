@@ -13,10 +13,10 @@ class CommentPage extends StatefulWidget {
   final int? currId;
 
   const CommentPage({
-    Key? key,
+    super.key,
     required this.tweet,
     required this.currId,
-  }) : super(key: key);
+  });
 
   @override
   State<CommentPage> createState() => _CommentPageState();
@@ -147,15 +147,15 @@ class _CommentPageState extends State<CommentPage> {
                                               context: context,
                                               builder: (BuildContext context) {
                                                 return AlertDialog(
-                                                  title: Text('Delete Tweet'),
-                                                  content: Text(
+                                                  title: const Text('Delete Tweet'),
+                                                  content: const Text(
                                                       'Are you sure you want to delete this tweet?'),
                                                   actions: [
                                                     TextButton(
                                                       onPressed: () {
                                                         Navigator.of(context).pop();
                                                       },
-                                                      child: Text('Cancel'),
+                                                      child: const Text('Cancel'),
                                                     ),
                                                     TextButton(
                                                       onPressed: () {
@@ -175,7 +175,7 @@ class _CommentPageState extends State<CommentPage> {
                                                           );
                                                         });
                                                       },
-                                                      child: Text('Delete'),
+                                                      child: const Text('Delete'),
                                                     ),
                                                   ],
                                                 );
@@ -201,6 +201,7 @@ class _CommentPageState extends State<CommentPage> {
                               style: const TextStyle(fontSize: 16),
                             ),
                             const SizedBox(height: 5),
+                            //gambar akan menunjukkan petak abu ketika loading dan tdk muncul jika tdk ada
                             if (widget.tweet.image != null) ...[
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8.0),
@@ -236,7 +237,7 @@ class _CommentPageState extends State<CommentPage> {
 
                             // Info
                             Consumer<TweetProvider>(
-                              builder: (context, TweetProvider, _) {
+                              builder: (context, tweetProvider, _) {
                                 return Column(
                                   children: [
                                     // Timestamp and view count
@@ -257,7 +258,7 @@ class _CommentPageState extends State<CommentPage> {
                                                       fontSize: 16),
                                                 ),
                                                 TextSpan(
-                                                  text: TweetProvider
+                                                  text: tweetProvider
                                                       .formatNumber(
                                                           widget.tweet.views),
                                                   style: const TextStyle(
@@ -294,7 +295,7 @@ class _CommentPageState extends State<CommentPage> {
                                         children: [
                                           Expanded(
                                             child: Container(
-                                              constraints: BoxConstraints(
+                                              constraints: const BoxConstraints(
                                                   maxWidth: double.infinity),
                                               child: RichText(
                                                 text: TextSpan(
@@ -307,7 +308,7 @@ class _CommentPageState extends State<CommentPage> {
                                                   children: [
                                                     TextSpan(
                                                       text:
-                                                          '${TweetProvider.formatNumber(widget.tweet.retweets)} ',
+                                                          '${tweetProvider.formatNumber(widget.tweet.retweets)} ',
                                                     ),
                                                     const TextSpan(
                                                       text: 'Reposts ',
@@ -318,7 +319,7 @@ class _CommentPageState extends State<CommentPage> {
                                                     ),
                                                     TextSpan(
                                                       text:
-                                                          '${TweetProvider.formatNumber(widget.tweet.qtweets)} ',
+                                                          '${tweetProvider.formatNumber(widget.tweet.qtweets)} ',
                                                     ),
                                                     const TextSpan(
                                                       text: 'Quotes ',
@@ -329,7 +330,7 @@ class _CommentPageState extends State<CommentPage> {
                                                     ),
                                                     TextSpan(
                                                       text:
-                                                          '${TweetProvider.formatNumber(widget.tweet.likes)} ',
+                                                          '${tweetProvider.formatNumber(widget.tweet.likes)} ',
                                                     ),
                                                     const TextSpan(
                                                       text: 'Likes ',
@@ -340,7 +341,7 @@ class _CommentPageState extends State<CommentPage> {
                                                     ),
                                                     TextSpan(
                                                       text:
-                                                          '${TweetProvider.formatNumber(widget.tweet.bookmarks)} ',
+                                                          '${tweetProvider.formatNumber(widget.tweet.bookmarks)} ',
                                                     ),
                                                     const TextSpan(
                                                       text: 'Bookmarks',

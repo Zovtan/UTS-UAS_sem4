@@ -10,10 +10,10 @@ class TweetCell extends StatelessWidget {
   final int? currId;
 
   const TweetCell({
-    Key? key,
+    super.key,
     required this.tweet,
     required this.currId,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -110,15 +110,15 @@ class TweetCell extends StatelessWidget {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text('Delete Tweet'),
-                                      content: Text(
+                                      title: const Text('Delete Tweet'),
+                                      content: const Text(
                                           'Are you sure you want to delete this tweet?'),
                                       actions: [
                                         TextButton(
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
-                                          child: Text('Cancel'),
+                                          child: const Text('Cancel'),
                                         ),
                                         TextButton(
                                           onPressed: () {
@@ -136,7 +136,7 @@ class TweetCell extends StatelessWidget {
                                               );
                                             });
                                           },
-                                          child: Text('Delete'),
+                                          child: const Text('Delete'),
                                         ),
                                       ],
                                     );
@@ -160,6 +160,7 @@ class TweetCell extends StatelessWidget {
                       style: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 5),
+                    //gambar akan menunjukkan petak abu ketika loading dan tdk muncul jika tdk ada
                     if (tweet.image != null) ...[
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),

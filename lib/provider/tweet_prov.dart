@@ -17,27 +17,27 @@ class TweetProvider with ChangeNotifier {
   bool _hasError = false;
   bool get hasError => _hasError;
 
-  int _userId = 0; // Class-level variable to store userId
-  int get userId => _userId; // Getter for userId
+  int _userId = 0; // id default
+  int get userId => _userId;
 
   TweetProvider() {
-    fetchTweets(); // Initial fetch when provider is created
+    fetchTweets(); // Inisialisasi ketika provider dimuat
   }
 
-  // Method to fetch userId from SharedPreferences
+  //mengambil userId dari SharedPreferences
   Future<void> fetchUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _userId = prefs.getInt('currUserId') ?? 0;
-    notifyListeners(); // Notify listeners after updating userId
+    notifyListeners();
   }
 
-// Fetch tweets from the server
+// mengambil tweet dari server, userId dibutuhkan utk mengecek interaksi
   Future<void> fetchTweets() async {
     _setLoadingState(true);
     _setErrorState(false);
 
     try {
-      await fetchUserId(); // Ensure userId is fetched before making the request
+      await fetchUserId();
 
       final response = await http.get(
         Uri.parse('$baseUrl/$_userId'),
@@ -48,16 +48,15 @@ class TweetProvider with ChangeNotifier {
         _tweets = jsonList.map((json) => TweetMdl.fromJson(json)).toList();
       } else {
         _setErrorState(true);
-        print('Error fetching tweets: ${response.statusCode}');
       }
     } catch (e) {
       _setErrorState(true);
-      print('Error fetching tweets: $e');
     } finally {
       _setLoadingState(false);
     }
   }
 
+  //fungsi tambah tweet
   Future<void> addTweet(String tweet) async {
     _setLoadingState(true);
     _setErrorState(false);
@@ -73,16 +72,15 @@ class TweetProvider with ChangeNotifier {
         await fetchTweets();
       } else {
         _setErrorState(true);
-        print('Error adding tweet: ${response.statusCode}');
       }
     } catch (e) {
       _setErrorState(true);
-      print('Error adding tweet: $e');
     } finally {
       _setLoadingState(false);
     }
   }
 
+  //fungsi ubah isi tweet
   Future<void> updateTweet(int twtId, String tweet) async {
     _setLoadingState(true);
     _setErrorState(false);
@@ -101,7 +99,6 @@ class TweetProvider with ChangeNotifier {
       }
     } catch (e) {
       _setErrorState(true);
-      print(e);
     } finally {
       _setLoadingState(false);
     }
@@ -123,35 +120,34 @@ class TweetProvider with ChangeNotifier {
     );
   }
 
+  //fungsi hapus tweet
   Future<bool> deleteTweet(int twtId) async {
-  _setLoadingState(true);
-  _setErrorState(false);
+    _setLoadingState(true);
+    _setErrorState(false);
 
-  try {
-    await fetchUserId();
-    final response = await http.delete(
-      Uri.parse('$baseUrl/$twtId'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'userId': _userId}),
-    );
-    if (response.statusCode == 200) {
-      await fetchTweets();
-      return true;
-    } else {
+    try {
+      await fetchUserId();
+      final response = await http.delete(
+        Uri.parse('$baseUrl/$twtId'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'userId': _userId}),
+      );
+      if (response.statusCode == 200) {
+        await fetchTweets();
+        return true;
+      } else {
+        _setErrorState(true);
+        return false;
+      }
+    } catch (e) {
       _setErrorState(true);
       return false;
+    } finally {
+      _setLoadingState(false);
     }
-  } catch (e) {
-    print(e);
-    _setErrorState(true);
-    return false;
-  } finally {
-    _setLoadingState(false);
   }
-}
 
-
-//ini utk menghindari refresh satu halaman
+//fungsi toggle like, retweet, dan bookmark. Ada versi lokal agar setiap kali di tekan tidak refresh 1 halaman, tapi masi tetap upload interaksi
   Future<void> toggleLike(TweetMdl tweet) async {
     _setLoadingState(true);
     _setErrorState(false);
@@ -163,14 +159,12 @@ class TweetProvider with ChangeNotifier {
         body: jsonEncode({'userId': _userId}),
       );
       if (response.statusCode == 200) {
-        // Update local tweet object
         tweet.interactions.isLiked = !tweet.interactions.isLiked;
         if (tweet.interactions.isLiked) {
           tweet.likes++;
         } else {
           tweet.likes--;
         }
-        // Notify listeners to update UI
         notifyListeners();
       } else {
         _setErrorState(true);
@@ -193,14 +187,13 @@ class TweetProvider with ChangeNotifier {
         body: jsonEncode({'userId': _userId}),
       );
       if (response.statusCode == 200) {
-        // Update local tweet object
         tweet.interactions.isRetweeted = !tweet.interactions.isRetweeted;
         if (tweet.interactions.isRetweeted) {
           tweet.retweets++;
         } else {
           tweet.retweets--;
         }
-        // Notif
+        notifyListeners();
       } else {
         _setErrorState(true);
       }
@@ -228,7 +221,7 @@ class TweetProvider with ChangeNotifier {
         } else {
           tweet.bookmarks--;
         }
-        // Notif
+        notifyListeners();
       } else {
         _setErrorState(true);
       }
@@ -239,6 +232,7 @@ class TweetProvider with ChangeNotifier {
     }
   }
 
+  //fungsi formating time stamp dan format Int
   String formatDur(DateTime parsedTimestamp) {
     var durTime = DateTime.now().difference(parsedTimestamp);
     if (durTime.inDays > 0) {
@@ -261,6 +255,7 @@ class TweetProvider with ChangeNotifier {
     }
   }
 
+  //loading dan error state
   void _setLoadingState(bool state) {
     _isLoading = state;
     if (state == false) {
