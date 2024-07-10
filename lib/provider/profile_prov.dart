@@ -65,10 +65,6 @@ class ProfileProvider with ChangeNotifier {
   }) async {
     _setLoading(true);
     try {
-      if (password != repeatPassword) {
-        throw Exception('Passwords do not match');
-      }
-
       final response = await http.post(Uri.parse('$baseUrl/register'), body: {
         'username': username,
         'displayName': displayName,
