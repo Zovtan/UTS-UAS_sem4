@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:twitter/provider/comment_prov.dart';
 import 'package:twitter/provider/tweet_prov.dart';
 import 'package:twitter/provider/profile_prov.dart';
-import 'package:twitter/twitter/login.dart';
+import 'package:twitter/screen/login.dart';
 
 void main() {
   runApp(const MyApp());

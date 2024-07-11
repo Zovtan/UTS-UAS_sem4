@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:twitter/model/tweets_mdl.dart';
 import 'package:twitter/provider/tweet_prov.dart';
-import 'package:twitter/twitter/comment_page.dart';
+import 'package:twitter/screen/comment_page.dart';
 import 'package:provider/provider.dart';
 
 class TweetCell extends StatelessWidget {
@@ -100,7 +100,7 @@ class TweetCell extends StatelessWidget {
                             ],
                             onSelected: (value) {
                               if (value == 'Edit') {
-                                tweetProvider.editTweet(
+                                tweetProvider.editTweetNav(
                                     context,
                                     tweet.displayName,
                                     tweet.twtId,

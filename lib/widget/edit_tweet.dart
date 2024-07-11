@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
+import 'package:provider/provider.dart';
+import 'package:twitter/provider/tweet_prov.dart';
 
 class EditTweetPage extends StatefulWidget {
   final String currDisplayName;
+  final int twtId;
   final String tweet;
-  final Function(String) onTweetEdited;
 
-  const EditTweetPage(
-      {super.key, required this.currDisplayName, required this.tweet, required this.onTweetEdited});
+  const EditTweetPage({
+    super.key,
+    required this.currDisplayName,
+    required this.tweet,
+    required this.twtId,
+  });
 
   @override
   EditTweetPageState createState() => EditTweetPageState();
@@ -15,7 +21,6 @@ class EditTweetPage extends StatefulWidget {
 
 class EditTweetPageState extends State<EditTweetPage> {
   late TextEditingController _tweetController;
-  bool isLoading = false; //memakai state loading lokal karena terlalu ribet dlm prov
 
   @override
   void initState() {
@@ -31,46 +36,43 @@ class EditTweetPageState extends State<EditTweetPage> {
         title: const Text('Edit Tweet'),
         backgroundColor: Colors.black,
         actions: [
-          ElevatedButton(
-            onPressed: isLoading
-                ? null
-                : () async {
-                    // Disable button when isLoading is true
-                    setState(() {
-                      isLoading =
-                          true; // Set isLoading to true before async operation
-                    });
-
-                    final editedTweet = _tweetController.text.trim();
-                    if (editedTweet.isEmpty) {
-                      _showSnackBar(context, "Tweet cannot be empty");
-                    } else {
-                      await widget.onTweetEdited(editedTweet);
-                      _showSnackBar(context, "Tweet edited");
-                      Navigator.of(context).pop();
-                    }
-
-                    setState(() {
-                      isLoading =
-                          false; // Set isLoading back to false after async operation completes
-                    });
-                  },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-            child: isLoading
-                ? const CircularProgressIndicator()
-                : const Text(
-                    'Save Changes',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+          Consumer<TweetProvider>(
+            builder: (context, tweetProvider, child) {
+              return ElevatedButton(
+                onPressed: tweetProvider.isLoading
+                    ? null
+                    : () async {
+                        final editedTweet = _tweetController.text.trim();
+                        if (editedTweet.isEmpty) {
+                          _showSnackBar(context, "Tweet cannot be empty");
+                        } else {
+                          await tweetProvider.updateTweet(widget.twtId, editedTweet);
+                          if (!tweetProvider.hasError) {
+                            _showSnackBar(context, "Tweet edited");
+                            Navigator.of(context).pop();
+                          } else {
+                            _showSnackBar(context, "Failed to edit tweet");
+                          }
+                        }
+                      },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
+                ),
+                child: tweetProvider.isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text(
+                        'Save Changes',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+              );
+            },
           ),
         ],
       ),

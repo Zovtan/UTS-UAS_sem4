@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
-import 'package:twitter/twitter/login.dart';
+import 'package:twitter/screen/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TwitterAppBar extends StatefulWidget {

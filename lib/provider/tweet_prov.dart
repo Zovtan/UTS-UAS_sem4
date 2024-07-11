@@ -104,17 +104,14 @@ class TweetProvider with ChangeNotifier {
     }
   }
 
-  void editTweet(
+  void editTweetNav(
       BuildContext context, String currDisplayName, int twtId, String tweet) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => EditTweetPage(
           currDisplayName: currDisplayName,
           tweet: tweet,
-          onTweetEdited: (editedTweet) {
-            updateTweet(
-                twtId, editedTweet); // Pass editedTweet instead of tweet
-          },
+          twtId: twtId,
         ),
       ),
     );

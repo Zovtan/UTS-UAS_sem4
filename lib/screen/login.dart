@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter/provider/profile_prov.dart';
-import 'package:twitter/twitter/sign_in.dart';
+import 'package:twitter/screen/sign_in.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});

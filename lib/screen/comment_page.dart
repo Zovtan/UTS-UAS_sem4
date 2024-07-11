@@ -137,7 +137,7 @@ class _CommentPageState extends State<CommentPage> {
                                         ],
                                         onSelected: (value) {
                                           if (value == 'Edit') {
-                                            tweetProvider.editTweet(
+                                            tweetProvider.editTweetNav(
                                                 context,
                                                 widget.tweet.displayName,
                                                 widget.tweet.twtId,

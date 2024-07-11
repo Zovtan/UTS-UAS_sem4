@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:twitter/twitter/login.dart';
+import 'package:twitter/screen/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:twitter/twitter/main_page.dart';
+import 'package:twitter/screen/main_page.dart';
 
 class ProfileProvider with ChangeNotifier {
   final String baseUrl =
